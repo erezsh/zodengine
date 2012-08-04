@@ -1,6 +1,8 @@
 CC=g++
-CFLAGS=-c -g `sdl-config --cflags` -D DISABLE_OPENGL -D DISABLE_REGCHECK
-LDFLAGS=`sdl-config --libs` -lSDL_image -lSDL_mixer -lSDL_ttf -lm -lmysqlclient
+SDL=c:/lib/SDL-1.2.15
+SQL=c:/lib/mysql-connector-c-6.0.2
+CFLAGS=-c -g -I$(SDL)/include -I$(SQL)/include -D_GNU_SOURCE=1 -Dmain=SDL_main -D DISABLE_OPENGL -D DISABLE_REGCHECK
+LDFLAGS=-L$(SDL)/lib -L$(SQL)\lib -llibmysql -lmingw32 -lSDLmain -lSDL -lSDL_image -lSDL_mixer -lSDL_ttf -lm -lmysqlclient -lws2_32 -lIphlpapi
 INCLUDES=
 BASEFILES = common.cpp zsdl.cpp event_handler.cpp socket_handler.cpp server_socket.cpp client_socket.cpp zhud.cpp zfont_engine.cpp zfont.cpp zmini_map.cpp cursor.cpp zgui_window.cpp zbuildlist.cpp zsound_engine.cpp zmusic_engine.cpp zcomp_message_engine.cpp zpath_finding.cpp zpath_finding_astar.cpp zsettings.cpp zsdl_opengl.cpp zportrait.cpp zteam.cpp ztray.cpp zmysql.cpp zpsettings.cpp ztime.cpp zvote.cpp zunitrating.cpp zencrypt_aes.cpp zolists.cpp zgui_main_menu_base.cpp zgui_main_menu_widget.cpp
 COREFILES = zcore.cpp zserver.cpp zserver_events.cpp zserver_commands.cpp zclient.cpp zplayer.cpp zplayer_events.cpp zbot.cpp zbot_events.cpp SDL_rotozoom.cpp
@@ -12,9 +14,10 @@ VEHICLEFILES = vjeep.cpp vlight.cpp vmedium.cpp vheavy.cpp vmissilelauncher.cpp 
 CANNONFILES = cgatling.cpp cgun.cpp chowitzer.cpp cmissilecannon.cpp
 GUIFILES = gwproduction.cpp gwproduction_fus.cpp gwproduction_us.cpp gwlogin.cpp gwcreateuser.cpp gwfactory_list.cpp gmm_change_teams.cpp gmm_main_menu.cpp gmm_manage_bots.cpp gmm_player_list.cpp gmm_select_map.cpp gmm_options.cpp gmm_warning.cpp gmmw_button.cpp gmmw_label.cpp gmmw_list.cpp gmmw_team_color.cpp gmmw_radio.cpp
 CPPFILES = $(BASEFILES) $(COREFILES) $(EFFECTFILES) $(OBJECTFILES) $(ROBOTFILES) $(BUILDINGFILES) $(VEHICLEFILES) $(CANNONFILES) $(GUIFILES)
-EXENAME = zod
+TARGET = bin
+EXENAME = $(TARGET)/zod_engine
 OFILES = main.o $(CPPFILES:.cpp=.o)
-MAPEDITOR_NAME = zod_map_editor
+MAPEDITOR_NAME = $(TARGET)/zod_map_editor
 MAPEDITOR_OFILES = map_editor.o $(CPPFILES:.cpp=.o)
 DATE = `date +%m-%d-%y`
 
