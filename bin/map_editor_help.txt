@@ -1,0 +1,75 @@
+The Zod Engine - Map Editor Readme
+
+How to create a map -
+With the map editor launcher place in the desired map filename, internal map name (such as Car Park), tile dimensions (ie 128x128), and palette then select the checkbox to start a new map. This will start the editor with a blank map. The map will not save until you press S.
+
+How to load an existing map -
+With the map editor launcher simply place in the desired map filename and click the launch map editor. Make sure the create / overwrite new map checkbox is not selected. The local directory for the map editor is C:\Program Files\Zod Engine\. An example map name should be level_orig1.map .
+
+How to change a map tile -
+Press M until you are in "place_tile" mode. Select the desired tile from the upper left tile board and then begin placing tiles on the map to the right. Hold ctrl while clicking a desired tile to add/remove another tile to the list. This will allow the map editor to randomly place a tile of your choice.
+
+How to place a building -
+Press M until you are in "place_building" mode.
+Press T until you have the desired team.
+Press O until you have the desired building.
+Press L until you have the desired building level (no effect on bridges, radars, or repairs).
+Press ; or ' until you have the desired starting health percentage
+Press , or . until you have the desired amount of extra bridge links (ignored by non bridges).
+Notes: Forts act as a flag, and a flag is what determines the actual team of other buildings in a zone. Forts are the only building that do not ignore their team setting.
+
+How to place a cannon -
+Press M until you are in "place_cannon" mode.
+Press T until you have the desired team.
+Press O until you have the desired cannon.
+Press ; or ' until you have the desired starting health percentage
+
+How to place a vehicle -
+Press M until you are in "place_vehicle" mode.
+Press T until you have the desired team.
+Press O until you have the desired vehicle.
+Press ; or ' until you have the desired starting health percentage
+
+How to place a robot -
+Press M until you are in "place_robot" mode.
+Press T until you have the desired team.
+Press O until you have the desired robot.
+Press ; or ' until you have the desired starting health percentage
+
+How to place a misc map item -
+Press M until you are in "place_item" mode.
+Press T until you have the desired team.
+Press O until you have the desired item.
+Press ; or ' until you have the desired starting health percentage
+Notes:Only the Flag uses the team flag. Some of the items you will find here are rocks, grenades, and animal start locations as well as shrubbery.
+
+How to place a zone -
+Press M until you are in "place_zone" mode.
+Select a spot on the map, this will be the upper left corner. Now you can select the lower right corner. A flag within the zone is what determines what team it will belong to by default.
+
+How to remove a zone -
+Press M until you are in "remove_zone" mode.
+Click the upper left tile of the zone, it will be highlighted with red.
+
+How to remove an object -
+Press M until you are in "remove_object" mode.
+Move the mouse over the desired object, it will highlight red when it is the object that will be removed with you left click.
+
+Undo / Redo -
+Press Ctrl+Z to Undo
+Press Ctrl+Shift+Z to Redo
+
+Blank Original Z Conversion Maps -
+You can find all of the 96 original Z maps as blank conversions in C:\Program Files\Zod Engine\blank_maps\
+
+Other Important Notes -
+Holding down click will cause all mouse movement to behave as a click. 
+You can use the mouse scroll in replacement of the O button.
+The print screen button will save a bmp image of the map to map_filename.map.bmp.
+To enable the map ruler press R.
+
+For anymore questions please visit the forums at http://zod.sourceforge.net/
+
+http://www.nighsoft.com
+http://zod.sourceforge.net
+freaknigh@hotmail.com

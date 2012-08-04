@@ -1,0 +1,44 @@
+The Zod Engine
+
+To Play -
+Run the Zod Launcher and click either "Local Game" or "Nighsoft Server". This will populate all the options for a simple game of either offline play in the original 20 levels or multiplayer on the main nighsoft server.
+
+Control System -
+The control system for the Zod Engine has changed. Left click selects units while right click will send them to their target. You can use ctrl+# to give them a control group. Also you can give units waypoints by holding in shift while you are giving them targets. In order to force units to "ignore-move" hold in alt while giving them orders. In order to force units to "attack-move" use ctrl instead. To move around the map you can either use the arrow keys, move the mouse to the screen's edge, click the minimap or hold in the middle mouse button to use the mouse to fly around the map. While you are viewing a factory or fort's unit production you can set it's rally point the same way you would set a unit's waypoint(s) so long as you currently do not have any units selected. Holding in z while giving units an order will have only the nearest unit to the order take the order and then have that unit removed from the selected group.
+
+Individual Keys -
+h - toggles chat history on / off
+p - shows the online player list
+m - toggles if the mouse is captured in windowed mode
+r - same as the R button on the lower left of the hud
+g - same as the G button on the lower left of the hud
+v - same as the V button on the lower left of the hud
+b - same as the B button on the lower left of the hud
+/ - begins chat with /
+enter - begins chat
+alt + v - changes volume level
+ctrl + r - select all robots
+ctrl + v - select all vehicles
+ctrl + a - select all robots and vehicles
+space bar - returns to last event, ie "Vehicle Captured" / "Grenades Collected"
+
+New Production Window -
+While you are selecting a unit you can click the portrait to bring up a large selection window with all of the available choices. You can also use the mouse scroll to cycle through the choices quickly. On the upper right of the window there is a [+] which when clicked will expand the window for the factory production queue. Here you can set the list of units to be built. If no units are in the list then after the current production nothing will be made. The last unit on the list will always be repeated. To remove a unit from the list simply click it.
+
+Messaging and the Command System -
+To talk to other players hit enter, type in your message and then type enter again. Also the command system is used through the chat system. To use the command system type in /help into the chat. The command system is used to do things such as start and stop bots or change maps.
+
+R/G/V/B Buttons -
+These buttons except for the B button will cycle through your respective unit type. The cycle will begin with the respective unit (R=Robot etc) closest to your mouse. If not used in within 7 seconds then it will restart with the nearest unit. The B button will bring up a listing of all your factories to scroll through and select.
+
+The Main Nighsoft Server and Activations -
+In order to command all of the units on the main server your user will have to be activated. To activate your user please visit https://www.nighsoft.com/index.php?page=zod_activate
+
+Troubleshooting -
+If you are having troubles running the game you may want to try running it in windowed mode and/or with no opengl. For all other troubles please visit the forums.
+
+For anymore questions please visit the forums at http://zod.sourceforge.net/
+
+http://www.nighsoft.com
+http://zod.sourceforge.net
+freaknigh@hotmail.com
