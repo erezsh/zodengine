@@ -1,7 +1,8 @@
 CC=g++
 SDL=c:/lib/SDL-1.2.15
 SQL=c:/lib/mysql-connector-c-6.0.2
-CFLAGS=-c -g -I$(SDL)/include -I$(SQL)/include -D_GNU_SOURCE=1 -Dmain=SDL_main -D DISABLE_OPENGL -D DISABLE_REGCHECK
+#CFLAGS=-c -I$(SDL)/include -I$(SQL)/include -D_GNU_SOURCE=1 -Dmain=SDL_main -D DISABLE_OPENGL -D DISABLE_REGCHECK -g <- DEBUG
+CFLAGS=-c -I$(SDL)/include -I$(SQL)/include -D_GNU_SOURCE=1 -Dmain=SDL_main -D DISABLE_OPENGL -D DISABLE_REGCHECK -Wall -O3
 LDFLAGS=-L$(SDL)/lib -L$(SQL)\lib -llibmysql -lmingw32 -lSDLmain -lSDL -lSDL_image -lSDL_mixer -lSDL_ttf -lm -lmysqlclient -lws2_32 -lIphlpapi
 INCLUDES=
 BASEFILES = common.cpp zsdl.cpp event_handler.cpp socket_handler.cpp server_socket.cpp client_socket.cpp zhud.cpp zfont_engine.cpp zfont.cpp zmini_map.cpp cursor.cpp zgui_window.cpp zbuildlist.cpp zsound_engine.cpp zmusic_engine.cpp zcomp_message_engine.cpp zpath_finding.cpp zpath_finding_astar.cpp zsettings.cpp zsdl_opengl.cpp zportrait.cpp zteam.cpp ztray.cpp zmysql.cpp zpsettings.cpp ztime.cpp zvote.cpp zunitrating.cpp zencrypt_aes.cpp zolists.cpp zgui_main_menu_base.cpp zgui_main_menu_widget.cpp
