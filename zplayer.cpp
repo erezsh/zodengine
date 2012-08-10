@@ -3,6 +3,56 @@
 
 using namespace COMMON;
 
+ClientSettings::ClientSettings() :
+    KeyboardScrollSpeed(400),
+    MouseScrollSpeed(400)
+{
+}
+
+bool ClientSettings::load(string filename)
+{
+    FILE *fp;
+
+    fp = fopen(filename.c_str(), "r");
+    if(!fp)
+    {
+            printf("ClientSettings::load could not open '%s' to read\n", filename.c_str());
+            return false;
+    }
+
+    const int buf_size = 500;
+    char cur_line[buf_size];
+    char variable[buf_size];
+    char value[buf_size];
+
+    while(fgets(cur_line, buf_size , fp))
+    {
+            clean_newline(cur_line, buf_size);
+
+            if(!strlen(cur_line))   // empty line
+                continue;
+            if(cur_line[0] == '#') continue; // don't read comment lines
+
+            int pt = 0;
+
+            //parse this line
+            split(variable, cur_line, '=', &pt, buf_size, buf_size);
+            split(value, cur_line, '=', &pt, buf_size, buf_size);
+
+            lcase(variable, buf_size);
+
+            if (!strcmp(variable, "keyboard_scroll_speed"))
+                KeyboardScrollSpeed = atoi(value);
+            else if (!strcmp(variable, "mouse_scroll_speed"))
+                MouseScrollSpeed = atoi(value);
+            else
+                printf("ClientSettings::load - Unknown option '%s'\n", variable);
+    }
+
+    fclose(fp);
+    return true;
+}
+
 void selection_info::DeleteObject(ZObject *obj)
 {
 	ZObject::RemoveObjectFromList(obj, selected_list);
@@ -337,7 +387,8 @@ void ZPlayer::Setup()
 
 	//setup gfile
 	//ZGFile::Init();
-	
+        client_settings.load("client_settings.txt");
+
 	InitSDL();
 
 	ZMusicEngine::Init();
@@ -442,7 +493,7 @@ void ZPlayer::InitSDL()
 
 	//splash sound best loaded here
 	//splash_music = MUS_Load_Error("assets/sounds/ABATTLE.mp3");
-	splash_screen.LoadBaseImage("assets/splash.bmp");// = IMG_Load("assets/splash.bmp");
+	splash_screen.LoadBaseImage("assets/splash.png");// = IMG_Load("assets/splash.bmp");
 	splash_screen.UseDisplayFormat(); //Regular needs this to do fading
 
 //	if(splash_screen)
@@ -1914,7 +1965,7 @@ bool ZPlayer::DoKeyScrollDown()
 void ZPlayer::ProcessScroll()
 {
 	double the_time = current_time();
-	const double shift_speed = 400;
+	const double shift_speed = (DoKeyScrollUp() || DoKeyScrollDown() || DoKeyScrollLeft() || DoKeyScrollRight()) ? client_settings.KeyboardScrollSpeed : client_settings.MouseScrollSpeed;
 	double time_diff;
 	double the_shift;
 

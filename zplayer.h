@@ -28,6 +28,15 @@
 #include "gmm_options.h"
 #include "gmm_warning.h"
 
+struct ClientSettings
+{
+    int KeyboardScrollSpeed;
+    int MouseScrollSpeed;
+
+    bool load(string filename);
+    ClientSettings();
+};
+
 struct news_entry
 {
    public:
@@ -423,6 +432,7 @@ class ZPlayer : public ZClient
 		GWCreateUser *create_user_menu;
 
 		bool graphics_loaded;
+                ClientSettings client_settings;
 };
 
 #endif
