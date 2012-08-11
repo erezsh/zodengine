@@ -1,0 +1,3 @@
+keyboard_scroll_speed=800
+mouse_scroll_speed=400
+
