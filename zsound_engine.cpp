@@ -37,6 +37,7 @@ ZSound ZSoundEngine::comp_radar_activated;
 ZSound ZSoundEngine::comp_fort_under_attack;
 ZSound ZSoundEngine::bat_chirp;
 ZSound ZSoundEngine::crow_sound;
+ZSound ZSoundEngine::message_sound;
 
 ZSound::ZSound()
 {
@@ -163,6 +164,9 @@ void ZSoundEngine::Init(ZMap *zmap_)
 	comp_territory_lost.LoadSound("assets/sounds/comp_territory_lost.wav");
 	comp_radar_activated.LoadSound("assets/sounds/comp_radar_activated.wav");
 	comp_fort_under_attack.LoadSound("assets/sounds/comp_fort_under_attack.wav");
+
+	message_sound.LoadSound("assets/sounds/CLICK1L.wav");
+
 
 	for(i=0;i<MAX_COMP_LOSING_MESSAGES;i++)
 	{
@@ -385,5 +389,8 @@ void ZSoundEngine::PlayWav(int snd)
 	case CROW_SND:
 		crow_sound.PlaySound();
 		break;
+        case MESSAGE_SND:
+                message_sound.PlaySound();
+                break;
 	}
 }

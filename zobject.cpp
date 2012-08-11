@@ -208,7 +208,6 @@ void ZObject::Init(TTF_Font *ttf_font)
 		textcolor.b = 200;
 
 		sprintf(filename_c, "%d", i);
-		//group_tag[i] = TTF_RenderText_Solid(ttf_font, filename_c, textcolor);
 		group_tag[i].LoadBaseImage(TTF_RenderText_Solid(ttf_font, filename_c, textcolor));
 	}
 

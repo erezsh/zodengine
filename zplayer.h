@@ -32,6 +32,9 @@ struct ClientSettings
 {
     int KeyboardScrollSpeed;
     int MouseScrollSpeed;
+    int MessagesMaxWidth;
+    bool CenterMessages;
+    bool SoundOnMessage;
 
     bool load(string filename);
     ClientSettings();

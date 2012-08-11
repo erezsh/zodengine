@@ -37,7 +37,7 @@ enum sound_engine_sound
 	WEVE_DONE_IT_END_SND, YEAHHH_END_SND, YOURE_CRAP_LOSE_SND, WEVE_LOST_IT_LOSE_SND,
 	YOUVE_BLOWN_IT_LOSE_SND, WE_HATE_YOU_LOSE_SND, MORON_LOSE_SND, ASSHOLE_LOSE_SND,
 	ITS_OVER_LOSE_SND, LETS_DO_IT1_START_SND, LETS_DO_IT2_START_SND,
-	MAX_ENGINE_SOUNDS
+	MAX_ENGINE_SOUNDS, MESSAGE_SND
 };
 
 class ZSound
@@ -94,6 +94,7 @@ class ZSoundEngine
 		static ZSound turrent_explosion;
 		static ZSound bat_chirp;
 		static ZSound crow_sound;
+                static ZSound message_sound;
 
 		static ZSound comp_vehicle;
 		static ZSound comp_robot;

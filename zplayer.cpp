@@ -5,7 +5,10 @@ using namespace COMMON;
 
 ClientSettings::ClientSettings() :
     KeyboardScrollSpeed(400),
-    MouseScrollSpeed(400)
+    MouseScrollSpeed(400),
+    MessagesMaxWidth(0),
+    CenterMessages(0),
+    SoundOnMessage(0)
 {
 }
 
@@ -45,6 +48,12 @@ bool ClientSettings::load(string filename)
                 KeyboardScrollSpeed = atoi(value);
             else if (!strcmp(variable, "mouse_scroll_speed"))
                 MouseScrollSpeed = atoi(value);
+            else if (!strcmp(variable, "messages_max_width"))
+                MessagesMaxWidth = atoi(value);
+            else if (!strcmp(variable, "center_messages"))
+                CenterMessages = atoi(value);
+            else if (!strcmp(variable, "sound_on_message"))
+                SoundOnMessage = atoi(value);
             else
                 printf("ClientSettings::load - Unknown option '%s'\n", variable);
     }
@@ -97,7 +106,7 @@ bool selection_info::GroupIsSelected(int group)
 	if(!selected_list.size()) return false;
 	if(selected_list.size() != quick_group[group].size()) return false;
 
-	for(int i=0;i<selected_list.size();i++)
+	for(unsigned i=0;i<selected_list.size();i++)
 		if(selected_list[i] != quick_group[group][i])
 			return false;
 
@@ -667,8 +676,6 @@ void ZPlayer::AddNewsEntry(string message, int r, int g, int b)
 	textcolor.r = new_entry->r;
 	textcolor.g = new_entry->g;
 	textcolor.b = new_entry->b;
-	//new_entry.text_image = TTF_RenderText_Solid(p->ttf_font, new_entry.message.c_str(), textcolor);
-	//new_entry->text_image.LoadBaseImage(TTF_RenderText_Solid(p->ttf_font, new_entry->message.c_str(), textcolor));
 	new_entry->text_image.LoadBaseImage(ZFontEngine::GetFont(SMALL_WHITE_FONT).Render(new_entry->message.c_str()));
 	
 	//a hack to get software renderer working again...
@@ -687,6 +694,9 @@ void ZPlayer::AddNewsEntry(string message, int r, int g, int b)
 	  news_list.insert(news_list.begin(), new_entry);
 	else
 	  printf("ZPlayer::display_news_event: was not about to render news message:%s...\n", new_entry->message.c_str());
+
+        if (client_settings.SoundOnMessage)
+            ZSoundEngine::PlayWav(MESSAGE_SND);
 }
 
 void ZPlayer::DisplayPlayerList()
@@ -1837,7 +1847,6 @@ void ZPlayer::FocusCameraTo(int map_x, int map_y)
 
 void ZPlayer::ProcessFocusCamerato()
 {
-	double the_time = current_time();
 	int shift_x, shift_y, view_w, view_h;
 	double dx, dy;
 	double end_dx, end_dy;
@@ -2103,18 +2112,21 @@ void ZPlayer::RenderNews()
 	double the_time = current_time();
 	const int y_int = 15;
 	const double start_fade_time = 5;
-	const int max_news_history = 50;
+	const unsigned max_news_history = 50;
 	double time_left;
 	int max_news_width;
 	SDL_Rect from_rect, to_rect;
 
 	//max_news_width = screen->w - (5 + 100);
-	max_news_width = init_w - (5 + 100);
+        int map_screen_width = init_w - (5+100);
+	max_news_width = client_settings.MessagesMaxWidth;
+        if (max_news_width <=0 || max_news_width > map_screen_width)
+            max_news_width = map_screen_width;
 
 	from_rect.x = 0;
 	from_rect.y = 0;
 	from_rect.h = 40;
-	to_rect.x = 5;
+	to_rect.x = client_settings.CenterMessages? (map_screen_width/2 - max_news_width/2) : 0;
 	//to_rect.y = screen->h - (36 + y_int);
 	to_rect.y = init_h - (36 + y_int);
 	to_rect.w = 0;
@@ -2432,13 +2444,11 @@ void ZPlayer::ProcessSDL()
 		case SDL_KEYDOWN:
 			the_key.the_key = event.key.keysym.sym;
 			the_key.the_unicode = event.key.keysym.unicode;
-			//ehandler.AddEvent(new Event(SDL_EVENT, KEYDOWN_EVENT_, 0, (char*)&the_key, sizeof(key_event)));
 			ehandler.ProcessEvent(SDL_EVENT, KEYDOWN_EVENT_, (char*)&the_key, sizeof(key_event), 0);
 			break;
 		case SDL_KEYUP:
 			the_key.the_key = event.key.keysym.sym;
 			the_key.the_unicode = event.key.keysym.unicode;
-			//ehandler.AddEvent(new Event(SDL_EVENT, KEYUP_EVENT_, 0, (char*)&the_key, sizeof(key_event)));
 			ehandler.ProcessEvent(SDL_EVENT, KEYUP_EVENT_, (char*)&the_key, sizeof(key_event), 0);
 			break;
 	}
@@ -3583,9 +3593,7 @@ void ZPlayer::SetPlaceCannonCords()
 
 void ZPlayer::RenderPlaceCannon()
 {
-	SDL_Rect from_rect, to_rect;
 	int map_x, map_y;
-	int shift_x, shift_y;
 
 	if(!place_cannon) return;
 
@@ -3593,8 +3601,6 @@ void ZPlayer::RenderPlaceCannon()
 	map_y = (place_cannon_ty * 16);
 
 	zmap.RenderZSurface(&place_cannon_ok_img, map_x, map_y);
-	//if(zmap.GetBlitInfo(place_cannon_ok_img, map_x, map_y, from_rect, to_rect))
-	//		SDL_BlitSurface( place_cannon_ok_img, &from_rect, screen, &to_rect);
 }
 
 bool ZPlayer::DoPlaceCannon()

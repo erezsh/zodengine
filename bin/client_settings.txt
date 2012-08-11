@@ -1,3 +1,5 @@
 keyboard_scroll_speed=800
 mouse_scroll_speed=400
-
+messages_max_width=500
+center_messages=1
+sound_on_message=1
