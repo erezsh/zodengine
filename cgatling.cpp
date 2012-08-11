@@ -95,7 +95,7 @@ void CGatling::DoRender(ZMap &the_map, SDL_Surface *dest, int shift_x, int shift
 	int &x = loc.x;
 	int &y = loc.y;
 	ZSDL_Surface *base_surface;
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 	int lx, ly;
 	
 	if(IsDestroyed())
@@ -193,7 +193,7 @@ int CGatling::Process()
 				next_attack_time = the_time + 0.07 + ((rand() % 100) * 0.03 * 0.01);
 
 				attack_object->GetCenterCords(tx, ty);
-				new_dir = DirectionFromLoc(tx - loc.x, ty - loc.y);
+				new_dir = DirectionFromLoc((float)(tx - loc.x), (float)(ty - loc.y));
 				if(new_dir != -1) direction = new_dir;
 
 				//now do a bullet effect
@@ -253,7 +253,7 @@ void CGatling::SetAttackObject(ZObject *obj)
 		int new_dir;
 
 		attack_object->GetCenterCords(tx, ty);
-		new_dir = DirectionFromLoc(tx - loc.x, ty - loc.y);
+		new_dir = DirectionFromLoc((float)(tx - loc.x), (float)(ty - loc.y));
 		if(new_dir != -1) direction = new_dir;
 	}
 }

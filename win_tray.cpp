@@ -19,7 +19,7 @@ int _stdcall WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR CmdLine,i
 {
 
 	HWND hwnd;           
-    MSG messages;
+//    MSG messages;
 	WNDCLASSEX wincl; 
 
 	wincl.hInstance = hInstance;

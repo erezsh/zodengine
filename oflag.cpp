@@ -55,7 +55,7 @@ void OFlag::DoRender(ZMap &the_map, SDL_Surface *dest, int shift_x, int shift_y)
 	int &y = loc.y;
 	ZSDL_Surface *base_surface;
 	SDL_Rect from_rect, to_rect;
-	int lx, ly;
+//	int lx, ly;
 	
 	base_surface = &flag_img[owner][flag_i];
 	

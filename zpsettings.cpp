@@ -35,7 +35,7 @@ bool ZPSettings::LoadSettings(string filename)
 {
 	FILE *fp;
 
-	fp = fopen(filename.c_str(), "r");
+	fp=fopen(filename.c_str(), "r");
 
 	if(!fp)
 	{
@@ -65,19 +65,19 @@ bool ZPSettings::LoadSettings(string filename)
 			split(value, cur_line, '=', &pt, buf_size, buf_size);
 
 			if(!strcmp(variable, "use_database"))
-				use_database = atoi(value);
+				use_database = atoi(value)!=0;
 			else if(!strcmp(variable, "use_mysql"))
-				use_mysql = atoi(value);
+				use_mysql = atoi(value) != 0;
 			else if(!strcmp(variable, "ignore_activation"))
-				ignore_activation = atoi(value);
+				ignore_activation = atoi(value) != 0;
 			else if(!strcmp(variable, "require_login"))
-				require_login = atoi(value);
+				require_login = atoi(value) != 0;
 			else if(!strcmp(variable, "start_map_paused"))
-				start_map_paused = atoi(value);
+				start_map_paused = atoi(value) != 0;
 			else if(!strcmp(variable, "bots_start_ignored"))
-				bots_start_ignored = atoi(value);
+				bots_start_ignored = atoi(value) != 0;
 			else if(!strcmp(variable, "allow_game_speed_change"))
-				allow_game_speed_change = atoi(value);
+				allow_game_speed_change = atoi(value) != 0;
 			else if(!strcmp(variable, "selectable_map_list"))
 				selectable_map_list = value;
 			else if(!strcmp(variable, "mysql_root_password"))
@@ -106,7 +106,7 @@ bool ZPSettings::SaveSettings(string filename)
 {
 	FILE *fp;
 
-	fp = fopen(filename.c_str(), "w");
+	fp=fopen(filename.c_str(), "w");
 
 	if(!fp)
 	{

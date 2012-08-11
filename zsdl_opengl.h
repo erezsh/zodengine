@@ -6,7 +6,11 @@
 #endif
 
 #ifndef DISABLE_OPENGL
+#ifdef WEBOS_PORT
+#include <SDL/SDL_opengles.h>
+#else
 #include <SDL/SDL_opengl.h>
+#endif
 #endif
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
@@ -24,7 +28,7 @@ public:
 	static void SetUseOpenGL(bool use_opengl_);
 	static void SetMainSoftwareSurface(SDL_Surface *screen_);
 	static void SetScreenDimensions(int w_, int h_);
-	static void ZSDL_FillRect(SDL_Rect *dstrect, char r, char g, char b, ZSDL_Surface *dst = NULL);
+	static void ZSDL_FillRect(SDL_Rect *dstrect, unsigned char r, unsigned char g, unsigned char b, ZSDL_Surface *dst = NULL);
 	static void SetMapPlace(int x, int y);
 	static void SetHasHud(bool has_hud_);
 	static void GetScreenDimensions(int &w_, int &h_) { w_ = screen_w; h_ = screen_h; }
@@ -41,7 +45,7 @@ public:
 
 	void SetSize(float size_);
 	void SetAngle(float angle_);
-	void SetAlpha(char alpha_);
+	void SetAlpha(Uint8 alpha_);
 
 	void RenderSurface(int x, int y, bool render_hit = false, bool about_center = false);
 	void RenderSurfaceHorzRepeat(int x, int y, int w_total, bool render_hit = false);
@@ -53,7 +57,7 @@ public:
 	void BlitHitSurface(SDL_Rect *srcrect, SDL_Rect *dstrect, ZSDL_Surface *dst = NULL, bool render_hit = false);
 
 	void BlitOnToMe(SDL_Rect *srcrect, SDL_Rect *dstrect, SDL_Surface *src);
-	void FillRectOnToMe(SDL_Rect *dstrect, char r, char g, char b);
+	void FillRectOnToMe(SDL_Rect *dstrect, unsigned char r, unsigned char g, unsigned char b);
 
 	bool WillRenderOnScreen(int x, int y, bool about_center);
 
@@ -82,12 +86,12 @@ private:
 	bool rotozoom_loaded;
 
 	float size, angle;
-	char alpha;
+	unsigned char alpha;
 };
 
 void InitOpenGL();
 void ResetOpenGLViewPort(int width, int height);
-inline void ZSDL_FillRect(SDL_Rect *dstrect, char r, char g, char b, ZSDL_Surface *dst = NULL)
+inline void ZSDL_FillRect(SDL_Rect *dstrect, unsigned char r, unsigned char g, unsigned char b, ZSDL_Surface *dst = NULL)
 	{ ZSDL_Surface::ZSDL_FillRect(dstrect, r, g, b, dst); }
 
 #endif

@@ -5,13 +5,13 @@ using namespace COMMON;
 
 ServerSocket::ServerSocket()
 {
-	int i;
-	
+//	int i;
+
 	started = 0;
 	bound = 0;
 	listen_socket = -1;
 	client_socket.clear();
-	
+
 	event_list = NULL;
 	ehandler = NULL;
 }
@@ -57,7 +57,7 @@ int ServerSocket::Process()
 {
 	//check for connects
 	CheckConnects();
-	
+
 	//check for data
 	CheckData();
 
@@ -118,7 +118,7 @@ int ServerSocket::CheckConnects()
 	int tst = sizeof(so_sndbuf_amount);
 #else
 	socklen_t c_temp_addrlen;
-	socklen_t tst = sizeof(so_sndbuf_amount);
+//	socklen_t tst = sizeof(so_sndbuf_amount);
 #endif
 	int &s = listen_socket;
 
@@ -152,30 +152,30 @@ int ServerSocket::CheckConnects()
 int ServerSocket::Start(int port_)
 {
 	port = port_;
-	
+
 	if(!CreateSocket()) return 0;
-	
+
 	if(!Bind()) return 0;
-	
+
 	if(!Listen()) return 0;
-	
+
 	started = 1;
-	
+
 	return 1;
 }
 
 int ServerSocket::CreateSocket()
 {
 	int &s = listen_socket;
-	
+
 	if(s != -1) return 1;
-	
+
 #ifdef _WIN32
 	WSADATA wsaData;
-	
+
 	WSAStartup(0x202,&wsaData);
 #endif
-	
+
 	if((s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
 	{
 		printf("ServerSocket::CreateSocket:error in socket creation\n");
@@ -186,7 +186,7 @@ int ServerSocket::CreateSocket()
 	int on = 1;
 	if(setsockopt(s, SOL_SOCKET, SO_REUSEADDR, (char*)&on, sizeof(on)) == -1)
 		printf("ServerSocket::CreateSocket:error setting SO_REUSEADDR on\n");
-	
+
 	return 1;
 }
 
@@ -194,20 +194,20 @@ int ServerSocket::Bind()
 {
 	struct sockaddr_in si_me;
 	int &s = listen_socket;
-	
+
 	if(bound) return 1;
-	
+
 	memset((char *) &si_me, sizeof(si_me), 0);
 	si_me.sin_family = AF_INET;
 	si_me.sin_port = htons(port);
 	si_me.sin_addr.s_addr = htonl(INADDR_ANY);
-	
+
 	while(bind(s, (struct sockaddr *) &si_me, sizeof(si_me))==-1)
 	{
 		printf("ServerSocket::Bind:error binding socket\n");
 		uni_pause(5000);
 	}
-	
+
 	return 1;
 }
 
@@ -215,20 +215,20 @@ int ServerSocket::Listen()
 {
 	u_long on_mode = 1;
 	int &s = listen_socket;
-	
+
 	if(started) return 1;
-	
+
 	while (listen(s, 5) == -1)
 	{
 		printf("ServerSocket::Listen:error starting listen\n");
 		uni_pause(5000);
 	}
-	
+
 #ifdef _WIN32
 	ioctlsocket(s, FIONBIO, &on_mode);
-#else		
+#else
 	ioctl(s, FIONBIO, &on_mode);
 #endif
-	
+
 	return 1;
 }

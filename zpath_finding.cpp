@@ -440,12 +440,12 @@ void ZPath_Finding_Engine::SetTileInfo(int x, int y, int tile_type)
 		path_vehicle_tile[x][y].passable = false;
 		break;
 	case PF_WATER: 
-		tile_speed = 1.0 / WATER_SPEED;
+		tile_speed = 1.0f / WATER_SPEED;
 		path_robot_tile[x][y].passable = true;
 		path_vehicle_tile[x][y].passable = false;
 		break;
 	case PF_ROAD: 
-		tile_speed = 1.0 / (ROAD_SPEED + 0.5);
+		tile_speed = 1.0f / (ROAD_SPEED + 0.5f);
 		path_robot_tile[x][y].passable = true;
 		path_vehicle_tile[x][y].passable = true;
 		break;
@@ -454,8 +454,8 @@ void ZPath_Finding_Engine::SetTileInfo(int x, int y, int tile_type)
 		break;
 	}
 
-	path_robot_tile[x][y].side_weight = 100 * tile_speed;
-	path_robot_tile[x][y].diag_weight = (1.414 * 100) * tile_speed;
+	path_robot_tile[x][y].side_weight = (int)(100 * tile_speed);
+	path_robot_tile[x][y].diag_weight = (int)((1.414 * 100) * tile_speed);
 
 	path_vehicle_tile[x][y].side_weight = path_robot_tile[x][y].side_weight;
 	path_vehicle_tile[x][y].diag_weight = path_robot_tile[x][y].diag_weight;
@@ -573,7 +573,7 @@ bool ZPath_Finding_Engine::ShouldBeAbleToMoveTo(int sx, int sy, int ex, int ey, 
 	//end target ok?
 	{
 		int tx, ty;
-		int cx, cy;
+//		int cx, cy;
 
 		tx = ex >> 4;
 		ty = ey >> 4;
@@ -862,7 +862,7 @@ int ZPath_Finding_Engine::Find_Path(int sx, int sy, int ex, int ey, bool is_robo
 
 		if(tile_check)
 		{
-			int size;
+//			int size;
 
 			response->w = w;
 			response->h = h;
@@ -919,7 +919,7 @@ bool ZPath_Finding_Engine::Direct_Path_Possible(int sx, int sy, int ex, int ey, 
 	y = sy;
 	dx = ex - sx;
 	dy = ey - sy;
-	dist_left = sqrt((dx * dx) + (dy * dy));
+	dist_left = (int)sqrt((dx * dx) + (dy * dy));
 	
 	double hyp;
 
@@ -980,8 +980,8 @@ bool ZPath_Finding_Engine::Direct_Path_Possible(int sx, int sy, int ex, int ey, 
 		int tx, ty;
 		int etx, ety;
 
-		ctx = x / 16;
-		cty = y / 16;
+		ctx = (int)(x / 16);
+		cty = (int)(y / 16);
 
 		etx = ctx+bc;
 		ety = cty+bc;

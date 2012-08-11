@@ -133,23 +133,23 @@ void ZObject::InitTypeId(unsigned char ot, unsigned char oid)
 		{
 		case FORT_FRONT:
 		case FORT_BACK:
-			max_health = zsettings->fort_building_health * MAX_UNIT_HEALTH;
+			max_health = (int)(zsettings->fort_building_health * MAX_UNIT_HEALTH);
 			break;
 		case RADAR:
-			max_health = zsettings->radar_building_health * MAX_UNIT_HEALTH;
+			max_health = (int)(zsettings->radar_building_health * MAX_UNIT_HEALTH);
 			break;
 		case REPAIR:
-			max_health = zsettings->repair_building_health * MAX_UNIT_HEALTH;
+			max_health = (int)(zsettings->repair_building_health * MAX_UNIT_HEALTH);
 			break;
 		case ROBOT_FACTORY:
-			max_health = zsettings->robot_building_health * MAX_UNIT_HEALTH;
+			max_health = (int)(zsettings->robot_building_health * MAX_UNIT_HEALTH);
 			break;
 		case VEHICLE_FACTORY:
-			max_health = zsettings->vehicle_building_health * MAX_UNIT_HEALTH;
+			max_health = (int)(zsettings->vehicle_building_health * MAX_UNIT_HEALTH);
 			break;
 		case BRIDGE_VERT:
 		case BRIDGE_HORZ:
-			max_health = zsettings->bridge_building_health * MAX_UNIT_HEALTH;
+			max_health = (int)(zsettings->bridge_building_health * MAX_UNIT_HEALTH);
 			break;
 		}
 	}
@@ -158,21 +158,21 @@ void ZObject::InitTypeId(unsigned char ot, unsigned char oid)
 		switch(oid)
 		{
 		case ROCK_ITEM:
-			max_health = zsettings->rock_item_health * MAX_UNIT_HEALTH;
+			max_health = (int)(zsettings->rock_item_health * MAX_UNIT_HEALTH);
 			break;
 		case GRENADES_ITEM:
-			max_health = zsettings->grenades_item_health * MAX_UNIT_HEALTH;
+			max_health = (int)(zsettings->grenades_item_health * MAX_UNIT_HEALTH);
 			break;
 		case ROCKETS_ITEM:
-			max_health = zsettings->rockets_item_health * MAX_UNIT_HEALTH;
+			max_health = (int)(zsettings->rockets_item_health * MAX_UNIT_HEALTH);
 			break;
 		case HUT_ITEM:
-			max_health = zsettings->hut_item_health * MAX_UNIT_HEALTH;
+			max_health = (int)(zsettings->hut_item_health * MAX_UNIT_HEALTH);
 			break;
 		}
 
 		if(oid >= MAP0_ITEM && oid < MAP0_ITEM + MAP_ITEMS_AMOUNT)
-			max_health = zsettings->map_item_health * MAX_UNIT_HEALTH;
+			max_health = (int)(zsettings->map_item_health * MAX_UNIT_HEALTH);
 	}
 	else
 	{
@@ -180,13 +180,13 @@ void ZObject::InitTypeId(unsigned char ot, unsigned char oid)
 
 		move_speed = unit_settings.move_speed;
 		attack_radius = unit_settings.attack_radius;
-		damage = unit_settings.attack_damage * MAX_UNIT_HEALTH;
+		damage = (int)(unit_settings.attack_damage * MAX_UNIT_HEALTH);
 		damage_chance = unit_settings.attack_damage_chance;
 		damage_radius = unit_settings.attack_damage_radius;
 		missile_speed = unit_settings.attack_missile_speed;
 		snipe_chance = unit_settings.attack_snipe_chance;
 		damage_int_time = unit_settings.attack_speed;
-		max_health = unit_settings.health * MAX_UNIT_HEALTH;
+		max_health = (int)(unit_settings.health * MAX_UNIT_HEALTH);
 		max_stamina = unit_settings.max_run_time;
 	}
 
@@ -233,8 +233,8 @@ void ZObject::Init(TTF_Font *ttf_font)
 
 void ZObject::InitRealMoveSpeed(ZMap &tmap)
 {
-	int &x = loc.x;
-	int &y = loc.y;
+//	int &x = loc.x;
+//	int &y = loc.y;
 
 	//real_move_speed = move_speed * tmap.GetTileWalkSpeed(x + (width_pix >> 1), y + (height_pix >> 1));
 	real_move_speed = move_speed * tmap.GetTileWalkSpeed(center_x, center_y);
@@ -354,7 +354,7 @@ int ZObject::DamageDriverHealth(int damage_amount)
 		//disengage, clear waypoints, and stop movement
 		//done at the server level
 	}
-	
+
 	return 1;
 }
 
@@ -556,7 +556,7 @@ void ZObject::RenderHover(ZMap &zmap, SDL_Surface *dest, team_type viewers_team)
 {
 	int &x = loc.x;
 	int &y = loc.y;
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 	const int hover_name_y_shift = -19;
 
 	if(hover_name_img.GetBaseSurface())
@@ -615,9 +615,9 @@ void ZObject::RenderHealth(ZMap &zmap, SDL_Surface *dest)
 	SDL_Rect the_box;
 	SDL_Rect from_rect, to_rect;
 	//int shift_x, shift_y, view_w, view_h;
-	const char g_r = 82, g_g = 190, g_b = 33;
-	const char y_r = 247, y_g = 203, y_b = 107;
-	const char b_r = 0, b_g = 0, b_b = 0;
+	const unsigned char g_r = 82, g_g = 190, g_b = 33;
+	const unsigned char y_r = 247, y_g = 203, y_b = 107;
+	const unsigned char b_r = 0, b_g = 0, b_b = 0;
 	//int green_map = SDL_MapRGB(dest->format, 82, 190, 33);
 	//int yellow_map = SDL_MapRGB(dest->format, 247, 203, 107);
 	//int black_map = SDL_MapRGB(dest->format, 0, 0, 0);
@@ -630,8 +630,8 @@ void ZObject::RenderHealth(ZMap &zmap, SDL_Surface *dest)
 	if(!hover_name.size()) return;
 
 	//calculate
-	green_dist = max_dist * (1.0 * health / MAX_UNIT_HEALTH);
-	yellow_dist = max_dist * (1.0 * max_health / MAX_UNIT_HEALTH);
+	green_dist = max_dist * (int)(1.0 * (float)health / MAX_UNIT_HEALTH);
+	yellow_dist = max_dist * (int)(1.0 * (float)max_health / MAX_UNIT_HEALTH);
 
 	if(green_dist <= 0) green_dist = 1;
 	if(yellow_dist <= 0) yellow_dist = 1;
@@ -729,15 +729,15 @@ void ZObject::RenderAttackRadius(ZMap &zmap, SDL_Surface *dest, vector<ZObject*>
 
 	//init stuff
 	//team_type &t = owner;
-	//rgb_map = SDL_MapRGB(dest->format, team_color[t].r, team_color[t].g, team_color[t].b); 
+	//rgb_map = SDL_MapRGB(dest->format, team_color[t].r, team_color[t].g, team_color[t].b);
 	to_rect.w = 3;
 	to_rect.h = 3;
 
 	deg = radius_i;
 	for(i=0;i<dots && deg <= PI / 2;i++,deg+=PI_shift)
 	{
-		mx = (attack_radius + 3) * sin(deg);
-		my = (attack_radius + 3) * cos(deg);
+		mx = (int)(((double)(attack_radius + 3)) * sin(deg));
+		my = (int)(((double)(attack_radius + 3)) * cos(deg));
 
 		to_rect.x = mx + cx;
 		to_rect.y = my + cy;
@@ -1177,7 +1177,7 @@ void ZObject::DoRenderWaypoints(ZMap &the_map, SDL_Surface *dest, vector<ZObject
 		tx += txp * (waypoint_i / 4.0);
 		ty += typ * (waypoint_i / 4.0);
 
-		maxj = dist / 4;
+		maxj = (int)(dist / 4);
 		maxj++;
 
 		if(waypoint_i) maxj--;
@@ -1204,7 +1204,7 @@ void ZObject::DoRenderWaypoints(ZMap &the_map, SDL_Surface *dest, vector<ZObject
 		tx = (nx - mshift_x);
 		ty = (ny - mshift_y);
 	}
-	
+
 	//for(i=waypoint_list.begin();i!=waypoint_list.end();i++)
 	for(i=render_waypoint_list->begin();i!=render_waypoint_list->end();i++)
 	{
@@ -1223,7 +1223,7 @@ void ZObject::DoRenderWaypoints(ZMap &the_map, SDL_Surface *dest, vector<ZObject
 			nx = (i->x - mshift_x);
 			ny = (i->y - mshift_y);
 			break;
-		
+
 			//dx = (i->x - mshift_x) - tx;
 			//dy = (i->y - mshift_y) - ty;
 			//break;
@@ -1247,12 +1247,12 @@ void ZObject::DoRenderWaypoints(ZMap &the_map, SDL_Surface *dest, vector<ZObject
 				nx = (i->x - mshift_x);
 				ny = (i->y - mshift_y);
 			}
-			
+
 			break;
 		}
 
 		//render
-		RenderWaypointLine(tx, ty, nx, ny, view_h, view_w);
+		RenderWaypointLine((int)tx, (int)ty, nx, ny, view_h, view_w);
 
 		//set old to new
 		tx = nx;
@@ -1352,7 +1352,7 @@ void ZObject::DoRenderWaypoints(ZMap &the_map, SDL_Surface *dest, vector<ZObject
 				ky = (i->y);// - mshift_y;
 				waypoint_cursor.SetCursor(PLACED_C);
 			}
-			
+
 			break;
 		}
 
@@ -1384,7 +1384,7 @@ void ZObject::RenderWaypointLine(int sx, int sy, int ex, int ey, int view_h, int
 	tx += txp * (waypoint_i / 4.0);
 	ty += typ * (waypoint_i / 4.0);
 
-	maxj = dist / 4;
+	maxj = (int)(dist / 4);
 	maxj++;
 
 	if(waypoint_i) maxj--;
@@ -1615,7 +1615,7 @@ void ZObject::CheckPassiveEngage(double &the_time, ZOLists &ols)
 	if(object_type == ROBOT_OBJECT && IsMoving()) return;
 
 	//are we already attacking someone?
-	if(attack_object) 
+	if(attack_object)
 	{
 		int ox, oy;
 
@@ -1625,7 +1625,7 @@ void ZObject::CheckPassiveEngage(double &the_time, ZOLists &ols)
 		//if(!WithinAttackRadius(ox, oy))
 		if(!WithinAttackRadius(attack_object))
 			Disengage();
-		
+
 		return;
 	}
 
@@ -1744,7 +1744,7 @@ void ZObject::CheckPassiveEngage(double &the_time, ZOLists &ols)
 				agro_choice = *obj;
 			}
 		}
-		
+
 
 		agro_choice->GetCenterCords(ox, oy);
 
@@ -1887,7 +1887,7 @@ bool ZObject::EstimateMissileTarget(ZObject *target, int &tx, int &ty)
 	c = (Cd * Cd * dy * dy) - (2 * Cu * Cd * dx) + (Cu * Cu * dx * dx) - (Cd * Cd * missile_speed * missile_speed);
 	d = (b * b) - (4 * a * c);
 
-	if(d <= 0.00001) 
+	if(d <= 0.00001)
 	{
 		printf("EstimateMissileTarget::not solvable\n");
 		return false;
@@ -1907,7 +1907,7 @@ bool ZObject::EstimateMissileTarget(ZObject *target, int &tx, int &ty)
 	//printf("dy2_guts:m:%d dx2_1:%lf\n", missile_speed, (-1 * b - sqrt(d)) / (2 * a));
 	//printf("dy2_guts:m:%d dx2_2:%lf\n", missile_speed, (-1 * b + sqrt(d)) / (2 * a));
 
-	if(dy2_guts <= 0.00001) 
+	if(dy2_guts <= 0.00001)
 	{
 		//printf("EstimateMissileTarget::trying other dx2\n");
 
@@ -1915,7 +1915,7 @@ bool ZObject::EstimateMissileTarget(ZObject *target, int &tx, int &ty)
 
 		dy2_guts = (missile_speed * missile_speed) - (dx2 * dx2);
 
-		if(dy2_guts <= 0.00001) 
+		if(dy2_guts <= 0.00001)
 		{
 			printf("EstimateMissileTarget::bad dy2_guts value\n");
 			return false;
@@ -1950,7 +1950,7 @@ bool ZObject::EstimateMissileTarget(ZObject *target, int &tx, int &ty)
 
 		dy2_guts = (double)(missile_speed * missile_speed) - (dx2 * dx2);
 
-		if(dy2_guts <= 0.00001) 
+		if(dy2_guts <= 0.00001)
 		{
 			printf("EstimateMissileTarget::bad dy2_guts value 2nd\n");
 			return false;
@@ -1976,8 +1976,8 @@ bool ZObject::EstimateMissileTarget(ZObject *target, int &tx, int &ty)
 		}
 	}
 
-	tx = dx * t + xo;
-	ty = dy * t + yo;
+	tx = (int)(dx * t + xo);
+	ty = (int)(dy * t + yo);
 
 	return true;
 }
@@ -1990,7 +1990,7 @@ bool ZObject::NearestAttackLoc(int sx, int sy, int &ex, int &ey, int aa_radius, 
 	int &cy = center_y;
 
 	//line test
-	
+
 
 	//normal checks
 	{
@@ -2047,12 +2047,12 @@ double ZObject::DamagedSpeed()
 	return 1.0;
 }
 
-double ZObject::RunSpeed() 
+double ZObject::RunSpeed()
 {
 	if(leader_obj)
-		return leader_obj->is_running && !ShowDamaged() ? zsettings->run_unit_speed : 1.0; 
+		return leader_obj->is_running && !ShowDamaged() ? zsettings->run_unit_speed : 1.0;
 	else
-		return is_running && !ShowDamaged() ? zsettings->run_unit_speed : 1.0; 
+		return is_running && !ShowDamaged() ? zsettings->run_unit_speed : 1.0;
 }
 
 bool ZObject::CanReachTargetRunning(int x, int y)
@@ -2062,7 +2062,7 @@ bool ZObject::CanReachTargetRunning(int x, int y)
 	//an estimate because the real speed can change with terrain
 	distance_runnable = move_speed * stamina;
 
-	return points_within_distance(center_x, center_y, x, y, distance_runnable);
+	return points_within_distance(center_x, center_y, x, y, (int)distance_runnable);
 }
 
 void ZObject::ProcessRunStamina(double time_dif)
@@ -2133,7 +2133,7 @@ void ZObject::ProcessAttackDamage(ZMap &tmap, bool attack_player_given)
 
 			new_missile.x = tx;
 			new_missile.y = ty;
-			new_missile.damage = zsettings->grenade_damage * MAX_UNIT_HEALTH;
+			new_missile.damage = (int)(zsettings->grenade_damage * MAX_UNIT_HEALTH);
 			new_missile.radius = zsettings->grenade_damage_radius;
 			new_missile.team = owner;
 			new_missile.attacker_ref_id = ref_id;
@@ -2198,7 +2198,7 @@ void ZObject::ProcessAttackDamage(ZMap &tmap, bool attack_player_given)
 			sflags.updated_attack_object_health = true;
 		}
 
-		//are we a pyro? have to set victom's last hurt by fire time 
+		//are we a pyro? have to set victom's last hurt by fire time
 		//(so that we can do the melt death effect)
 		if(object_type == ROBOT_OBJECT && object_id == PYRO)
 			attack_object->SetDamagedByFireTime(the_time);
@@ -2232,10 +2232,10 @@ void ZObject::ProcessKillObject()
 
 void ZObject::ProcessAgroWP(vector<waypoint>::iterator &wp, double time_dif, bool is_new, ZOLists &ols, ZMap &tmap)
 {
-	int &x = loc.x;
-	int &y = loc.y;
-	float &dx = loc.dx;
-	float &dy = loc.dy;
+//	int &x = loc.x;
+//	int &y = loc.y;
+//	float &dx = loc.dx;
+//	float &dy = loc.dy;
 	int ox, oy;
 	ZObject *target_object;
 
@@ -2252,8 +2252,8 @@ void ZObject::ProcessAgroWP(vector<waypoint>::iterator &wp, double time_dif, boo
 	target_object = GetObjectFromID(wp->ref_id, *ols.object_list);
 
 	//we still attacking this target?
-	//if(!target_object || 
-	//	target_object->IsDestroyed() || 
+	//if(!target_object ||
+	//	target_object->IsDestroyed() ||
 	//	owner == target_object->GetOwner() ||
 	//	(!HasExplosives() && target_object->AttackedOnlyByExplosives()))
 	if(!CanAttackObject(target_object))
@@ -2331,16 +2331,16 @@ void ZObject::ProcessAttackWP(vector<waypoint>::iterator &wp, double time_dif, b
 {
 	int &x = loc.x;
 	int &y = loc.y;
-	float &dx = loc.dx;
-	float &dy = loc.dy;
+//	float &dx = loc.dx;
+//	float &dy = loc.dy;
 	int ox, oy;
 	ZObject *target_object;
 
 	target_object = GetObjectFromID(wp->ref_id, *ols.object_list);
 
 	//we still attacking this target?
-	//if(!target_object || 
-	//	target_object->IsDestroyed() || 
+	//if(!target_object ||
+	//	target_object->IsDestroyed() ||
 	//	owner == target_object->GetOwner() ||
 	//	(!HasExplosives() && target_object->AttackedOnlyByExplosives()))
 	if(!CanAttackObject(target_object))
@@ -2480,11 +2480,11 @@ void ZObject::ProcessAttackWP(vector<waypoint>::iterator &wp, double time_dif, b
 
 void ZObject::ProcessPickupWP(vector<waypoint>::iterator &wp, double time_dif, bool is_new, ZOLists &ols, ZMap &tmap)
 {
-	const double z = 0.000001;
+//	const double z = 0.000001;
 	int &x = loc.x;
 	int &y = loc.y;
-	float &dx = loc.dx;
-	float &dy = loc.dy;
+//	float &dx = loc.dx;
+//	float &dy = loc.dy;
 	ZObject *target_object;
 
 	target_object = GetObjectFromID(wp->ref_id, *ols.object_list);
@@ -2517,7 +2517,7 @@ void ZObject::ProcessPickupWP(vector<waypoint>::iterator &wp, double time_dif, b
 	{
 		KillWP(wp);
 
-		if(!IsMinion()) 
+		if(!IsMinion())
 		{
 			sflags.do_pickup_grenade_anim = true;
 			sflags.updated_grenade_amount = true;
@@ -2583,11 +2583,11 @@ void ZObject::ProcessPickupWP(vector<waypoint>::iterator &wp, double time_dif, b
 
 void ZObject::ProcessEnterWP(vector<waypoint>::iterator &wp, double time_dif, bool is_new, ZOLists &ols, ZMap &tmap)
 {
-	const double z = 0.000001;
+//	const double z = 0.000001;
 	int &x = loc.x;
 	int &y = loc.y;
-	float &dx = loc.dx;
-	float &dy = loc.dy;
+//	float &dx = loc.dx;
+//	float &dy = loc.dy;
 	ZObject *target_object;
 
 	if(is_new)
@@ -2668,11 +2668,11 @@ void ZObject::ProcessEnterWP(vector<waypoint>::iterator &wp, double time_dif, bo
 
 void ZObject::ProcessDodgeWP(vector<waypoint>::iterator &wp, double time_dif, bool is_new, ZOLists &ols, ZMap &tmap)
 {
-	const double z = 0.000001;
-	int &x = loc.x;
-	int &y = loc.y;
-	float &dx = loc.dx;
-	float &dy = loc.dy;
+//	const double z = 0.000001;
+//	int &x = loc.x;
+//	int &y = loc.y;
+//	float &dx = loc.dx;
+//	float &dy = loc.dy;
 
 	if(is_new)
 	{
@@ -2695,11 +2695,11 @@ void ZObject::ProcessDodgeWP(vector<waypoint>::iterator &wp, double time_dif, bo
 
 void ZObject::ProcessMoveWP(vector<waypoint>::iterator &wp, double time_dif, bool is_new, ZOLists &ols, ZMap &tmap, bool stoppable)
 {
-	const double z = 0.000001;
+//	const double z = 0.000001;
 	int &x = loc.x;
 	int &y = loc.y;
-	float &dx = loc.dx;
-	float &dy = loc.dy;
+//	float &dx = loc.dx;
+//	float &dy = loc.dy;
 
 	//disengage if this is a robot, because they can not fire and walk
 	//also setvelocity
@@ -2775,8 +2775,8 @@ void ZObject::ProcessEnterFortWP(vector<waypoint>::iterator &wp, double time_dif
 {
 	int &x = loc.x;
 	int &y = loc.y;
-	float &dx = loc.dx;
-	float &dy = loc.dy;
+//	float &dx = loc.dx;
+//	float &dy = loc.dy;
 	ZObject *target_object;
 	bool stoppable;
 
@@ -2914,11 +2914,11 @@ void ZObject::ProcessEnterFortWP(vector<waypoint>::iterator &wp, double time_dif
 
 void ZObject::ProcessCraneRepairWP(vector<waypoint>::iterator &wp, double time_dif, bool is_new, ZOLists &ols, ZMap &tmap)
 {
-	const double z = 0.000001;
+//	const double z = 0.000001;
 	int &x = loc.x;
 	int &y = loc.y;
-	float &dx = loc.dx;
-	float &dy = loc.dy;
+//	float &dx = loc.dx;
+//	float &dy = loc.dy;
 	ZObject *target_object;
 	bool stoppable;
 
@@ -3092,11 +3092,11 @@ void ZObject::ProcessCraneRepairWP(vector<waypoint>::iterator &wp, double time_d
 
 void ZObject::ProcessUnitRepairWP(vector<waypoint>::iterator &wp, double time_dif, bool is_new, ZOLists &ols, ZMap &tmap)
 {
-	const double z = 0.000001;
+//	const double z = 0.000001;
 	int &x = loc.x;
 	int &y = loc.y;
-	float &dx = loc.dx;
-	float &dy = loc.dy;
+//	float &dx = loc.dx;
+//	float &dy = loc.dy;
 	ZObject *target_object;
 	bool stoppable;
 	int ent_x, ent_y;
@@ -3250,7 +3250,7 @@ void ZObject::ProcessUnitRepairWP(vector<waypoint>::iterator &wp, double time_di
 		break;
 	case ENTER_BUILDING_URWS:
 		sflags.entered_repair_building_ref_id = target_object->GetRefID();
-		
+
 		//set this to leave the building incase it isn't accepted
 		//because of another unit entering at the exact same interval / "time"
 		if(target_object->GetRepairEntrance(ent_x, ent_y))
@@ -3421,11 +3421,11 @@ bool ZObject::ReachedTarget()
 	int &y = loc.y;
 	int &cx = center_x;
 	int &cy = center_y;
-	float &dx = loc.dx;
-	float &dy = loc.dy;
-	
+//	float &dx = loc.dx;
+//	float &dy = loc.dy;
+
 	//we at the target?
-	if(cx == cur_wp_info.x && cy == cur_wp_info.y) 
+	if(cx == cur_wp_info.x && cy == cur_wp_info.y)
 	{
 		xover = yover = 0;
 		return true;
@@ -3520,8 +3520,8 @@ bool ZObject::ProcessMove(double time_dif, ZMap &tmap, int &stop_x, int &stop_y,
 	if(object_type == ROBOT_OBJECT) Disengage();
 
 	//capture the overflow loss from double to int conversion
-	xover = nx - inx;
-	yover = ny - iny;
+	xover = (float)nx - (float)inx;
+	yover = (float)ny - (float)iny;
 
 	x = inx;
 	y = iny;
@@ -3545,15 +3545,15 @@ bool ZObject::ProcessMove(double time_dif, ZMap &tmap, int &stop_x, int &stop_y,
 		{
 			if(previous_real_speed > 0)
 			{
-				dx /= previous_real_speed;
-				dy /= previous_real_speed;
+				dx /= (float)previous_real_speed;
+				dy /= (float)previous_real_speed;
 			}
 			else
 			{
 				printf("error:previous_real_speed(%lf) not above zero!\n", previous_real_speed);
 			}
-			dx *= real_move_speed;
-			dy *= real_move_speed;
+			dx *= (float)real_move_speed;
+			dy *= (float)real_move_speed;
 
 			sflags.updated_velocity = true;
 		}
@@ -3564,16 +3564,16 @@ bool ZObject::ProcessMove(double time_dif, ZMap &tmap, int &stop_x, int &stop_y,
 
 void ZObject::SetVelocity(ZObject *target_object)
 {
-	int &x = loc.x;
-	int &y = loc.y;
-	int ox, oy;
+//	int &x = loc.x;
+//	int &y = loc.y;
+//	int ox, oy;
 	float &dx = loc.dx;
 	float &dy = loc.dy;
 	vector<waypoint>::iterator wp;
 	float mag;
 	float old_dx = loc.dx;
 	float old_dy = loc.dy;
-	
+
 
 	//do we have a waypoint?
 	if(waypoint_list.size())
@@ -3584,15 +3584,15 @@ void ZObject::SetVelocity(ZObject *target_object)
 		//cx = x + (width_pix >> 1);
 		//cy = y + (height_pix >> 1);
 
-		dx = cur_wp_info.x - cx;
-		dy = cur_wp_info.y - cy;
+		dx = (float)(cur_wp_info.x - cx);
+		dy = (float)(cur_wp_info.y - cy);
 		if(!isz(dx) || !isz(dy))
 		{
 			mag = sqrt((dx * dx) + (dy * dy));
 			dx /= mag;
 			dy /= mag;
-			dx *= real_move_speed;
-			dy *= real_move_speed;
+			dx *= (float)real_move_speed;
+			dy *= (float)real_move_speed;
 		}
 
 		//wp = waypoint_list.begin();
@@ -3666,19 +3666,19 @@ bool ZObject::DodgeMissile(int tx, int ty, double time_till_explode)
 	if(object_type == ROBOT_OBJECT && attack_object) return false;
 	if(owner == NULL_TEAM) return false;
 
-	double dist; 
+	double dist;
 	if(time_till_explode > stamina) dist = time_till_explode * real_move_speed;
 	else dist = time_till_explode * real_move_speed * zsettings->run_unit_speed;
-	int m_move_dist = dist * 2.0 / 4.0;
-	int f_move_dist = dist * 4.0 / 4.0;
+	int m_move_dist = (int)(dist * 2.0 / 4.0);
+	int f_move_dist = (int)(dist * 4.0 / 4.0);
 	if(m_move_dist <= 0) m_move_dist = 1;
 	int move_dist = f_move_dist + (rand() % m_move_dist);
 	double theta = (2 * PI) * (1000.0 / (rand() % 1000));
 
 	//move_dist = dist;
 
-	nx = center_x + (move_dist * cos(theta));
-	ny = center_y + (move_dist * sin(theta));
+	nx = center_x + (int)((double)move_dist * cos(theta));
+	ny = center_y + (int)((double)move_dist * sin(theta));
 
 	//if(rand()%2)
 	//	nx = center_x + (f_move_dist + (rand() % m_move_dist));
@@ -3807,8 +3807,8 @@ void ZObject::SmoothMove(double &the_time)
 	float &dy = loc.dy;
 
 	//move if it is moving
-	if(!isz(dx)) loc.x = last_loc.x + floor(dx * (the_time - last_loc_set_time));
-	if(!isz(dy)) loc.y = last_loc.y + floor(dy * (the_time - last_loc_set_time));
+	if(!isz(dx)) loc.x = last_loc.x + (int)floor(dx * (the_time - last_loc_set_time));
+	if(!isz(dy)) loc.y = last_loc.y + (int)floor(dy * (the_time - last_loc_set_time));
 
 	//set centers
 	center_x = x + (width_pix >> 1);
@@ -3840,8 +3840,8 @@ int ZObject::DirectionFromLoc(float dx, float dy)
 	a = atan2(dy,dx);
 
 	//atan2 is kind of funky
-	if(a < 0) a += PI + PI;
-	a += PI * 1 / 8;
+	if(a < 0) a += (float)PI + (float)PI;
+	a += (float)PI * 1 / 8;
 
 	if(a < PI / 4) dir = 0;
 	else if(a < PI / 2) dir = 7;
@@ -4041,7 +4041,7 @@ ZObject* ZObject::NextSelectableObjectAboveID(vector<ZObject*> &the_list, int un
 
 		(*i)->GetObjectID(ot, oid);
 		if(ot != unit_type) continue;
-			
+
 		return *i;
 	}
 
@@ -4244,7 +4244,7 @@ bool ZObject::DoAutoRepair(ZMap &tmap, ZOLists &ols)
 
 		//nevermind?
 		if(HasDestroyedFortInZone(ols)) return false;
-		
+
 		//do the repair
 		//health = max_health;
 		SetHealth(max_health, tmap);

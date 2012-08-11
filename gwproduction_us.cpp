@@ -94,7 +94,7 @@ void GWPUnitSelector::SetDrawObject()
 		//make sure our select_i is kosher
 		if(!buildlist->GetBuildList(building_type, b_level).size()) return;
 
-		if(select_i >= buildlist->GetBuildList(building_type, b_level).size())
+		if(select_i >= (int)buildlist->GetBuildList(building_type, b_level).size())
 			select_i = 0;
 
 		ot = buildlist->GetBuildList(building_type, b_level)[select_i].ot;
@@ -268,7 +268,7 @@ void GWPUnitSelector::DrawPercentageBar(ZMap &the_map, SDL_Surface *dest, int tx
 	{
 		int max_h;
 
-		max_h = (1.0 - percentage_produced) * p_bar_yellow.GetBaseSurface()->h;
+		max_h = (int)((1.0 - percentage_produced) * (double)p_bar_yellow.GetBaseSurface()->h);
 
 		if(from_rect.h > max_h)
 			from_rect.h = max_h;
@@ -325,7 +325,7 @@ void GWPUnitSelector::SetSelection(unsigned char ot, unsigned char oid)
 
 	vector<buildlist_object> &blist = buildlist->GetBuildList(building_type, building_level);
 
-	for(int i=0; i<blist.size(); ++i)
+	for(int i=0; i<(int)blist.size(); ++i)
 		if(blist[i].ot == ot && blist[i].oid == oid)
 		{
 			select_i = i;
@@ -425,7 +425,7 @@ void GWPUnitSelector::DoUpButton()
 
 	select_i++;
 
-	if(select_i >= buildlist->GetBuildList(building_type, b_level).size())
+	if(select_i >= (int)buildlist->GetBuildList(building_type, b_level).size())
 		select_i = 0;
 }
 

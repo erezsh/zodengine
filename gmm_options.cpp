@@ -159,7 +159,7 @@ void GMMOptions::HandleWidgetEvent(int event_type, ZGMMWidget *event_widget)
 			if(si >=0 && si < MAX_GMMOPTIONS_SPEED_SETTINGS)
 			{
 				gmm_flags.set_game_speed = true;
-				gmm_flags.set_game_speed_value = gmmoption_speed_setting_value[si];
+				gmm_flags.set_game_speed_value = (float)gmmoption_speed_setting_value[si];
 			}
 		}
 		break;

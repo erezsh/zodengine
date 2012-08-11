@@ -173,7 +173,7 @@ void VAPC::DoRender(ZMap &the_map, SDL_Surface *dest, int shift_x, int shift_y)
 	const int turrent_x[MAX_ANGLE_TYPES] = {1, 5, 9, 13, 15, 11, 8, 5};
 	const int turrent_y[MAX_ANGLE_TYPES] = {5, 8, 5, 8, 5, 3, 3, 4};
 	ZSDL_Surface *base_surface;
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 	int lx, ly;
 	
 	if(destroyed)
@@ -242,7 +242,7 @@ void VAPC::FireMissile(int x_, int y_)
 		attack_object->GetDimensionsPixel(w,h);
 
 		//add some effect for the extra toughs in the apc
-		for(int i=0;i<driver_info.size()-1;i++)
+		for(int i=0;i<(int)(driver_info.size()-1);i++)
 		{
 			int tx, ty;
 
@@ -281,7 +281,7 @@ void VAPC::ResetDamageInfo()
 	ZUnit_Settings &unit_settings = zsettings->GetUnitSettings(ROBOT_OBJECT, driver_type);
 
 	attack_radius = unit_settings.attack_radius;
-	damage = unit_settings.attack_damage * MAX_UNIT_HEALTH;
+	damage = (int)(unit_settings.attack_damage * MAX_UNIT_HEALTH);
 	damage_chance = unit_settings.attack_damage_chance;
 	damage_int_time = unit_settings.attack_speed;
 	damage_radius = unit_settings.attack_damage_radius;

@@ -116,7 +116,7 @@ vector<fire_missile_info> OMapObject::ServerFireTurrentMissile(int &damage, int 
 	a_missile.missile_y = (loc.y + 16) + (max_vert - (rand() % (max_vert + max_vert)));
 
 	//damage = MAP_OBJECT_DAMAGE;
-	damage = zsettings->map_item_turrent_damage * MAX_UNIT_HEALTH;
+	damage = (int)(zsettings->map_item_turrent_damage * MAX_UNIT_HEALTH);
 	radius = 40;
 
 	ret.push_back(a_missile);

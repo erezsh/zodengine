@@ -100,7 +100,7 @@ void CMissileCannon::DoRender(ZMap &the_map, SDL_Surface *dest, int shift_x, int
 	int &x = loc.x;
 	int &y = loc.y;
 	ZSDL_Surface *base_surface;
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 	int lx, ly;
 	
 	if(destroyed)
@@ -197,7 +197,7 @@ int CMissileCannon::Process()
 				int new_dir;
 
 				attack_object->GetCenterCords(tx, ty);
-				new_dir = DirectionFromLoc(tx - loc.x, ty - loc.y);
+				new_dir = DirectionFromLoc((float)(tx - loc.x), (float)(ty - loc.y));
 				if(new_dir != -1) direction = new_dir;
 			}
 			else
@@ -237,7 +237,7 @@ void CMissileCannon::SetAttackObject(ZObject *obj)
 		int new_dir;
 
 		attack_object->GetCenterCords(tx, ty);
-		new_dir = DirectionFromLoc(tx - loc.x, ty - loc.y);
+		new_dir = DirectionFromLoc((float)(tx - loc.x), (float)(ty - loc.y));
 		if(new_dir != -1) direction = new_dir;
 	}
 }

@@ -230,7 +230,7 @@ bool ZPortrait::DoingAnim()
 int ZPortrait::Process()
 {
 	double the_time = current_time();
-	static int test_anim = 0;
+//	static int test_anim = 0;
 	//static double next_test_anim_time = 0;
 
 	if(!finished_init) return 1;
@@ -289,7 +289,7 @@ int ZPortrait::Process()
 
 void ZPortrait::DoRender()
 {
-	SDL_Rect from_rect, to_rect;
+	SDL_Rect /* from_rect,*/ to_rect;
 
 	if(do_render)
 	{
@@ -361,7 +361,7 @@ void ZPortrait::RenderFace()
 			else
 				render_surface->RenderSurface(to_rect.x, to_rect.y);
 		}
-		
+
 		if(render_frame->look_direction == LOOK_STRAIGHT)
 		{
 			switch(oid)
@@ -454,19 +454,19 @@ void ZPortrait::PlayAnimSound()
 
 	switch(cur_anim)
 	{
-	case YES_SIR_ANIM: 
+	case YES_SIR_ANIM:
 		if(rand() % 2)
-			ZSoundEngine::PlayWav(YES_SIR1_SND); 
+			ZSoundEngine::PlayWav(YES_SIR1_SND);
 		else
-			ZSoundEngine::PlayWav(YES_SIR2_SND); 
+			ZSoundEngine::PlayWav(YES_SIR2_SND);
 		break;
 	case YES_SIR3_ANIM: ZSoundEngine::PlayWav(YES_SIR3_SND); break;
 	case UNIT_REPORTING1_ANIM: ZSoundEngine::PlayWav(UNIT_REPORTING1_SND); break;
-	case UNIT_REPORTING2_ANIM: 
+	case UNIT_REPORTING2_ANIM:
 		if(rand() % 2)
-			ZSoundEngine::PlayWav(UNIT_REPORTING2_SND); 
+			ZSoundEngine::PlayWav(UNIT_REPORTING2_SND);
 		else
-			ZSoundEngine::PlayWav(UNIT_REPORTING3_SND); 
+			ZSoundEngine::PlayWav(UNIT_REPORTING3_SND);
 		break;
 	case GRUNTS_REPORTING_ANIM: ZSoundEngine::PlayWav(GRUNTS_REPORTING_SND); break;
 	case PSYCHOS_REPORTING_ANIM: ZSoundEngine::PlayWav(PSYCHOS_REPORTING_SND); break;
@@ -498,9 +498,9 @@ void ZPortrait::PlayAnimSound()
 	case TARGET_DESTROYED_ANIM: ZSoundEngine::PlayWav(TARGET_DESTROYED_SND); break;
 	case YES_SIR_SALUTE_ANIM:
 		if(rand() % 2)
-			ZSoundEngine::PlayWav(YES_SIR1_SND); 
+			ZSoundEngine::PlayWav(YES_SIR1_SND);
 		else
-			ZSoundEngine::PlayWav(YES_SIR2_SND); 
+			ZSoundEngine::PlayWav(YES_SIR2_SND);
 		break;
 	case GOING_IN_THUMBS_UP_ANIM: ZSoundEngine::PlayWav(GOING_IN_SND); break;
 	case FORGET_IT_ANIM: ZSoundEngine::PlayWav(FORGET_IT_SND); break;
@@ -518,14 +518,14 @@ void ZPortrait::PlayAnimSound()
 	case GUN_CAPTURED_ANIM: ZSoundEngine::PlayWav(GUN_CAPTURED_SND); break;
 	case VEHICLE_CAPTURED_ANIM: ZSoundEngine::PlayWav(VEHICLE_CAPTURED_SND); break;
 	case GRENADES_COLLECTED_ANIM: ZSoundEngine::PlayWav(GRENADES_COLLECTED_SND); break;
-	case ENDW1_ANIM: 
+	case ENDW1_ANIM:
 	case ENDW2_ANIM:
 	case ENDW3_ANIM:
 		next_end_anim = rand() % 6;
 		while(next_end_anim == last_end_anim) next_end_anim = rand() % 6;
 		last_end_anim = next_end_anim;
 		ZSoundEngine::PlayWav(YEEHAA_END_SND + next_end_anim); break;
-	case ENDL1_ANIM: 
+	case ENDL1_ANIM:
 	case ENDL2_ANIM:
 	case ENDL3_ANIM:
 		next_end_anim = rand() % 7;

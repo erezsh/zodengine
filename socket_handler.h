@@ -4,7 +4,9 @@
 #ifdef _WIN32 //if windows
 #include <windows.h>		//win for Sleep(1000)
 #include <direct.h>		//win
+#ifndef WEBOS_PORT
 #include <Iphlpapi.h>
+#endif
 #else
 #include <sys/types.h>		//lin
 #include <sys/socket.h>		//lin
@@ -40,13 +42,13 @@ class SocketHandler
 		int recv_good(int rcv_amt);
 		int pause_for_send();
 		int socket_good_to_send(bool &kill_me);
-		
+
 		int s;
 		struct sockaddr_in s_in;
 		char ipaddress[50];
 		int connected;
 		int fp_ptr;
-		
+
 		char buf[MAX_DATA_STORED];
 		int buf_size;
 

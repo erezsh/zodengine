@@ -51,17 +51,17 @@ void ABird::DoRender(ZMap &the_map, SDL_Surface *dest, int shift_x, int shift_y)
 {
 	int &x = loc.x;
 	int &y = loc.y;
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 	ZSDL_Surface *render_img;
 
 	//render_img = bird_img[palette][0][render_i].CreateImage(angle, rise);
 	render_img = &bird_img[palette][0][render_i];
-	render_img->SetAngle(angle);
-	render_img->SetSize(rise);
+	render_img->SetAngle((float)angle);
+	render_img->SetSize((float)rise);
 
 	if(!render_img) return;
 
-	the_map.RenderZSurface(render_img, x, y - ((rise - 1) * 50), false, true);
+	the_map.RenderZSurface(render_img, x, y - (int)((rise - 1) * 50), false, true);
 	//if(the_map.GetBlitInfo(render_img->GetBaseSurface(), x - (render_img->GetBaseSurface()->w >> 1), (y - ((rise - 1) * 50)) - (render_img->GetBaseSurface()->h >> 1), from_rect, to_rect))
 	//	render_img->BlitSurface(&from_rect, &to_rect);
 
@@ -89,7 +89,7 @@ int ABird::Process()
 
 	if(the_time >= next_dangle_time)
 	{
-		if(dangle < 0.00001 & dangle > -0.00001)
+		if((dangle < 0.00001) & (dangle > -0.00001))
 		{
 			//start it
 			next_dangle_time = the_time + 5 + ((rand() % 30) * 0.1);

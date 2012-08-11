@@ -24,7 +24,7 @@ namespace COMMON
 void create_folder(char *foldername)
 {
 #ifdef WIN32 //if windows
-	mkdir(foldername);
+	_mkdir(foldername);
 #else
 	mkdir(foldername,-1);
 #endif
@@ -130,7 +130,7 @@ void lcase(char *message, int m_size)
 
 void lcase(string &message)
 {
-	for(int i=0;i<message.size();i++)
+	for(int i=0;i<(int)message.size();i++)
 		message[i] = tolower(message[i]);
 }
 
@@ -162,7 +162,7 @@ bool points_within_distance(int x1, int y1, int x2, int y2, int distance)
 	if(y2 > y1 + distance) return false;
 
 	//semi quick tests
-	int sh_dist = distance * 0.707106781; //sin(45)
+	int sh_dist = (int)((float)distance * 0.707106781); //sin(45)
 	int dx = abs(x1 - x2);
 	int dy = abs(y1 - y2);
 	if(dx < sh_dist && dy < sh_dist) return true;
@@ -224,14 +224,15 @@ void printd_reg(char *message)
 	FILE *ofp;
 	struct tm *ptr;
 	time_t lt;
-	char timebuf[100];
+	char timebuf[100]="";
 
 	lt = time(NULL);
 	ptr = localtime(&lt);
 	
-	ofp = fopen("reg_log.txt","a");
+	ofp=fopen("reg_log.txt","a");
 
 	strcpy(timebuf, asctime(ptr));
+
 	clean_newline(timebuf, 100);
 
 	fprintf(ofp, "%-12s :: %s\n", timebuf, message);
@@ -259,7 +260,7 @@ bool file_can_be_written(char *filename)
 {
 	FILE *fp;
 
-	fp = fopen(filename, "a");
+	fp=fopen(filename, "a");
 
 	if(!fp) return false;
 

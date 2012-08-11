@@ -288,7 +288,7 @@ void GWProduction::ResetShowTime(int new_time)
 void GWProduction::DoRender(ZMap &the_map, SDL_Surface *dest)
 {
 	int lx, ly;
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 
 	if(killme) return;
 
@@ -553,7 +553,7 @@ void GWProduction::DoQueueButton()
 void GWProduction::DoCancelQueueItem(int i)
 {
 	if(i<0) return;
-	if(i>=queue_button_list.size()) return;
+	if(i>=(int)queue_button_list.size()) return;
 
 	gflags.send_cancel_queue_item = true;
 	gflags.qcref_id = building_obj->GetRefID();
@@ -676,7 +676,7 @@ bool GWProduction::UnClick(int x_, int y_)
 	//queue_list buttons
 	if(is_expanded)
 	{
-		for(int i=0; i<queue_button_list.size(); i++)
+		for(int i=0; i<(int)queue_button_list.size(); i++)
 		{
 			if(queue_button_list[i].obj_name_button.UnClick(x_local, y_local))
 				DoCancelQueueItem(i);

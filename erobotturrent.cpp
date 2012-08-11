@@ -41,7 +41,7 @@ ERobotTurrent::ERobotTurrent(ZTime *ztime_, int x_, int y_, int owner_, int max_
 	ex = x + (max_horz - (rand() % (max_horz + max_horz)));
 	ey = y + (max_vert - (rand() % (max_vert + max_vert)));
 
-	rise = 1.3 + (0.01 * (rand() % 200));
+	rise = (int)(1.3 + (0.01 * (rand() % 200)));
 
 	double mag;
 	dx = ex - sx;
@@ -110,15 +110,15 @@ void ERobotTurrent::Process()
 		if(the_time < final_time)
 		{
 			double time_dif = (the_time - init_time);
-			double up_amount;
+//			double up_amount;
 
 			//move
-			x = sx + (dx * time_dif);
-			y = sy + (dy * time_dif);
+			x = sx + (int)(dx * time_dif);
+			y = sy + (int)(dy * time_dif);
 
 			size = -(rise / (final_time - init_time)) * (time_dif * time_dif) + rise * time_dif;
 			size += 1;
-			y -= (size-1) * 30;
+			y -= (int)((size-1) * 30);
 		}
 		else
 		{
@@ -132,13 +132,13 @@ void ERobotTurrent::Process()
 
 void ERobotTurrent::DoRender(ZMap &zmap, SDL_Surface *dest)
 {
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 	//SDL_Surface *surface;
 
 	if(killme) return;
 
 	//surface = robot_flip[owner][render_i].GetImage(size);
-	robot_flip[owner][render_i].SetSize(size);
+	robot_flip[owner][render_i].SetSize((float)size);
 
 	//if(!surface) return;
 

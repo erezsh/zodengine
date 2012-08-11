@@ -215,7 +215,7 @@ void BFort::DoPreRender(ZMap &the_map, SDL_Surface *dest, int shift_x, int shift
 {
 	int &x = loc.x;
 	int &y = loc.y;
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 	ZSDL_Surface *destroyed_overlay_img;
 
 	if(IsDestroyed())
@@ -243,8 +243,8 @@ void BFort::DoRender(ZMap &the_map, SDL_Surface *dest, int shift_x, int shift_y)
 	int &x = loc.x;
 	int &y = loc.y;
 	ZSDL_Surface *base_surface;
-	SDL_Rect from_rect, to_rect;
-	int lx, ly;
+//	SDL_Rect from_rect, to_rect;
+//	int lx, ly;
 
 	if(!dont_stamp)
 	{
@@ -304,7 +304,7 @@ void BFort::DoAfterEffects(ZMap &the_map, SDL_Surface *dest, int shift_x, int sh
 {
 	int &x = loc.x;
 	int &y = loc.y;
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 	int lx, ly;
 
 	//unit creation cover
@@ -351,7 +351,7 @@ void BFort::RenderUnitCover(ZMap &the_map, SDL_Surface *dest, int shift_x, int s
 	int &x = loc.x;
 	int &y = loc.y;
 	SDL_Rect from_rect, to_rect;
-	int lx, ly;
+//	int lx, ly;
 
 	//unit creation cover
 	if(is_front)

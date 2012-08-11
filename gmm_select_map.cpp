@@ -93,7 +93,7 @@ void GMMSelectMap::SetupList()
 
 	map_list.GetEntryList().clear();
 
-	for(int i=0;i<selectable_map_list->size();i++)
+	for(int i=0;i<(int)selectable_map_list->size();i++)
 		map_list.GetEntryList().push_back(mmlist_entry((*selectable_map_list)[i], i, i));
 
 	map_list.CheckViewI();

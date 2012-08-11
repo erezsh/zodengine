@@ -20,8 +20,8 @@ using namespace std;
 #define MAX_STORED_CANNONS 4
 #define DEFAULT_MAX_UNITS_PER_TEAM 70
 
-#define ROAD_SPEED 1.689
-#define WATER_SPEED 0.7
+#define ROAD_SPEED 1.689f
+#define WATER_SPEED 0.7f
 
 #define TAN1 1.55740772
 
@@ -50,7 +50,7 @@ enum planet_type
 	DESERT, VOLCANIC, ARCTIC, JUNGLE, CITY, MAX_PLANET_TYPES
 };
 
-const string planet_type_string[MAX_PLANET_TYPES] = 
+const string planet_type_string[MAX_PLANET_TYPES] =
 {
 	"desert", "volcanic", "arctic", "jungle", "city"
 };
@@ -60,12 +60,12 @@ enum robot_type
 	GRUNT, PSYCHO, SNIPER, TOUGH, PYRO, LASER, MAX_ROBOT_TYPES
 };
 
-const string robot_type_string[MAX_ROBOT_TYPES] = 
+const string robot_type_string[MAX_ROBOT_TYPES] =
 {
 	"grunt", "psycho", "sniper", "tough", "pyro", "laser"
 };
 
-const string robot_production_string[MAX_ROBOT_TYPES] = 
+const string robot_production_string[MAX_ROBOT_TYPES] =
 {
 	"Grunt", "Psycho", "Sniper", "Tough", "Pyro", "Laser"
 };
@@ -75,12 +75,12 @@ enum cannon_type
 	GATLING, GUN, HOWITZER, MISSILE_CANNON, MAX_CANNON_TYPES
 };
 
-const string cannon_type_string[MAX_CANNON_TYPES] = 
+const string cannon_type_string[MAX_CANNON_TYPES] =
 {
 	"gatling", "gun", "howitzer", "missile_cannon"
 };
 
-const string cannon_production_string[MAX_CANNON_TYPES] = 
+const string cannon_production_string[MAX_CANNON_TYPES] =
 {
 	"Gatling", "Gun", "Howitzer", "Missile"
 };
@@ -90,23 +90,23 @@ enum vehicle_type
 	JEEP, LIGHT, MEDIUM, HEAVY, APC, MISSILE_LAUNCHER, CRANE, MAX_VEHICLE_TYPES
 };
 
-const string vehicle_type_string[MAX_VEHICLE_TYPES] = 
+const string vehicle_type_string[MAX_VEHICLE_TYPES] =
 {
 	"jeep", "light", "medium", "heavy", "apc", "missile_launcher", "crane"
 };
 
-const string vehicle_production_string[MAX_VEHICLE_TYPES] = 
+const string vehicle_production_string[MAX_VEHICLE_TYPES] =
 {
 	"Jeep", "Light", "Medium", "Heavy", "APC", "M Missile", "Crane"
 };
 
 enum building_type
 {
-	FORT_FRONT, FORT_BACK, RADAR, REPAIR, ROBOT_FACTORY, VEHICLE_FACTORY, 
+	FORT_FRONT, FORT_BACK, RADAR, REPAIR, ROBOT_FACTORY, VEHICLE_FACTORY,
 	BRIDGE_VERT, BRIDGE_HORZ, MAX_BUILDING_TYPES
 };
 
-const string building_type_string[MAX_BUILDING_TYPES] = 
+const string building_type_string[MAX_BUILDING_TYPES] =
 {
 	"fort_front", "fort_back", "radar", "repair", "robot_factory", "vehicle_factory",
 	"bridge_vert", "bridge_horz"
@@ -124,7 +124,7 @@ enum item_type
 
 #define MAP_ITEMS_AMOUNT 22
 
-const string item_type_string[MAX_ITEM_TYPES] = 
+const string item_type_string[MAX_ITEM_TYPES] =
 {
 	"flag", "rock", "grenades", "rockets", "hut", "map_object0"
 };
@@ -135,7 +135,7 @@ enum team_type
 		NULL_TEAM, RED_TEAM, BLUE_TEAM, MAX_TEAM_TYPES
 	};
 
-	const string team_type_string[MAX_TEAM_TYPES] = 
+	const string team_type_string[MAX_TEAM_TYPES] =
 	{
 		"null", "red", "blue"
 	};
@@ -144,14 +144,14 @@ enum team_type
 
 	enum team_type
 	{
-		NULL_TEAM, RED_TEAM, BLUE_TEAM, GREEN_TEAM, YELLOW_TEAM, 
+		NULL_TEAM, RED_TEAM, BLUE_TEAM, GREEN_TEAM, YELLOW_TEAM,
 		PURPLE_TEAM, TEAL_TEAM, WHITE_TEAM, BLACK_TEAM, MAX_TEAM_TYPES
 	};
 
 
-	const string team_type_string[MAX_TEAM_TYPES] = 
+	const string team_type_string[MAX_TEAM_TYPES] =
 	{
-		"null", "red", "blue", "green", "yellow", 
+		"null", "red", "blue", "green", "yellow",
 		"purple", "teal", "white", "black"
 	};
 
@@ -162,7 +162,7 @@ enum team_type
 		NULL_TEAM, RED_TEAM, BLUE_TEAM, GREEN_TEAM, YELLOW_TEAM, MAX_TEAM_TYPES
 	};
 
-	const string team_type_string[MAX_TEAM_TYPES] = 
+	const string team_type_string[MAX_TEAM_TYPES] =
 	{
 		"null", "red", "blue", "green", "yellow"
 	};
@@ -175,14 +175,14 @@ enum player_mode
 	NOBODY_MODE, PLAYER_MODE, BOT_MODE, SPECTATOR_MODE, TRAY_MODE, MAX_PLAYER_MODES
 };
 
-const string player_mode_string[MAX_PLAYER_MODES] = 
+const string player_mode_string[MAX_PLAYER_MODES] =
 {
 	"nobody_mode", "player_mode", "bot_mode", "spectator_mode", "tray_mode"
 };
 
 enum cursor_type
 {
-	CURSOR_C, PLACE_C, PLACED_C, ATTACK_C, 
+	CURSOR_C, PLACE_C, PLACED_C, ATTACK_C,
 	ATTACKED_C, GRAB_C, GRABBED_C, GRENADE_C, GRENADED_C,
 	REPAIR_C, REPAIRED_C, NONO_C, CANNON_C, CANNONED_C,
 	ENTER_C, ENTERED_C, EXIT_C, EXITED_C, MAX_CURSOR_TYPES

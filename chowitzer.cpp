@@ -94,7 +94,7 @@ void CHowitzer::DoRender(ZMap &the_map, SDL_Surface *dest, int shift_x, int shif
 	const int base_x[8] = {5, 2, 2, 2, 0, 2, 2, 2};
 	const int base_y[8] = {0, 0, 0, 0, 0, 3, 3, 3};
 	ZSDL_Surface *base_surface;
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 	int lx, ly;
 	
 	if(destroyed)
@@ -191,7 +191,7 @@ int CHowitzer::Process()
 				int new_dir;
 
 				attack_object->GetCenterCords(tx, ty);
-				new_dir = DirectionFromLoc(tx - loc.x, ty - loc.y);
+				new_dir = DirectionFromLoc((float)(tx - loc.x), (float)(ty - loc.y));
 				if(new_dir != -1) direction = new_dir;
 			}
 			else
@@ -233,7 +233,7 @@ void CHowitzer::SetAttackObject(ZObject *obj)
 		int new_dir;
 
 		attack_object->GetCenterCords(tx, ty);
-		new_dir = DirectionFromLoc(tx - loc.x, ty - loc.y);
+		new_dir = DirectionFromLoc((float)(tx - loc.x), (float)(ty - loc.y));
 		if(new_dir != -1) direction = new_dir;
 	}
 }

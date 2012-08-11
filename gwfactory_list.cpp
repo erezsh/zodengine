@@ -133,7 +133,7 @@ void GWFactoryList::DoRenderEntries(ZMap &the_map, SDL_Surface *dest)
 
 	ty = y + main_top_img.GetBaseSurface()->h;
 
-	for(int ei=show_start_entry; ei<entry_list.size() && (ei-show_start_entry)<show_able_entries; ei++)
+	for(int ei=show_start_entry; ((ei<(int)entry_list.size()) && ((ei-show_start_entry)<show_able_entries)); ei++)
 	{
 		gwfl_render_entry *e = &entry_list[ei];
 		int bx, by;
@@ -165,7 +165,7 @@ void GWFactoryList::DoRenderEntries(ZMap &the_map, SDL_Surface *dest)
 					int wx;
 					SDL_Rect from_rect, to_rect;
 
-					gw = entry_bar_green_img.GetBaseSurface()->w * e->percent[i];
+					gw = (int)((double)entry_bar_green_img.GetBaseSurface()->w * e->percent[i]);
 
 					if(gw <= 0) gw = 0;
 
@@ -234,7 +234,7 @@ void GWFactoryList::DetermineHeight(int max_h)
 
 	if(free_space > 0) show_able_entries += free_space / main_entry_img.GetBaseSurface()->h;
 
-	if(show_able_entries > entry_list.size()) show_able_entries = entry_list.size();
+	if(show_able_entries > (int)entry_list.size()) show_able_entries = entry_list.size();
 
 	max_start_entry = entry_list.size() - show_able_entries;
 	if(show_start_entry > max_start_entry) show_start_entry = max_start_entry;
@@ -432,7 +432,7 @@ void GWFactoryList::AddEntry(ZObject *obj)
 					int minutes, seconds;
 					int prod_time;
 
-					prod_time = ((ZBuilding*)obj)->ProductionTimeLeft(the_time);
+					prod_time = (int)((ZBuilding*)obj)->ProductionTimeLeft(the_time);
 
 					seconds = prod_time % 60;
 					prod_time /= 60;

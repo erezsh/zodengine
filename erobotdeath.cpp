@@ -19,7 +19,7 @@ ERobotDeath::ERobotDeath(ZTime *ztime_, int x_, int y_, int team, bool do_melt_d
 	die_i = rand() % 4;
 	render_i = 0;
 	owner = team;
-	
+
 
 	x = x_;
 	y = y_;
@@ -89,7 +89,7 @@ void ERobotDeath::Process()
 
 void ERobotDeath::DoRender(ZMap &zmap, SDL_Surface *dest)
 {
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 
 	if(killme) return;
 

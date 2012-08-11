@@ -78,13 +78,13 @@ void EToughMushroom::Process()
 
 void EToughMushroom::DoRender(ZMap &zmap, SDL_Surface *dest)
 {
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 
 	if(killme) return;
 
-	base_img[render_i].SetSize(zoom_size);
+	base_img[render_i].SetSize((float)zoom_size);
 
-	zmap.RenderZSurface(&base_img[render_i], x, y + (etoughmushroom_shift_y[render_i] * zoom_size));
+	zmap.RenderZSurface(&base_img[render_i], x, y + (etoughmushroom_shift_y[render_i] * (int)zoom_size));
 
 	//if(zmap.GetBlitInfo( render_img[render_i], x, y + (etoughmushroom_shift_y[render_i] * zoom_size), from_rect, to_rect))
 	//	SDL_BlitSurface( render_img[render_i], &from_rect, dest, &to_rect);

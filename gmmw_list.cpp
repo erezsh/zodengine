@@ -77,7 +77,7 @@ void GMMWList::Process()
 		the_time = current_time();
 		time_dif = the_time - button_down_time;
 		if(time_dif < 0) return;
-		clicks_to_go = time_dif * clicks_per_second;
+		clicks_to_go = (int)(time_dif * (double)clicks_per_second);
 
 		if(clicks_to_go)
 		{
@@ -92,7 +92,7 @@ void GMMWList::Process()
 		the_time = current_time();
 		time_dif = the_time - button_down_time;
 		if(time_dif < 0) return;
-		clicks_to_go = time_dif * clicks_per_second;
+		clicks_to_go = (int)(time_dif * (double)clicks_per_second);
 
 		if(clicks_to_go)
 		{
@@ -119,7 +119,7 @@ void GMMWList::SetHeight()
 
 int GMMWList::GetFirstSelected()
 {
-	for(int i=0;i<entry_list.size();i++)
+	for(int i=0;i<(int)entry_list.size();i++)
 		if(entry_list[i].state == MMLIST_PRESSED)
 			return i;
 
@@ -128,7 +128,7 @@ int GMMWList::GetFirstSelected()
 
 void GMMWList::UnSelectAll(int except_entry)
 {
-	for(int i=0;i<entry_list.size();i++)
+	for(int i=0;i<(int)entry_list.size();i++)
 		if(i != except_entry)
 			entry_list[i].state = MMLIST_NORMAL;
 }
@@ -168,7 +168,7 @@ bool GMMWList::Click(int x_, int y_)
 
 	//entry?
 	entry_clicked = WithinEntry(x_, y_);
-	if(entry_clicked != -1 && entry_clicked < entry_list.size())
+	if((entry_clicked != -1) && (entry_clicked < (int)entry_list.size()))
 	{
 		if(entry_list[entry_clicked].state == MMLIST_NORMAL)
 			entry_list[entry_clicked].state = MMLIST_PRESSED;
@@ -224,7 +224,7 @@ int GMMWList::WithinEntry(int x_, int y_)
 	entry_found += view_i;
 
 	if(entry_found < 0) return -1;
-	if(entry_found >= entry_list.size()) return -1;
+	if(entry_found >= (int)entry_list.size()) return -1;
 
 	return entry_found;
 }
@@ -389,7 +389,7 @@ void GMMWList::RenderEntries(ZMap &the_map, SDL_Surface *dest, int tx, int ty)
 
 	for(i=0,j=view_i;i<visible_entries;i++,j++)
 	{
-		if(j < entry_list.size())
+		if(j < (int)entry_list.size())
 		{
 			ZSDL_Surface text_img;
 
@@ -404,7 +404,7 @@ void GMMWList::RenderEntries(ZMap &the_map, SDL_Surface *dest, int tx, int ty)
 
 void GMMWList::RenderEntry(ZMap &the_map, SDL_Surface *dest, int tx, int ty, int tw, ZSDL_Surface *text, int state)
 {
-	int ix, iy, iw, ih;
+	int ix, iy, iw;//, ih;
 
 	ZSDL_Surface &top = list_entry_top_img[state];
 	ZSDL_Surface &left = list_entry_left_img[state];
@@ -486,7 +486,7 @@ void GMMWList::RenderControls(ZMap &the_map, SDL_Surface *dest, int tx, int ty)
 		if(percent_down>1) percent_down=1;
 
 		ix = tx + (w - MMLIST_SCROLLER_FROM_RIGHT);
-		iy = ty + list_top_right_img.GetBaseSurface()->h + (total_space * percent_down) - 2;
+		iy = ty + list_top_right_img.GetBaseSurface()->h + (int)((double)total_space * percent_down) - 2;
 
 		list_scroller_img.BlitSurface(NULL, ix, iy);
 	}

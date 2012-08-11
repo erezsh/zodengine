@@ -117,27 +117,27 @@ void ERockParticle::Process()
 
 	{
 		double time_dif = (the_time - init_time);
-		double up_amount;
+//		double up_amount;
 
 		//move
-		x = sx + (dx * time_dif);
-		y = sy + (dy * time_dif);
+		x = sx + (int)(dx * time_dif);
+		y = sy + (int)(dy * time_dif);
 
 		size = -(rise / (final_time - init_time)) * (time_dif * time_dif) + rise * time_dif;
 		size += 1;
-		y -= (size-1) * 150;
+		y -= (int)((size-1) * 150);
 	}
 }
 
 void ERockParticle::DoRender(ZMap &zmap, SDL_Surface *dest)
 {
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 	//SDL_Surface *surface;
 
 	if(killme) return;
 
 	//surface = render_img[render_i].GetImage(size);
-	render_img[render_i].SetSize(size);
+	render_img[render_i].SetSize((float)size);
 
 	//if(!surface) return;
 

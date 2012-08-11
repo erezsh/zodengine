@@ -67,7 +67,7 @@ vector<fire_missile_info> OGrenades::ServerFireTurrentMissile(int &damage, int &
 		a_missile.missile_offset_time = 3 + (0.01 * (rand() % 100));
 
 		//damage = GRENADE_DAMAGE;
-		damage = zsettings->grenade_damage * MAX_UNIT_HEALTH;
+		damage = (int)(zsettings->grenade_damage * MAX_UNIT_HEALTH);
 		radius = 40;
 
 		ret.push_back(a_missile);

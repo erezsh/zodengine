@@ -73,12 +73,12 @@ void ZGuiScrollBar::DoRender(ZMap &the_map, SDL_Surface *dest, int shift_x, int 
 
 		max_h = h - 16;
 
-		h_ = max_h * percent_viewable;
+		h_ = (int)((double)max_h * percent_viewable);
 		if(h_ < 6) h_ = 6;
 
 		x--;
 		y += (h - h_ - (max_h - h_)) >> 1;
-		y += (max_h - h_) * percent_down;
+		y += (int)((double)(max_h - h_) * percent_down);
 		RenderStrip(the_map, dest, x, y, h_, inner_top_img, inner_center_img, inner_bottom_img);
 	}
 }
@@ -217,7 +217,7 @@ void ZGuiTextBox::KeyPress(int c)
 	}
 	else
 	{
-		if(max_text != -1 && text.length() >= max_text) return;
+		if((max_text != -1) && ((int)text.length() >= max_text)) return;
 		if(good_chars_only && !good_user_char(c)) return;
 
 		//add it to the string
@@ -403,7 +403,7 @@ bool ZGuiButton::UnClick(int x, int y)
 
 void ZGuiButton::DoRender(ZMap &the_map, SDL_Surface *dest, int shift_x, int shift_y)
 {
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 
 	if(!finished_init) return;
 

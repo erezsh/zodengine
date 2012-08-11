@@ -74,28 +74,28 @@ void EUnitParticle::Process()
 
 	{
 		double time_dif = (the_time - init_time);
-		double up_amount;
+//		double up_amount;
 
 		//move
-		x = sx + (dx * time_dif);
-		y = sy + (dy * time_dif);
+		x = sx + (int)(dx * time_dif);
+		y = sy + (int)(dy * time_dif);
 
 		size = -(rise / (final_time - init_time)) * (time_dif * time_dif) + rise * time_dif;
 		size += 1;
-		y -= (size-1) * 65;
+		y -= (int)((size-1) * 65);
 		size = 1;
 	}
 }
 
 void EUnitParticle::DoRender(ZMap &zmap, SDL_Surface *dest)
 {
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 	//SDL_Surface *surface;
 
 	if(killme) return;
 
 	//surface = base_img[render_i].GetImage(size);
-	base_img[render_i].SetSize(size);
+	base_img[render_i].SetSize((float)size);
 
 	//if(!surface) return;
 

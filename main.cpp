@@ -1,4 +1,4 @@
-#include <stdio.h>
+//#include <stdio.h>
 
 #ifdef _WIN32
 
@@ -23,6 +23,11 @@ TCHAR *optarg;
 #include "zserver.h"
 #include "ztray.h"
 
+#ifdef WEBOS_PORT
+#include <sdl\sdl.h>
+#include <pdl.h>
+#endif
+
 void display_help(char *shell_command);
 void display_version();
 int run_server_thread(void *nothing);
@@ -38,26 +43,31 @@ int bot_bypass_size;
 #undef main
 int main(int argc, char **argv)
 {
+#ifdef WEBOS_PORT
+#ifndef WIN32 // win32 debug?
+	PDL_Init(0);
+#endif
+#endif
 	SDL_Thread *server_thread;
-	
+
 	printf("Welcome to the Zod Engine\n");
 
 	if(argc<=1) starting_conditions.setdefaults();
-	
+
 	//read in the arguments
 	starting_conditions.getoptions(argc, argv);
-	
-	//make sure there is nothing conflicting, 
+
+	//make sure there is nothing conflicting,
 	//like we are trying to make a dedicated server that is supposed to connect to another server
 	starting_conditions.checkoptions();
-	
+
 	//init this for the bots
 	ZCore::CreateRandomBotBypassData(bot_bypass_data, bot_bypass_size);
 
 	//now see what we have
 	if(starting_conditions.read_display_version) display_version();
 	if(starting_conditions.read_display_help) display_help(argv[0]);
-	
+
 	//now what do we really run?
 	else if(starting_conditions.read_run_tray)
 	{
@@ -77,10 +87,16 @@ int main(int argc, char **argv)
 	else
 	{
 		//run a server, then connect to it
+
+		// !!!
 		server_thread = SDL_CreateThread(run_server_thread, NULL);
 		run_player_thread();
 	}
-
+#ifdef WEBOS_PORT
+#ifndef WIN32 //Win32 debug?
+	PDL_Quit();
+#endif
+#endif
 	return 1;
 }
 
@@ -101,7 +117,7 @@ int run_server_thread(void *nothing)
 			//*team = i;
 			//bot_thread.push_back(SDL_CreateThread(run_bot_thread, (void*)team));
 		}
-	
+
 	if(starting_conditions.read_map_name)
 		zserver.SetMapName(starting_conditions.map_name);
 	else if(starting_conditions.read_map_list)
@@ -126,7 +142,7 @@ int run_bot_thread(void *nothing)
 	ZBot zbot;
 
 	team = (int*)nothing;
-	
+
 	zbot.SetDesiredTeam((team_type)*team);
 	if(starting_conditions.read_connect_address)
 		zbot.SetRemoteAddress(starting_conditions.connect_address);
@@ -142,7 +158,7 @@ int run_bot_thread(void *nothing)
 void run_player_thread()
 {
 	ZPlayer zplayer;
-	
+
 	zplayer.DisableCursor(starting_conditions.read_disable_zcursor);
 	zplayer.SetSoundsOff(starting_conditions.read_sound_off);
 	zplayer.SetMusicOff(starting_conditions.read_music_off);
@@ -160,13 +176,14 @@ void run_player_thread()
 		zplayer.SetRemoteAddress(starting_conditions.connect_address);
 	if(starting_conditions.read_resolution)
 		zplayer.SetDimensions(starting_conditions.resolution_width, starting_conditions.resolution_height);
-	
+
 	zplayer.Setup();
 	zplayer.Run();
 }
 
 void run_tray_app()
 {
+#ifndef WEBOS_PORT
 	ZTray ztray;
 
 	if(starting_conditions.read_connect_address)
@@ -174,8 +191,9 @@ void run_tray_app()
 
 	ztray.Setup();
 	ztray.Run();
+#endif
 }
- 
+
 void display_help(char *shell_command)
 {
 	printf("\n==================================================================\n");
@@ -200,7 +218,7 @@ void display_help(char *shell_command)
 	printf("-k                   - use faster and blander cursor\n");
 	printf("-v                   - display version and credits\n");
 	printf("-a                   - run shell based tray app\n");
-	
+
 	printf("\nExample usage...\n");
 	printf("%s -c localhost -r 800x600 -w\n", shell_command);
 	printf("%s -m level1.map -b 1 -p 1\n", shell_command);
@@ -220,8 +238,38 @@ void display_version()
 
 void input_options::setdefaults()
 {
+#ifdef WEBOS_PORT
+	//-c localhost -n zlover -t red -r 1024x768 -w -o
+	printf("no arguments set, using defaults of '-c localhost -n zlover -t red -r 1024x768 -w -o'\n");
+
+	read_connect_address = false;//true;
+	connect_address = "localhost";
+
+	read_player_name = true;
+	player_name = "zlover";
+
+	read_player_team = true;
+	player_team_str = "red";
+	team = RED_TEAM;
+
+    read_map_list = true;
+	map_list = "map_list.txt";
+
+	resolution = "1024x768";
+	resolution_width = 1024;
+	resolution_height = 768;
+	read_resolution = false;
+
+	read_is_windowed = false;
+	read_start_bot[2]=true;
+// TODO (iev0107m#1#): load last setting from file (last completed level) ?
+
+	read_sound_off = false;
+	read_music_off = false;
+#else
 	//-c hestia.nighsoft.net -n zlover -t red -r 800x600 -w -o
 	printf("no arguments set, using defaults of '-c hestia.nighsoft.net -n zlover -t red -r 800x600 -w -o'\n");
+// -l map_list.txt -n test -t red -r 1024x768 -w -o -b blue
 
 	read_connect_address = true;
 	connect_address = "hestia.nighsoft.net";
@@ -239,10 +287,10 @@ void input_options::setdefaults()
 	read_resolution = true;
 
 	read_is_windowed = true;
-
+#endif
 	read_opengl_off = true;
 }
- 
+
 int input_options::checkoptions()
 {
 	//nothing?
@@ -257,25 +305,25 @@ int input_options::checkoptions()
 	{
 		read_display_help = true;
 	}
-	
+
 	if(read_connect_address && read_is_dedicated)
 	{
 		printf("cannot be a dedicated server and have a connect address\n");
 		return 0;
 	}
-	
+
 	if(read_is_dedicated && read_resolution)
 	{
 		printf("cannot be a dedicated server and have a screen resolution\n");
 		return 0;
 	}
-	
+
 	if(read_is_dedicated && read_is_windowed)
 	{
 		printf("cannot be a dedicated server and be in windowed mode\n");
 		return 0;
 	}
-	
+
 	if(read_connect_address && (read_map_name || read_map_list))
 	{
 		printf("cannot have a connect address and set the map\n");
@@ -293,21 +341,23 @@ int input_options::checkoptions()
 		printf("need a connect address to run the tray app\n");
 		return 0;
 	}
-	
+
 	return 1;
 }
- 
+
 int input_options::getoptions(int argc, char **argv)
 {
 	int c;
 	int i;
 	int temp_int;
+#ifdef _WIN32
 	extern char *optarg;
-	extern int optind;
+//	extern int optind;
+#endif
 
-	while ((c = getopt(argc, argv, "c:m:l:n:t:b:z:e:g:i:wr:dhvksuoa")) != -1) 
+	while ((c = getopt(argc, argv, "c:m:l:n:t:b:z:e:g:i:wr:dhvksuoa")) != -1)
 	{
-		switch(c) 
+		switch(c)
 		{
 			case 'c':
 				if(!optarg) return 0;
@@ -325,7 +375,7 @@ int input_options::getoptions(int argc, char **argv)
 				read_map_list = true;
 				map_list = optarg;
 				break;
-				
+
 			case 'n':
 				if(!optarg) return 0;
 				read_player_name = true;
@@ -355,7 +405,7 @@ int input_options::getoptions(int argc, char **argv)
 				read_password = true;
 				password = optarg;
 				break;
-				
+
 			case 't':
 				if(!optarg) return 0;
 				read_player_team = true;
@@ -370,7 +420,7 @@ int input_options::getoptions(int argc, char **argv)
 				else
 					printf("could not find the team '%s', perhaps try lowercase?\n", player_team_str.c_str());
 				break;
-				
+
 			case 'b':
 				if(!optarg) return 0;
 				//read_bot_count = true;
@@ -386,14 +436,14 @@ int input_options::getoptions(int argc, char **argv)
 				else
 					printf("could not find the team '%s', perhaps try lowercase?\n", optarg);
 				break;
-				
+
 			case 'r':
 				if(!optarg) return 0;
 				resolution = optarg;
-				
+
 				temp_int = resolution.find('x');
-				
-				if(temp_int != string::npos)
+
+				if(temp_int != (int)string::npos)
 				{
 					resolution_width = atoi(resolution.substr(0, temp_int).c_str());
 					resolution_height = atoi(resolution.substr(temp_int+1, 10).c_str());
@@ -401,21 +451,21 @@ int input_options::getoptions(int argc, char **argv)
 				}
 				else
 					read_resolution = false;
-				
+
 				break;
-				
+
 			case 'w':
 				read_is_windowed = true;
 				break;
-				
+
 			case 'd':
 				read_is_dedicated = true;
 				break;
-				
+
 			case 'h':
 				read_display_help = true;
 				break;
-				
+
 			case 'v':
 				read_display_version = true;
 				break;
@@ -439,16 +489,16 @@ int input_options::getoptions(int argc, char **argv)
 			case 'a':
 				read_run_tray = true;
 				break;
-				
+
 			case '?':
 				printf("unrecognized option -%c\n", c);
 				read_display_help = true;
 				return 0;
 				break;
-				
-				
+
+
 		}
-		
+
 	}
 
 	return 1;

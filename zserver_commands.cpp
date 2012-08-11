@@ -271,7 +271,7 @@ void ZServer::PlayerCommand_CreateUser(int player, string contents)
 		user.password = values[2];
 		user.email = values[3];
 
-		user.creation_time = time(0);
+		user.creation_time = (int)time(0);
 		user.creation_ip = player_info[player].ip;
 
 		if(!user.format_okay())
@@ -345,11 +345,11 @@ void ZServer::PlayerCommand_ListMaps(int player, string contents)
 {
 	int i;
 
-	for(i=0; i<selectable_map_list.size();)
+	for(i=0; i<(int)selectable_map_list.size();)
 	{
 		string send_str;
 
-		for(int j=0;j<4 && i<selectable_map_list.size();j++,i++)
+		for(int j=0;j<4 && i<(int)selectable_map_list.size();j++,i++)
 		{
 			char num_c[50];
 

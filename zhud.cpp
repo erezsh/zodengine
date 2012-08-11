@@ -283,7 +283,7 @@ void ZHud::MouseMotion(int x, int y, int screen_w, int screen_h, hud_click_respo
 	{
 		int off_x, off_y;
 		int rx, ry;
-		int i;
+//		int i;
 		
 		off_x = screen_w - 648;
 		off_y = screen_h - 484;
@@ -306,7 +306,7 @@ bool ZHud::OverMiniMap(int x, int y, int screen_w, int screen_h, int &mini_x, in
 	{
 		int off_x, off_y;
 		int rx, ry;
-		int i;
+//		int i;
 		
 		off_x = screen_w - 648;
 		off_y = screen_h - 484;
@@ -919,7 +919,7 @@ void ZHud::RenderUnitAmountBar(SDL_Surface *dest, int off_x, int off_y)
 
 	from_rect.x = 0;
 	from_rect.y = 0;
-	from_rect.w = unit_amount_bar[team].GetBaseSurface()->w * percent_to_max;
+	from_rect.w = (Uint16)((double)unit_amount_bar[team].GetBaseSurface()->w * percent_to_max);
 	from_rect.h = unit_amount_bar[team].GetBaseSurface()->h;
 
 	unit_amount_bar[team].BlitSurface(&from_rect, &to_rect);
@@ -968,8 +968,8 @@ void ZHud::RenderHealth(SDL_Surface *dest, int off_x, int off_y)
 		int green_dist, yellow_dist;
 
 		//calculate
-		green_dist = max_dist * (1.0 * selected_object->GetHealth() / MAX_UNIT_HEALTH);
-		yellow_dist = max_dist * (1.0 * selected_object->GetMaxHealth() / MAX_UNIT_HEALTH);
+		green_dist = max_dist * (int)(1.0 * (double)selected_object->GetHealth() / MAX_UNIT_HEALTH);
+		yellow_dist = max_dist * (int)(1.0 * (double)selected_object->GetMaxHealth() / MAX_UNIT_HEALTH);
 
 		if(green_dist <= 0) green_dist = 1;
 		if(yellow_dist <= 0) yellow_dist = 1;
@@ -1030,7 +1030,7 @@ void ZHud::RenderTime(SDL_Surface *dest, int off_x, int off_y)
 	const int x_minutes_shift = x_hours_shift + 14;
 	const int x_seconds_shift = x_minutes_shift + 23;
 
-	the_time = ztime->ztime - start_time;
+	the_time = (int)ztime->ztime - start_time;
 
 	if(do_init)
 	{

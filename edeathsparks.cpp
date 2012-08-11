@@ -34,7 +34,7 @@ EDeathSparks::EDeathSparks(ZTime *ztime_, int x_, int y_) : ZEffect(ztime_)
 	ex = x + (max_right - (rand() % (max_right + max_left)));
 	ey = y + (max_down - (rand() % (max_down + max_up)));
 
-	rise = 3 + (0.01 * (rand() % 300));
+	rise = (int)(3 + (0.01 * (rand() % 300)));
 
 	double mag;
 	dx = ex - sx;
@@ -86,11 +86,11 @@ void EDeathSparks::Process()
 
 	{
 		double time_dif = (the_time - init_time);
-		double up_amount;
+//		double up_amount;
 
 		//move
-		x = sx + (dx * time_dif);
-		y = sy + (dy * time_dif);
+		x = sx + (int)(dx * time_dif);
+		y = sy + (int)(dy * time_dif);
 
 		//double percent = (time_dif / (final_time - init_time));
 		//if(percent >= 0.5)
@@ -104,7 +104,7 @@ void EDeathSparks::Process()
 		//y -= -(rise / (final_time - init_time)) * (time_dif * time_dif) + rise * time_dif;
 
 		size = -(rise / (final_time - init_time)) * (time_dif * time_dif) + rise * time_dif;
-		y -= size * 30;
+		y -= (int)(size * 30);
 		//printf("size:%lf\n", size);
 
 		//y -= (rise * (size - 1.0));
@@ -115,13 +115,13 @@ void EDeathSparks::Process()
 
 void EDeathSparks::DoRender(ZMap &zmap, SDL_Surface *dest)
 {
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 	//SDL_Surface *render_img;
 
 	if(killme) return;
 
 	//render_img = base_img[render_i].GetImage(size);
-	base_img[render_i].SetSize(size);
+	base_img[render_i].SetSize((float)size);
 
 	zmap.RenderZSurface(&base_img[render_i], x, y, false, true);
 	//if(zmap.GetBlitInfo( render_img, x, y, from_rect, to_rect))

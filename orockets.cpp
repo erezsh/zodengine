@@ -28,7 +28,7 @@ void ORockets::DoRender(ZMap &the_map, SDL_Surface *dest, int shift_x, int shift
 {
 	int &x = loc.x;
 	int &y = loc.y;
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 
 	the_map.RenderZSurface(&render_img, x, y);
 	//if(the_map.GetBlitInfo( render_img, x, y, from_rect, to_rect))

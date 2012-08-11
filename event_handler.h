@@ -350,19 +350,19 @@ template <typename T> void EventHandler<T>::AddFunction(int event_type, int even
 {
 	if(event_type < 0 || event_type >= MAX_EVENT_TYPES)
 	{
-		printf("EventHandler::attempting to attach function to out of bounds event %d:%d\n", event_type, event_number);
+//		mprintf("EventHandler::attempting to attach function to out of bounds event %d:%d\n", event_type, event_number);
 		return;
 	}
 	
 	if(event_number < 0 || event_number >= MAX_FUNCTIONS)
 	{
-		printf("EventHandler::attempting to attach function to out of bounds event %d:%d\n", event_type, event_number);
+//		mprintf("EventHandler::attempting to attach function to out of bounds event %d:%d\n", event_type, event_number);
 		return;
 	}
 	
 	if(fp[event_type][event_number])
 	{
-		printf("EventHandler::attempting to attach function already attached event %d:%d\n", event_type, event_number);
+//		mprintf("EventHandler::attempting to attach function already attached event %d:%d\n", event_type, event_number);
 	}
 	
 	fp[event_type][event_number] = tfp;
@@ -372,19 +372,19 @@ template <typename T> int EventHandler<T>::ProcessEvent(int event_type, int even
 {
 	if(event_type < 0 || event_type >= MAX_EVENT_TYPES)
 	{
-		printf("EventHandler::attempting to process invalid event %d:%d\n", event_type, event_number);
+//		mprintf("EventHandler::attempting to process invalid event %d:%d\n", event_type, event_number);
 		return 0;
 	}
 		
 	if(event_number < 0 || event_number >= MAX_FUNCTIONS)
 	{
-		printf("EventHandler::attempting to process invalid event %d:%d\n", event_type, event_number);
+//		mprintf("EventHandler::attempting to process invalid event %d:%d\n", event_type, event_number);
 		return 0;
 	}
 		
 	if(!fp[event_type][event_number])
 	{
-		printf("EventHandler::no function attached to event %d:%d\n", event_type, event_number);
+//		mprintf("EventHandler::no function attached to event %d:%d\n", event_type, event_number);
 		return 0;
 	}
 		
@@ -408,19 +408,19 @@ template <typename T> void EventHandler<T>::ProcessEvents()
 		
 		//if(event_type < 0 || event_type >= MAX_EVENT_TYPES)
 		//{
-		//	printf("EventHandler::attempting to process invalid event %d:%d\n", event_type, event_number);
+		//	mprintf("EventHandler::attempting to process invalid event %d:%d\n", event_type, event_number);
 		//	continue;
 		//}
 		//
 		//if(event_number < 0 || event_number >= MAX_FUNCTIONS)
 		//{
-		//	printf("EventHandler::attempting to process invalid event %d:%d\n", event_type, event_number);
+		//	mprintf("EventHandler::attempting to process invalid event %d:%d\n", event_type, event_number);
 		//	continue;
 		//}
 		//
 		//if(!fp[event_type][event_number])
 		//{
-		//	printf("EventHandler::no function attached to event %d:%d\n", event_type, event_number);
+		//	mprintf("EventHandler::no function attached to event %d:%d\n", event_type, event_number);
 		//	continue;
 		//}
 		//

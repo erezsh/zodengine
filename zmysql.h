@@ -95,24 +95,24 @@ public:
 
 	void debug()
 	{
-		printf("ZMysqlUser Debug:\n");
-		printf("\t tabID:%d\n", tabID);
-		printf("\t username:'%s'\n", username.c_str());
-		printf("\t loginname:'%s'\n", loginname.c_str());
-		printf("\t password:'%s'\n", password.c_str());
-		printf("\t email:'%s'\n", email.c_str());
-		printf("\t activated:%d\n", activated);
-		printf("\t voting_power:%d\n", voting_power);
-		printf("\t wins:%d\n", wins);
-		printf("\t loses:%d\n", loses);
-		printf("\t total_games:%d\n", total_games);
-		printf("\t creation_ip:'%s'\n", creation_ip.c_str());
-		printf("\t last_ip:'%s'\n", last_ip.c_str());
-		printf("\t creation_time:%d\n", creation_time);
-		printf("\t last_time:%d\n", last_time);
-		printf("\t total_time:%d\n", total_time);
-		printf("\t aff_creates:%d\n", aff_creates);
-		printf("\t aff_buys:%d\n", aff_buys);
+/*		mprintf("ZMysqlUser Debug:\n");
+		mprintf("\t tabID:%d\n", tabID);
+		mprintf("\t username:'%s'\n", username.c_str());
+		mprintf("\t loginname:'%s'\n", loginname.c_str());
+		mprintf("\t password:'%s'\n", password.c_str());
+		mprintf("\t email:'%s'\n", email.c_str());
+		mprintf("\t activated:%d\n", activated);
+		mprintf("\t voting_power:%d\n", voting_power);
+		mprintf("\t wins:%d\n", wins);
+		mprintf("\t loses:%d\n", loses);
+		mprintf("\t total_games:%d\n", total_games);
+		mprintf("\t creation_ip:'%s'\n", creation_ip.c_str());
+		mprintf("\t last_ip:'%s'\n", last_ip.c_str());
+		mprintf("\t creation_time:%d\n", creation_time);
+		mprintf("\t last_time:%d\n", last_time);
+		mprintf("\t total_time:%d\n", total_time);
+		mprintf("\t aff_creates:%d\n", aff_creates);
+		mprintf("\t aff_buys:%d\n", aff_buys);*/
 	}
 };
 

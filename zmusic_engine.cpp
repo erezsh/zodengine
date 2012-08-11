@@ -22,7 +22,7 @@ void ZMusicEngine::Init()
 	string filename;
 
 	splash_music = MUS_Load_Error("assets/sounds/ABATTLE.mp3");
-	
+
 	for(int i=0;i<MAX_PLANET_TYPES;i++)
 	{
 		filename = "assets/sounds/music_" + planet_type_string[i] + ".ogg";
@@ -185,6 +185,7 @@ void ZMusicEngine::PlaySplashMusic()
 {
 	if(!sound_system_on) return;
 
+    printf("Start splash music playback #2...\n");
 	ZSDL_PlayMusic(splash_music, -1);
 	//Mix_VolumeMusic(128);
 
@@ -228,7 +229,7 @@ void ZMusicEngine::Process(vector<ZObject*> &object_list, ZMap &tmap, int our_te
 
 		int new_d_level = M_CALM;
 		static int last_new_d_level = M_CALM;
-		
+
 		if(our_fort->IsDestroyed())
 		{
 			new_d_level = M_CALM;
@@ -270,7 +271,7 @@ void ZMusicEngine::Process(vector<ZObject*> &object_list, ZMap &tmap, int our_te
 			{
 				for(vector<ZObject*>::iterator obj=object_list.begin(); obj!=object_list.end(); obj++)
 				{
-					unsigned char ot, oid;
+//					unsigned char ot, oid;
 
 					if(!(*obj)->GetAttackObject()) continue;
 
@@ -288,13 +289,13 @@ void ZMusicEngine::Process(vector<ZObject*> &object_list, ZMap &tmap, int our_te
 				}
 			}
 		}
-		
+
 
 		if(last_new_d_level != new_d_level)
 		{
 			int inc_time;
 
-			if(our_fort->IsDestroyed()) 
+			if(our_fort->IsDestroyed())
 				inc_time = 15;
 			else
 				inc_time = 3;

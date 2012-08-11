@@ -26,7 +26,7 @@ BVehicle::BVehicle(ZTime *ztime_, ZSettings *zsettings_, planet_type palette_) :
 
 	//max_health = VEHICLE_BUILDING_HEALTH;
 	//health = max_health;
-	
+
 	spin_i = 0;
 	vent_i = 0;
 	lights_i = 0;
@@ -64,7 +64,7 @@ void BVehicle::Init()
 	int i, j;
 	string filename;
 	char filename_c[500];
-	
+
 	//load colors
 	//base_color[0] = NULL;
 	for(j=1;j<MAX_TEAM_TYPES;j++)
@@ -72,62 +72,62 @@ void BVehicle::Init()
 		filename = "assets/buildings/vehicle/" + team_type_string[j] + ".png";
 		//base_color[j].LoadBaseImage(filename);// = IMG_Load_Error(filename);
 		ZTeam::LoadZSurface(j, base_color[ZTEAM_BASE_TEAM], base_color[j], filename);
-		
+
 		filename = "assets/buildings/vehicle/" + team_type_string[j] + "_destroyed.png";
 		//base_color_destroyed[j].LoadBaseImage(filename);// = IMG_Load_Error(filename);
 		ZTeam::LoadZSurface(j, base_color_destroyed[ZTEAM_BASE_TEAM], base_color_destroyed[j], filename);
 	}
-	
+
 	//load images pertaining to a fort
 	for(i=0;i<MAX_PLANET_TYPES;i++)
 	{
 		filename = "assets/buildings/vehicle/base_" + planet_type_string[i] + ".png";
 		base[i][0].LoadBaseImage(filename);// = IMG_Load_Error(filename);
-		
+
 		filename = "assets/buildings/vehicle/base_destroyed_" + planet_type_string[i] + ".png";
 		base_destroyed[i][0].LoadBaseImage(filename);// = IMG_Load_Error(filename);
-		
+
 		//make the other colors
 		for(j=1;j<MAX_TEAM_TYPES;j++)
 		{
 			SDL_Rect dest;
-			
+
 			//base[i][j] = CopyImage(base[i][0]);
 			//base_destroyed[i][j] = CopyImage(base_destroyed[i][0]);
 			base[i][j] = base[i][0].GetBaseSurface();
 			base_destroyed[i][j] = base_destroyed[i][0].GetBaseSurface();
-			
+
 			dest.x = 32;
 			dest.y = 48;
-			
+
 			//SDL_BlitSurface(base_color[j], NULL, base[i][j], &dest);
 			//SDL_BlitSurface(base_color_destroyed[j], NULL, base_destroyed[i][j], &dest);
 			base_color[j].BlitSurface(NULL, &dest, &base[i][j]);
 			base_color_destroyed[j].BlitSurface(NULL, &dest, &base_destroyed[i][j]);
 		}
 	}
-	
+
 	//load effects
 	for(i=0;i<8;i++)
 	{
 		sprintf(filename_c, "assets/buildings/vehicle/spin_%d.png", i);
 		spin[i].LoadBaseImage(filename_c);// = IMG_Load_Error(filename_c);
 	}
-	
+
 	for(i=0;i<4;i++)
 	{
 		sprintf(filename_c, "assets/buildings/vehicle/vent_%d.png", i);
 		vent[i].LoadBaseImage(filename_c);// = IMG_Load_Error(filename_c);
 	}
-	
+
 	for(i=0;i<2;i++)
 	{
 		sprintf(filename_c, "assets/buildings/vehicle/lights_%d.png", i);
 		lights[i].LoadBaseImage(filename_c);// = IMG_Load_Error(filename_c);
-		
+
 		sprintf(filename_c, "assets/buildings/vehicle/tank_%d.png", i);
 		tank[i].LoadBaseImage(filename_c);// = IMG_Load_Error(filename_c);
-		
+
 		sprintf(filename_c, "assets/buildings/vehicle/bulb_%d.png", i);
 		bulb[i].LoadBaseImage(filename_c);// = IMG_Load_Error(filename_c);
 	}
@@ -139,26 +139,26 @@ int BVehicle::Process()
 	const double min_interval_time = 0.25;
 
 	ProcessBuildingsEffects(the_time);
-	
+
 	if(the_time - last_process_time >= min_interval_time)
 	{
 		last_process_time = the_time;
-		
+
 		spin_i++;
 		if(spin_i >= 8) spin_i = 0;
-		
+
 		vent_i++;
 		if(vent_i >= 4) vent_i = 0;
-		
+
 		exhaust_i++;
 		if(exhaust_i >= 13) exhaust_i = 0;
-		
+
 		//lights_i++;
 		//if(lights_i >= 2) lights_i = 0;
-		
+
 		bulb_i++;
 		if(bulb_i >= 2) bulb_i = 0;
-		
+
 		tank_i++;
 		if(tank_i >= 2) tank_i = 0;
 	}
@@ -173,15 +173,15 @@ int BVehicle::Process()
 
 void BVehicle::DoRender(ZMap &the_map, SDL_Surface *dest, int shift_x, int shift_y)
 {
-	const int level_x = 8;
-	const int level_y = 56;
+//	const int level_x = 8;
+//	const int level_y = 56;
 
 	int &x = loc.x;
 	int &y = loc.y;
 	ZSDL_Surface *base_surface;
-	SDL_Rect from_rect, to_rect;
-	int lx, ly;
-	
+//	SDL_Rect from_rect, to_rect;
+//	int lx, ly;
+
 	if(!dont_stamp)
 	{
 		if(do_base_rerender)
@@ -190,7 +190,7 @@ void BVehicle::DoRender(ZMap &the_map, SDL_Surface *dest, int shift_x, int shift
 				base_surface = &base_destroyed[palette][owner];
 			else
 				base_surface = &base[palette][owner];
-			
+
 			if(the_map.PermStamp(x, y, base_surface))
 				do_base_rerender = false;
 		}
@@ -231,7 +231,7 @@ void BVehicle::DoAfterEffects(ZMap &the_map, SDL_Surface *dest, int shift_x, int
 	const int lights_y = 47;
 	const int exhaust_x = 28;
 	const int exhaust_y = -22;
-	
+
 	SDL_Rect from_rect, to_rect;
 	int lx, ly;
 
@@ -251,7 +251,7 @@ void BVehicle::DoAfterEffects(ZMap &the_map, SDL_Surface *dest, int shift_x, int
 				base[palette][owner].BlitSurface(&from_rect, &to_rect);
 				//SDL_BlitSurface( base[palette][owner], &from_rect, dest, &to_rect);
 			}
-		
+
 			lx = x + exhaust_x;
 			ly = y + exhaust_y + (exhaust_i * -2);
 
@@ -263,10 +263,10 @@ void BVehicle::DoAfterEffects(ZMap &the_map, SDL_Surface *dest, int shift_x, int
 
 			//	SDL_BlitSurface( exhaust[exhaust_i], &from_rect, dest, &to_rect);
 			//}
-			
+
 			lx = x + tank_x;
 			ly = y + tank_y;
-			
+
 			the_map.RenderZSurface(&tank[tank_i], lx, ly);
 			//if(the_map.GetBlitInfo(tank[tank_i], lx, ly, from_rect, to_rect))
 			//{
@@ -275,10 +275,10 @@ void BVehicle::DoAfterEffects(ZMap &the_map, SDL_Surface *dest, int shift_x, int
 
 			//	SDL_BlitSurface( tank[tank_i], &from_rect, dest, &to_rect);
 			//}
-			
+
 			lx = x + vent_x;
 			ly = y + vent_y;
-			
+
 			the_map.RenderZSurface(&vent[vent_i], lx, ly);
 			//if(the_map.GetBlitInfo(vent[vent_i], lx, ly, from_rect, to_rect))
 			//{
@@ -287,10 +287,10 @@ void BVehicle::DoAfterEffects(ZMap &the_map, SDL_Surface *dest, int shift_x, int
 
 			//	SDL_BlitSurface( vent[vent_i], &from_rect, dest, &to_rect);
 			//}
-			
+
 			lx = x + bulb_x;
 			ly = y + bulb_y;
-			
+
 			the_map.RenderZSurface(&bulb[bulb_i], lx, ly);
 			//if(the_map.GetBlitInfo(bulb[bulb_i], lx, ly, from_rect, to_rect))
 			//{
@@ -299,12 +299,12 @@ void BVehicle::DoAfterEffects(ZMap &the_map, SDL_Surface *dest, int shift_x, int
 
 			//	SDL_BlitSurface( bulb[bulb_i], &from_rect, dest, &to_rect);
 			//}
-			
+
 			for(int i=0;i<2;i++)
 			{
 				lx = x + lights_x[i];
 				ly = y + lights_y;
-			
+
 				the_map.RenderZSurface(&lights[1], lx, ly);
 				//if(the_map.GetBlitInfo(lights[1], lx, ly, from_rect, to_rect))
 				//{
@@ -314,10 +314,10 @@ void BVehicle::DoAfterEffects(ZMap &the_map, SDL_Surface *dest, int shift_x, int
 				//	SDL_BlitSurface( lights[1], &from_rect, dest, &to_rect);
 				//}
 			}
-			
+
 			lx = x + spin_x;
 			ly = y + spin_y;
-			
+
 			the_map.RenderZSurface(&spin[spin_i], lx, ly);
 			//if(the_map.GetBlitInfo(spin[spin_i], lx, ly, from_rect, to_rect))
 			//{
@@ -377,7 +377,7 @@ void BVehicle::DoAfterEffects(ZMap &the_map, SDL_Surface *dest, int shift_x, int
 	//render level
 	lx = x + level_x;
 	ly = y + level_y;
-	
+
 	the_map.RenderZSurface(&level_img[level], lx, ly);
 	//if(the_map.GetBlitInfo(level_img[level], lx, ly, from_rect, to_rect))
 	//{

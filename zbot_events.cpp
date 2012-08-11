@@ -61,7 +61,7 @@ void ZBot::SetupEHandler()
 	ehandler.AddFunction(TCP_EVENT, SET_BUILDING_QUEUE_LIST, set_build_queue_list_event);
 	ehandler.AddFunction(TCP_EVENT, REQUEST_VERSION, nothing_event);
 	ehandler.AddFunction(TCP_EVENT, GIVE_VERSION, nothing_event);
-	
+
 	ehandler.AddFunction(OTHER_EVENT, CONNECT_EVENT, connect_event);
 	ehandler.AddFunction(OTHER_EVENT, DISCONNECT_EVENT, disconnect_event);
 }
@@ -109,7 +109,7 @@ void ZBot::add_new_object_event(ZBot *p, char *data, int size, int dummy)
 	if(ot == MAP_ITEM_OBJECT)
 	{
 		if(oid == FLAG_ITEM || oid == GRENADES_ITEM) p->flag_object_list.push_back(obj);
-		else 
+		else
 		{
 			//we don't care about the rest of the map object garbage
 			p->ols.DeleteObject(obj);
@@ -216,14 +216,14 @@ void ZBot::destroy_object_event(ZBot *p, char *data, int size, int dummy)
 	int i;
 
 	//good packet?
-	if(size < sizeof(destroy_object_packet)) return;
+	if(size < (int)sizeof(destroy_object_packet)) return;
 
 	obj = p->GetObjectFromID(pi->ref_id, p->object_list);
 
 	if(!obj) return;
 
 	//good packet (double check)?
-	if(size != sizeof(destroy_object_packet) + (sizeof(fire_missile_info) * pi->fire_missile_amount)) return;
+	if(size != (int)(sizeof(destroy_object_packet) + (sizeof(fire_missile_info) * pi->fire_missile_amount))) return;
 
 	obj->SetHealth(0, p->zmap);
 	//obj->DoDeathEffect();
@@ -238,7 +238,7 @@ void ZBot::destroy_object_event(ZBot *p, char *data, int size, int dummy)
 
 	if(pi->destroy_object)
 	{
-		ZObject::RemoveObjectFromList(obj, p->object_list);	
+		ZObject::RemoveObjectFromList(obj, p->object_list);
 		p->DeleteObjectCleanUp(obj);
 	}
 }
@@ -324,7 +324,7 @@ void ZBot::set_player_name_event(ZBot *p, char *data, int size, int dummy)
 void ZBot::set_player_team_event(ZBot *p, char *data, int size, int dummy)
 {
 	p->ProcessSetLPlayerTeam(data, size);
-} 
+}
 
 void ZBot::set_player_mode_event(ZBot *p, char *data, int size, int dummy)
 {

@@ -378,7 +378,7 @@ void ECraneConco::Process()
 		if(the_time < travel_time_end)
 		{
 			double percentage = (the_time - travel_time_start) / travel_time_width;
-			conco_i = 7 * (1 - percentage);
+			conco_i = int(7 * (1 - percentage));
 
 			if(conco_i < 0) conco_i = 0;
 			if(conco_i > 7) conco_i = 7;
@@ -404,7 +404,7 @@ void ECraneConco::Process()
 		if(the_time < travel_time_end)
 		{
 			double percentage = (the_time - travel_time_start) / travel_time_width;
-			conco_i = 7 * (percentage);
+			conco_i = (int)(7 * (percentage));
 
 			if(conco_i < 0) conco_i = 0;
 			if(conco_i > 7) conco_i = 7;
@@ -426,10 +426,10 @@ void ECraneConco::Process()
 
 void ECraneConco::DoRender(ZMap &zmap, SDL_Surface *dest)
 {
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 	ZSDL_Surface *surface;
-	int i;
-	int the_dir;
+//	int i;
+//	int the_dir;
 
 	if(killme) return;
 

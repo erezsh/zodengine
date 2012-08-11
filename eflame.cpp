@@ -22,7 +22,7 @@ EFlame::EFlame(ZTime *ztime_, int start_x, int start_y, int dest_x, int dest_y) 
 	float mag;
 	dx = dest_x - start_x;
 	dy = dest_y - start_y;
-	mag = sqrt((dx * dx) + (dy * dy));
+	mag = (float)sqrt((dx * dx) + (dy * dy));
 
 	init_time = the_time;
 	final_time = init_time + (mag / bullet_speed);
@@ -31,12 +31,12 @@ EFlame::EFlame(ZTime *ztime_, int start_x, int start_y, int dest_x, int dest_y) 
 	dy /= (final_time - init_time);
 
 	//find angle
-	angle = 359 - AngleFromLoc(dx, dy);
+	angle = 359 - AngleFromLoc((float)dx, (float)dy);
 	for(int i=0;i<4;i++)
 	{
 		//bullet_img[i] = flame_bullet[i].GetImage(angle);
 		bullet_img[i] = flame_bullet[i];
-		bullet_img[i].SetAngle(angle);
+		bullet_img[i].SetAngle((float)angle);
 	}
 
 	if(!bullet_img[0].GetBaseSurface())
@@ -83,14 +83,14 @@ void EFlame::Process()
 	else
 	{
 		//move
-		x = sx + (dx * (the_time - init_time));
-		y = sy + (dy * (the_time - init_time));
+		x = sx + (int)(dx * (the_time - init_time));
+		y = sy + (int)(dy * (the_time - init_time));
 	}
 }
 
 void EFlame::DoRender(ZMap &zmap, SDL_Surface *dest)
 {
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 
 	if(killme) return;
 

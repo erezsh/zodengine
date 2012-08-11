@@ -181,12 +181,12 @@ void ZBot::ReduceUnitsToPercent(vector<ZObject*> &units_list, double max_percent
 	if(max_percent >= 0.95) return;
 	if(units_list.size() <= 1) return;
 
-	max_units = max_percent * units_list.size();
+	max_units = (int)(max_percent * units_list.size());
 	max_units++;
 
-	if(max_units > units_list.size()) max_units = units_list.size();
+	if(max_units > (int)units_list.size()) max_units = units_list.size();
 
-	while(new_units_list.size() < max_units && units_list.size())
+	while(((int)new_units_list.size() < max_units) && (units_list.size()))
 	{
 		int choice;
 

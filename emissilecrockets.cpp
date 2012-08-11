@@ -21,13 +21,13 @@ EMissileCRockets::EMissileCRockets(ZTime *ztime_, int start_x, int start_y, int 
 	float mag;
 	dx = dest_x - start_x;
 	dy = dest_y - start_y;
-	mag = sqrt((dx * dx) + (dy * dy));
+	mag = (float)sqrt((dx * dx) + (dy * dy));
 
 	udx = dx / mag;
 	udy = dy / mag;
 
-	other_x_shift = udy * 8;
-	other_y_shift = udx * -8;
+	other_x_shift = (int)(udy * 8);
+	other_y_shift = (int)(udx * -8);
 
 	//right_x_shift = udy * -8;
 	//right_y_shift = udx * 8;
@@ -40,18 +40,18 @@ EMissileCRockets::EMissileCRockets(ZTime *ztime_, int start_x, int start_y, int 
 	dy /= (final_time - init_time);
 
 	//find angle
-	angle = 359 - AngleFromLoc(dx, dy);
+	angle = 359 - AngleFromLoc((float)dx, (float)dy);
 	//bullet_img = the_bullet.GetImage(angle);
 	bullet_img = the_bullet;
-	bullet_img.SetAngle(angle);
+	bullet_img.SetAngle((float)angle);
 
 	//shift the x and y's
 	//cx = (bullet_img.GetBaseSurface()->w >> 1);
 	//cy = (bullet_img.GetBaseSurface()->h >> 1);
 	//x = sx = (start_x - cx) + (udy * -4);
 	//y = sy = (start_y - cy) + (udx * 8);
-	x = sx = start_x + (udy * -4);
-	y = sy = start_y + (udx * 8);
+	x = sx = start_x + (int)(udy * -4);
+	y = sy = start_y + (int)(udx * 8);
 
 	ex = dest_x;
 	ey = dest_y;
@@ -116,8 +116,8 @@ void EMissileCRockets::Process()
 	else
 	{
 		//move
-		x = sx + (dx * (the_time - init_time));
-		y = sy + (dy * (the_time - init_time));
+		x = sx + (int)(dx * (the_time - init_time));
+		y = sy + (int)(dy * (the_time - init_time));
 
 		PlaceSmoke(the_time);
 	}
@@ -125,7 +125,7 @@ void EMissileCRockets::Process()
 
 void EMissileCRockets::DoRender(ZMap &zmap, SDL_Surface *dest)
 {
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 
 	if(killme) return;
 
@@ -147,8 +147,8 @@ void EMissileCRockets::PlaceSmoke(double &the_time)
 
 	for(;the_time - last_smoke_time > time_d2; last_smoke_time += time_d2)
 	{
-		smx = sx + (dx * ((last_smoke_time - time_d) - init_time));
-		smy = sy + (dy * ((last_smoke_time - time_d) - init_time));
+		smx = sx + (int)(dx * ((last_smoke_time - time_d) - init_time));
+		smy = sy + (int)(dy * ((last_smoke_time - time_d) - init_time));
 
 		//smx += cx;
 		//smy += cy;

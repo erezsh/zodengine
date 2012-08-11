@@ -121,7 +121,7 @@ int VLight::Process()
 		if(attack_object)
 		{
 			attack_object->GetCenterCords(tx, ty);
-			new_dir = DirectionFromLoc(tx - loc.x, ty - loc.y);
+			new_dir = DirectionFromLoc((float)(tx - loc.x), (float)(ty - loc.y));
 			if(new_dir != -1) t_direction = new_dir;
 		}
 		else
@@ -149,7 +149,7 @@ void VLight::DoRender(ZMap &the_map, SDL_Surface *dest, int shift_x, int shift_y
 	int damaged_shift_y = 0;
 	int damaged_shift_x = 0;
 	ZSDL_Surface *base_surface;
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 	int lx, ly;
 
 	if(IsDestroyed())

@@ -54,19 +54,19 @@ void ZBuilding::Init()
 {
 	int i;
 	char filename[500];
-	
+
 	for(i=0;i<MAX_BUILDING_LEVELS;i++)
 	{
 		sprintf(filename, "assets/buildings/level_%d.bmp", i+1);
 		level_img[i].LoadBaseImage(filename);// = IMG_Load_Error(filename);
 	}
-	
+
 	for(i=0;i<13;i++)
 	{
 		sprintf(filename, "assets/buildings/exhaust_%d.png", i);
 		exhaust[i].LoadBaseImage(filename);// = IMG_Load_Error(filename);
 	}
-	
+
 	for(i=0;i<4;i++)
 	{
 		sprintf(filename, "assets/buildings/little_exhaust_%d.png", i);
@@ -176,7 +176,7 @@ bool ZBuilding::CancelBuildingQueue(int list_i, unsigned char ot, unsigned char 
 
 	//list_i ok?
 	if(list_i<0) return false;
-	if(list_i>=queue_list.size()) return false;
+	if(list_i>=(int)queue_list.size()) return false;
 
 	//ot and oid match?
 	if(ot != queue_list[list_i].ot) return false;
@@ -223,7 +223,7 @@ void ZBuilding::ProcessBuildingQueueData(char *data, int size)
 	int expected_packet_size;
 	int queue_amount;
 	int data_ref_id;
-	ZObject *our_object;
+//	ZObject *our_object;
 
 	//produces units?
 	if(!ProducesUnits()) return;
@@ -294,7 +294,7 @@ void ZBuilding::CreateBuiltCannonData(char *&data, int &size)
 	*(int*)(data) = ref_id;
 	*(int*)(data + 4) = built_cannon_list.size();
 
-	for(int i=0;i<built_cannon_list.size();i++)
+	for(int i=0;i<(int)built_cannon_list.size();i++)
 	{
 		*(char*)(data + 8 + i) = built_cannon_list[i];
 		//printf("storing cannon:%d\n", built_cannon_list[i]);
@@ -344,7 +344,7 @@ void ZBuilding::ProcessSetBuildingStateData(char *data, int size)
 	double &the_time = ztime->ztime;
 
 	set_building_state_packet *pi = (set_building_state_packet*)data;
-	ZObject *obj;
+//	ZObject *obj;
 
 	//good packet?
 	if(size != sizeof(set_building_state_packet)) return;
@@ -476,7 +476,7 @@ bool ZBuilding::HaveStoredCannon(unsigned char oid)
 
 void ZBuilding::ResetProduction()
 {
-	double &the_time = ztime->ztime;
+//	double &the_time = ztime->ztime;
 
 	if(queue_list.size())
 	{
@@ -587,7 +587,7 @@ void ZBuilding::ProcessBuildingsEffects(double &the_time)
 	if(damage_percent > 1) damage_percent = 1;
 	if(damage_percent < 0) damage_percent = 0;
 
-	should_effects = max_effects * (1 - damage_percent);
+	should_effects = (int)((double)max_effects * (1 - damage_percent));
 
 	//if(should_effects) printf("should_effects:%d size:%d\n", should_effects, extra_effects.size());
 
@@ -643,7 +643,7 @@ bool ZBuilding::RecalcBuildTime()
 	if(bot == (unsigned char)-1) return false;
 	if(boid == (unsigned char)-1) return false;
 	if(build_state == BUILDING_SELECT) return false;
-		
+
 	//base time
 	build_time = BuildTimeModified(buildlist->UnitBuildTime(bot, boid));
 

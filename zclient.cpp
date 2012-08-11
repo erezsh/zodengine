@@ -376,7 +376,7 @@ void ZClient::ProcessZoneInfo(char *data, int size)
 	if(pi->owner < 0) return;
 	if(pi->owner >= MAX_TEAM_TYPES) return;
 	if(pi->zone_number < 0) return;
-	if(pi->zone_number >= zmap.GetZoneInfoList().size()) return;
+	if(pi->zone_number >= (int)zmap.GetZoneInfoList().size()) return;
 
 	//printf("ProcessZoneInfo::id:%d owner:%d\n", pi->zone_number, pi->owner);
 

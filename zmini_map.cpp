@@ -34,7 +34,7 @@ void ZMiniMap::Setup_Boundaries()
 
 	if(map_ratio < max_mini_ratio)
 	{
-		render_area.w = (map_ratio * MINIMAP_H_MAX);
+		render_area.w = (Uint16)(map_ratio * MINIMAP_H_MAX);
 		render_area.h = MINIMAP_H_MAX;
 		render_area.x = (MINIMAP_W_MAX - render_area.w) >> 1;
 		render_area.y = (MINIMAP_H_MAX - render_area.h) >> 1;
@@ -42,7 +42,7 @@ void ZMiniMap::Setup_Boundaries()
 	else
 	{
 		render_area.w = MINIMAP_W_MAX;
-		render_area.h = (MINIMAP_W_MAX / map_ratio);
+		render_area.h = (Uint16)(MINIMAP_W_MAX / map_ratio);
 		render_area.x = (MINIMAP_W_MAX - render_area.w) >> 1;
 		render_area.y = (MINIMAP_H_MAX - render_area.h) >> 1;
 	}
@@ -68,8 +68,8 @@ bool ZMiniMap::ClickedMap(int x, int y, int &map_x, int &map_y)
 	double x_percent = 1.0 * (x - render_area.x) / render_area.w;
 	double y_percent = 1.0 * (y - render_area.y) / render_area.h;
 
-	map_x = x_percent * (zmap->GetMapBasics().width * 16.0);
-	map_y = y_percent * (zmap->GetMapBasics().height * 16.0);
+	map_x = (int)(x_percent * (double)(zmap->GetMapBasics().width * 16.0));
+	map_y = (int)(y_percent * (double)(zmap->GetMapBasics().height * 16.0));
 
 	return true;
 }
@@ -104,13 +104,13 @@ void ZMiniMap::DoRender(SDL_Surface *dest, int x, int y)
 		water_rect.y = iy;
 		water_rect.w = water_rect.h = 1;
 
-		water_rect.x *= render_ratio;
-		water_rect.y *= render_ratio;
+		water_rect.x = (Sint16)((double)water_rect.x * render_ratio);
+		water_rect.y = (Sint16)((double)water_rect.y * render_ratio);
 
 		water_rect.x += to_rect.x;
 		water_rect.y += to_rect.y;
 
-		ZSDL_FillRect(&water_rect, 0, 0, 250);
+		ZSDL_FillRect(&water_rect, 0, 0, 250, NULL);
 	}
 
 
@@ -124,10 +124,10 @@ void ZMiniMap::DoRender(SDL_Surface *dest, int x, int y)
 		zone_rect.w = i->w;
 		zone_rect.h = i->h;
 
-		zone_rect.x *= render_ratio;
-		zone_rect.y *= render_ratio;
-		zone_rect.w *= render_ratio;
-		zone_rect.h *= render_ratio;
+		zone_rect.x = (Sint16)((double)zone_rect.x * render_ratio);
+		zone_rect.y = (Sint16)((double)zone_rect.y * render_ratio);
+		zone_rect.w = (Sint16)((double)zone_rect.w * render_ratio);
+		zone_rect.h = (Sint16)((double)zone_rect.h * render_ratio);
 
 		zone_rect.x += to_rect.x;
 		zone_rect.y += to_rect.y;
@@ -140,7 +140,7 @@ void ZMiniMap::DoRender(SDL_Surface *dest, int x, int y)
 		//do we actually render?
 		if(zone_rect.w > 0 && zone_rect.h > 0)
 		{
-			int sdlmap;
+//			int sdlmap;
 			//sdlmap = SDL_MapRGB(dest->format, team_color[i->owner].r * 0.4, team_color[i->owner].g * 0.4, team_color[i->owner].b * 0.4);
 			//SDL_FillRect(dest, &zone_rect, sdlmap);
 			ZSDL_FillRect(&zone_rect, team_color[i->owner].r * 0.4, team_color[i->owner].g * 0.4, team_color[i->owner].b * 0.4);
@@ -158,13 +158,13 @@ void ZMiniMap::DoRender(SDL_Surface *dest, int x, int y)
 		
 		obj_rect.x = x;
 		obj_rect.y = y;
-		obj_rect.w = w * 0.8;
-		obj_rect.h = h * 0.8;
+		obj_rect.w = (Uint16)((float)w * 0.8);
+		obj_rect.h = (Uint16)((float)h * 0.8);
 
-		obj_rect.x *= render_ratio;
-		obj_rect.y *= render_ratio;
-		obj_rect.w *= render_ratio;
-		obj_rect.h *= render_ratio;
+		obj_rect.x = (Sint16)((double)obj_rect.x * render_ratio);
+		obj_rect.y = (Sint16)((double)obj_rect.y * render_ratio);
+		obj_rect.w = (Uint16)((double)obj_rect.w * render_ratio);
+		obj_rect.h = (Uint16)((double)obj_rect.h * render_ratio);
 
 		obj_rect.x += to_rect.x;
 		obj_rect.y += to_rect.y;
@@ -172,7 +172,7 @@ void ZMiniMap::DoRender(SDL_Surface *dest, int x, int y)
 		if(obj_rect.w < 1) obj_rect.w = 1;
 		if(obj_rect.h < 1) obj_rect.h = 1;
 
-		int sdlmap;
+//		int sdlmap;
 		int towner;
 		towner = (*i)->GetOwner();
 		//sdlmap = SDL_MapRGB(dest->format, team_color[towner].r, team_color[towner].g , team_color[towner].b);
@@ -192,10 +192,10 @@ void ZMiniMap::DoRender(SDL_Surface *dest, int x, int y)
 		view_box.w = mview_w;
 		view_box.h = mview_h;
 
-		view_box.x *= render_ratio;
-		view_box.y *= render_ratio;
-		view_box.w *= render_ratio;
-		view_box.h *= render_ratio;
+		view_box.x = (Sint16)((double)view_box.x * render_ratio);
+		view_box.y = (Sint16)((double)view_box.y * render_ratio);
+		view_box.w = (Uint16)((double)view_box.w * render_ratio);
+		view_box.h = (Uint16)((double)view_box.h * render_ratio);
 
 		view_box.x += to_rect.x;
 		view_box.y += to_rect.y;

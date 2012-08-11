@@ -9,8 +9,10 @@ void InitOpenGL()
 {
 #ifndef DISABLE_OPENGL
     glEnable(GL_TEXTURE_2D);			// Enable Texture Mapping
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);	// Clear The Background Color To Black 
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);	// Clear The Background Color To Black
+#ifndef WEBOS_PORT
     glClearDepth(0.0f);				// Disables(?) Clearing Of The Depth Buffer
+#endif
 	glDepthFunc( GL_ALWAYS );
     glEnable(GL_DEPTH_TEST);			// Enables Depth Testing
     glShadeModel(GL_SMOOTH);			// Enables Smooth Color Shading
@@ -34,9 +36,12 @@ void ResetOpenGLViewPort(int width, int height)
 
 	glMatrixMode(GL_PROJECTION);
     glLoadIdentity(); // Reset The Projection Matrix
-    
+
+#ifdef WEBOS_PORT
+	glOrthof(0.0f, width, height, 0.0f, 1.0f, -1.0f);
+#else
 	glOrtho(0.0f, width, height, 0.0f, 1.0f, -1.0f);
-    
+#endif
     glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 #endif
@@ -136,7 +141,7 @@ void ZSDL_Surface::LoadBaseImage(SDL_Surface *sdl_surface_, bool delete_surface)
 
 	if(!sdl_surface)
 	{
-		if(image_filename.size()) printf("could not load:%s\n", image_filename.c_str()); 
+		if(image_filename.size()) printf("could not load:%s\n", image_filename.c_str());
 		return;
 	}
 
@@ -147,12 +152,12 @@ void ZSDL_Surface::LoadBaseImage(SDL_Surface *sdl_surface_, bool delete_surface)
 	sdl_surface = new_ret;
 
 	//checks
-	if ( (sdl_surface->w & (sdl_surface->w - 1)) != 0 )
-		;//printf("warning: %s's width is not a power of 2\n", image_filename.c_str());
-	
+//	if ( (sdl_surface->w & (sdl_surface->w - 1)) != 0 )
+		//printf("warning: %s's width is not a power of 2\n", image_filename.c_str());
+
 	// Also check if the height is a power of 2
-	if ( (sdl_surface->h & (sdl_surface->h - 1)) != 0 )
-		;//printf("warning: %s's height is not a power of 2\n", image_filename.c_str());
+//	if ( (sdl_surface->h & (sdl_surface->h - 1)) != 0 )
+		//printf("warning: %s's height is not a power of 2\n", image_filename.c_str());
 }
 
 void ZSDL_Surface::UseDisplayFormat()
@@ -179,7 +184,7 @@ void ZSDL_Surface::MakeAlphable()
 
 	ZSDL_ModifyBlack(sdl_surface);
 	UseDisplayFormat();
-	SDL_SetColorKey(sdl_surface, SDL_SRCCOLORKEY, 0x000000); 
+	SDL_SetColorKey(sdl_surface, SDL_SRCCOLORKEY, 0x000000);
 }
 
 bool ZSDL_Surface::LoadRotoZoomSurface()
@@ -225,7 +230,7 @@ bool ZSDL_Surface::LoadGLtexture()
 	switch(nOfColors)
 	{
 	case 4:
-		if (sdl_surface->format->Rmask == 0x000000ff) texture_format = GL_RGBA;   
+		if (sdl_surface->format->Rmask == 0x000000ff) texture_format = GL_RGBA;
 		else texture_format = GL_BGRA;
 		break;
 	case 3:
@@ -240,14 +245,14 @@ bool ZSDL_Surface::LoadGLtexture()
 
 	// Have OpenGL generate a texture object handle for us
 	glGenTextures( 1, &gl_texture );
- 
+
 	// Bind the texture object
 	glBindTexture( GL_TEXTURE_2D, gl_texture );
- 
+
 	// Set the texture's stretching properties
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
- 
+
 	// Edit the texture object's image data using the information SDL_Surface gives us
 	glTexImage2D( GL_TEXTURE_2D, 0, nOfColors, sdl_surface->w, sdl_surface->h, 0, texture_format, GL_UNSIGNED_BYTE, sdl_surface->pixels );
 
@@ -312,7 +317,7 @@ void ZSDL_Surface::SetAngle(float angle_)
 	angle = angle_;
 }
 
-void ZSDL_Surface::SetAlpha(char alpha_)
+void ZSDL_Surface::SetAlpha(Uint8 alpha_)
 {
 	alpha = alpha_;
 
@@ -323,13 +328,13 @@ void ZSDL_Surface::SetAlpha(char alpha_)
 	}
 }
 
-void ZSDL_Surface::FillRectOnToMe(SDL_Rect *dstrect, char r, char g, char b)
+void ZSDL_Surface::FillRectOnToMe(SDL_Rect *dstrect, unsigned char r, unsigned char g, unsigned char b)
 {
 	if(!sdl_surface) return;
 
 	SDL_FillRect(sdl_surface, dstrect, SDL_MapRGB(sdl_surface->format, r,g,b));
 
-	if(gl_texture_loaded) 
+	if(gl_texture_loaded)
 	{
 #ifndef DISABLE_OPENGL
 		glDeleteTextures(1, &gl_texture);
@@ -352,7 +357,7 @@ void ZSDL_Surface::BlitOnToMe(SDL_Rect *srcrect, SDL_Rect *dstrect, SDL_Surface 
 
 	SDL_BlitSurface(src, srcrect, sdl_surface, dstrect);
 
-	if(gl_texture_loaded) 
+	if(gl_texture_loaded)
 	{
 #ifndef DISABLE_OPENGL
 		glDeleteTextures(1, &gl_texture);
@@ -370,7 +375,7 @@ void ZSDL_Surface::BlitOnToMe(SDL_Rect *srcrect, SDL_Rect *dstrect, SDL_Surface 
 }
 
 //ZSDL_Surface has made itself into an engine it seems...
-void ZSDL_Surface::ZSDL_FillRect(SDL_Rect *dstrect, char r, char g, char b, ZSDL_Surface *dst)
+void ZSDL_Surface::ZSDL_FillRect(SDL_Rect *dstrect, unsigned char r, unsigned char g, unsigned char b, ZSDL_Surface *dst)
 {
 	if(dst)
 	{
@@ -408,7 +413,7 @@ void ZSDL_Surface::ZSDL_FillRect(SDL_Rect *dstrect, char r, char g, char b, ZSDL
 		{
 			//we are supposed to fill the whole screen with this color
 			//this area is not debuged.
-			
+
 			glClearColor(r / 255.0, g / 255.0, b / 255.0, 0.0f); // Clear The Background Color To Black
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	// Clear The Screen And The Depth Buffer
 			glLoadIdentity(); // Reset The View
@@ -453,7 +458,7 @@ void ZSDL_Surface::RenderSurface(int x, int y, bool render_hit, bool about_cente
 		glTranslatef((sdl_surface->w >> 1), (sdl_surface->h >> 1), 0.0f);
 		glRotatef(-angle, 0.0f, 0.0f, 1.0f);
 		glTranslatef(-(sdl_surface->w >> 1), -(sdl_surface->h >> 1), 0.0f);
-		
+
 
 		//we are at the center now, so don't translate back
 		//if(!about_center) glTranslatef(-(sdl_surface->w >> 1), -(sdl_surface->h >> 1), 0.0f);
@@ -503,7 +508,7 @@ void ZSDL_Surface::RenderSurface(int x, int y, bool render_hit, bool about_cente
 			to_rect.x += map_place_x;
 			to_rect.y += map_place_y;
 
-			if(render_hit)	
+			if(render_hit)
 				BlitHitSurface(&from_rect, &to_rect, NULL, true);
 			else
 				SDL_BlitSurface(render_surface, &from_rect, screen, &to_rect);
@@ -872,8 +877,8 @@ bool ZSDL_Surface::WillRenderOnScreen(int x, int y, bool about_center)
 
 	if(about_center)
 	{
-		x -= ((sdl_surface->w >> 1) * size);
-		y -= ((sdl_surface->h >> 1) * size);
+		x -= (int)((float)(sdl_surface->w >> 1) * size);
+		y -= (int)((float)(sdl_surface->h >> 1) * size);
 	}
 
 	if(x > screen_w) return false;

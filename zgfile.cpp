@@ -16,7 +16,7 @@ void ZGFile::LoadEntryList()
 {
 	FILE *fp;
 
-	fp = fopen(ZGFILE_NAME, "rb");
+	fp=fopen(ZGFILE_NAME, "rb");
 
 	if(!fp)
 	{
@@ -90,7 +90,7 @@ void ZGFile::AddFile(string filename, SDL_Surface *img)
 		return;
 	}
 
-	fp = fopen(ZGFILE_NAME, "ab");
+	fp=fopen(ZGFILE_NAME, "ab");
 
 	if(!fp)
 	{
@@ -166,7 +166,7 @@ SDL_Surface *ZGFile::LoadFile(string filename)
 		return NULL;
 	}
 
-	fp = fopen(ZGFILE_NAME, "rb");
+	fp=fopen(ZGFILE_NAME, "rb");
 
 	if(!fp)
 	{
@@ -221,7 +221,7 @@ SDL_Surface *ZGFile::LoadFile(string filename)
 
 int ZGFile::FindEntry(string filename)
 {
-	for(int i=0; i<entry_list.size(); i++)
+	for(int i=0; i<(int)entry_list.size(); i++)
 		if(filename == entry_list[i].filename)
 			return i;
 

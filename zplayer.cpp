@@ -1,57 +1,11 @@
+#ifdef WEBOS_PORT
+#include "webos.h"
+#endif
+
 #include "zplayer.h"
 #include <math.h>
 
 using namespace COMMON;
-
-ClientSettings::ClientSettings() :
-    KeyboardScrollSpeed(400),
-    MouseScrollSpeed(400)
-{
-}
-
-bool ClientSettings::load(string filename)
-{
-    FILE *fp;
-
-    fp = fopen(filename.c_str(), "r");
-    if(!fp)
-    {
-            printf("ClientSettings::load could not open '%s' to read\n", filename.c_str());
-            return false;
-    }
-
-    const int buf_size = 500;
-    char cur_line[buf_size];
-    char variable[buf_size];
-    char value[buf_size];
-
-    while(fgets(cur_line, buf_size , fp))
-    {
-            clean_newline(cur_line, buf_size);
-
-            if(!strlen(cur_line))   // empty line
-                continue;
-            if(cur_line[0] == '#') continue; // don't read comment lines
-
-            int pt = 0;
-
-            //parse this line
-            split(variable, cur_line, '=', &pt, buf_size, buf_size);
-            split(value, cur_line, '=', &pt, buf_size, buf_size);
-
-            lcase(variable, buf_size);
-
-            if (!strcmp(variable, "keyboard_scroll_speed"))
-                KeyboardScrollSpeed = atoi(value);
-            else if (!strcmp(variable, "mouse_scroll_speed"))
-                MouseScrollSpeed = atoi(value);
-            else
-                printf("ClientSettings::load - Unknown option '%s'\n", variable);
-    }
-
-    fclose(fp);
-    return true;
-}
 
 void selection_info::DeleteObject(ZObject *obj)
 {
@@ -97,7 +51,7 @@ bool selection_info::GroupIsSelected(int group)
 	if(!selected_list.size()) return false;
 	if(selected_list.size() != quick_group[group].size()) return false;
 
-	for(int i=0;i<selected_list.size();i++)
+	for(int i=0;i<(int)selected_list.size();i++)
 		if(selected_list[i] != quick_group[group][i])
 			return false;
 
@@ -126,7 +80,7 @@ void selection_info::SetGroup(int group)
 	e=quick_group[group].end();
 	for(; i!=e; i++)
 		(*i)->SetGroup(-1);
-	
+
 
 	//save this list
 	quick_group[group] = selected_list;
@@ -156,7 +110,7 @@ bool selection_info::UpdateGroupMember(ZObject *obj)
 
 void selection_info::SetupGroupDetails(bool show_waypoints)
 {
-	double &the_time = ztime->ztime;
+//	double &the_time = ztime->ztime;
 
 	vector<ZObject*>::iterator i, e;
 
@@ -171,13 +125,13 @@ void selection_info::SetupGroupDetails(bool show_waypoints)
 	for(; i!=e; i++)
 	{
 		unsigned char ot, oid;
-		
+
 		(*i)->GetObjectID(ot, oid);
 
 		if(ot == ROBOT_OBJECT) can_equip = true;
 		if(ot != CANNON_OBJECT) can_move = true;
 		if(ot == VEHICLE_OBJECT && oid == CRANE) can_repair = true;
-		
+
 		if((*i)->HasExplosives()) have_explosives = true;
 		if((*i)->CanAttack()) can_attack = true;
 		if((*i)->CanBeRepaired()) can_be_repaired = true;
@@ -241,14 +195,14 @@ ZPlayer::ZPlayer() : ZClient()
 
 	//setup minimap
 	zhud.GetMiniMap().Setup(&zmap, &object_list);
-	
+
 	//setup events
 	SetupEHandler();
 
 	//setup the comp message system
 	zcomp_msg.SetObjectList(&object_list);
 	zcomp_msg.SetZTime(&ztime);
-	
+
 	//give the tcp socket the event list so it can cram in events
 	client_socket.SetEventList(&ehandler.GetEventList());
 	//ZObject::SetEffectList(&effect_list);
@@ -263,6 +217,21 @@ ZPlayer::ZPlayer() : ZClient()
 	gui_factory_list = new GWFactoryList(&ztime);
 	gui_factory_list->Hide();
 	gui_factory_list->SetOList(&ols);
+
+#ifdef WEBOS_PORT
+// TODO (iev0107m#1#): update right and bottom hud after splash screen
+/*                        SDL_Event lclk_event_dn_simu,lclk_event_up_simu;
+                        lclk_event_dn_simu.type = SDL_MOUSEBUTTONDOWN;
+                        lclk_event_dn_simu.motion.which=9;// to override WEBOS check code
+                        lclk_event_dn_simu.button.button=SDL_BUTTON_LEFT;
+                        lclk_event_dn_simu.button.x=900;
+                        lclk_event_dn_simu.button.y=50;
+                        SDL_PushEvent(&lclk_event_dn_simu);
+                        lclk_event_up_simu.type = SDL_MOUSEBUTTONUP;
+                        lclk_event_up_simu.motion.which=9;// to override WEBOS check code
+                        lclk_event_up_simu.button.button=SDL_BUTTON_LEFT;
+                        SDL_PushEvent(&lclk_event_up_simu);*/
+#endif
 }
 
 void ZPlayer::ProcessResetGame()
@@ -272,7 +241,7 @@ void ZPlayer::ProcessResetGame()
 
 	//clear stuff out
 	zmap.ClearMap();
-	
+
 	//clear object list
 	ols.DeleteAllObjects();
 	//for(vector<ZObject*>::iterator obj=object_list.begin(); obj!=object_list.end(); obj++)
@@ -387,7 +356,6 @@ void ZPlayer::Setup()
 
 	//setup gfile
 	//ZGFile::Init();
-        client_settings.load("client_settings.txt");
 
 	InitSDL();
 
@@ -414,23 +382,34 @@ void ZPlayer::Setup()
 
 void ZPlayer::InitSDL()
 {
+#ifdef WEBOS_PORT
+	int audio_rate = 44100;
+	Uint16 audio_format = AUDIO_S16SYS; /* 16-bit stereo */
+#else
 	int audio_rate = 22050;
 	Uint16 audio_format = AUDIO_S16; /* 16-bit stereo */
+#endif
 	int audio_channels = 2;
 	int audio_buffers = 4096;
 
 	//init SDL
+#ifdef WEBOS_PORT
+	SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO|SDL_INIT_TIMER);
+#else
 	SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO);
-
+#endif
 	//some stuff that just has to be right after init
 	game_icon = IMG_Load("assets/icon.png");
 	//ffuts
-
 	if(game_icon) SDL_WM_SetIcon(game_icon, NULL);
 	SDL_WM_SetCaption("Zod Engine", "Zod Engine");
 	atexit(ZSDL_Quit);//SDL_Quit);
 	SDL_EnableUNICODE(SDL_ENABLE);
 	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
+
+#ifndef WEBOS_PORT
+// TODO (iev0107m#1#): OPEN_GL in WEBOS_PORT?
+#endif
 
 #ifdef DISABLE_OPENGL
 	use_opengl = false;
@@ -459,8 +438,11 @@ void ZPlayer::InitSDL()
 		if(is_windowed)
 			screen = SDL_SetVideoMode(init_w, init_h, 32, SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_RESIZABLE);
 		else
+#ifdef WEBOS_PORT
+			screen = SDL_SetVideoMode(init_w, init_h, 32, 0);
+#else
 			screen = SDL_SetVideoMode(init_w, init_h, 32, SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_RESIZABLE|SDL_FULLSCREEN);
-
+#endif
 		ZSDL_Surface::SetMainSoftwareSurface(screen);
 	}
 
@@ -472,7 +454,7 @@ void ZPlayer::InitSDL()
 	SDL_WarpMouse(init_w>>1, init_h>>1);
 	//SDL_EventState(SDL_MOUSEMOTION, SDL_ENABLE);
 
-	//Removed because some sdl_mixer libs dont have  
+	//Removed because some sdl_mixer libs dont have
 	//this function and it is not 100% required
 	//if(Mix_Init(MIX_INIT_MOD | MIX_INIT_OGG) != (MIX_INIT_MOD | MIX_INIT_OGG))
 	//	printf("InitSDL::Mix_Init() error\n");
@@ -493,7 +475,7 @@ void ZPlayer::InitSDL()
 
 	//splash sound best loaded here
 	//splash_music = MUS_Load_Error("assets/sounds/ABATTLE.mp3");
-	splash_screen.LoadBaseImage("assets/splash.png");// = IMG_Load("assets/splash.bmp");
+	splash_screen.LoadBaseImage("assets/splash.bmp");// = IMG_Load("assets/splash.bmp");
 	splash_screen.UseDisplayFormat(); //Regular needs this to do fading
 
 //	if(splash_screen)
@@ -609,7 +591,7 @@ int ZPlayer::Load_Graphics(void *p)
 	//need to be done once...
 #ifdef COLLECT_TEAM_COLORS
 	ZTeam::SaveAllPalettes();
-#endif	
+#endif
 
 	printf("graphics loaded\n");
 	((ZPlayer*)p)->graphics_loaded = true;
@@ -670,14 +652,14 @@ void ZPlayer::AddNewsEntry(string message, int r, int g, int b)
 	//new_entry.text_image = TTF_RenderText_Solid(p->ttf_font, new_entry.message.c_str(), textcolor);
 	//new_entry->text_image.LoadBaseImage(TTF_RenderText_Solid(p->ttf_font, new_entry->message.c_str(), textcolor));
 	new_entry->text_image.LoadBaseImage(ZFontEngine::GetFont(SMALL_WHITE_FONT).Render(new_entry->message.c_str()));
-	
+
 	//a hack to get software renderer working again...
 	new_entry->text_image.MakeAlphable();
 	//if(!use_opengl && new_entry->text_image.GetBaseSurface())
 	//{
 	//	ZSDL_ModifyBlack(new_entry->text_image.GetBaseSurface());
 	//	new_entry->text_image.UseDisplayFormat();
-	//	SDL_SetColorKey(new_entry->text_image.GetBaseSurface(), SDL_SRCCOLORKEY, 0x000000); 
+	//	SDL_SetColorKey(new_entry->text_image.GetBaseSurface(), SDL_SRCCOLORKEY, 0x000000);
 	//}
 
 	//set death time
@@ -749,6 +731,8 @@ void ZPlayer::DisplayPlayerList()
 		case TRAY_MODE:
 			tray_players++;
 			break;
+        case MAX_PLAYER_MODES:
+            break;
 		}
 	}
 
@@ -769,7 +753,7 @@ void ZPlayer::DisplayPlayerList()
 
 	if(spectators.size())
 		AddNewsEntry("spectators: " + spectators);
-	
+
 	//if(have_bot_players)
 	//{
 	//	string message;
@@ -930,10 +914,10 @@ void ZPlayer::SetupSelectionImages()
 
 void ZPlayer::Run()
 {
-	double whole_time;
-	double process_time;
-	double render_time;
-	double socket_time;
+//	double whole_time;
+//	double process_time;
+//	double render_time;
+//	double socket_time;
 
 	while(allow_run)
 	{
@@ -946,27 +930,27 @@ void ZPlayer::Run()
 		ProcessSocketEvents();
 		//socket_time = current_time() - socket_time;
 		//client_socket.Process();
-		
+
 		//check for sdl events
 		ProcessSDL();
-		
+
 		//process events
 		ehandler.ProcessEvents();
-		
+
 		//do stuff
 		//process_time = current_time();
 		ProcessGame();
 		//process_time = current_time() - process_time;
-		
+
 		//render
 		//render_time = current_time();
 		RenderScreen();
 		//render_time = current_time() - render_time;
 
 		//whole_time = current_time() - whole_time;
-		
+
 		//printf("player:: whole_time:%lf \t socket_time:%lf \t process:%lf \t render:%lf\n", whole_time, socket_time, process_time, render_time);
-		
+
 		uni_pause(10);
 		//uni_pause(1000 * 4 / 60);
 	}
@@ -978,22 +962,22 @@ void ZPlayer::ProcessSocketEvents()
 	int size;
 	int pack_id;
 	SocketHandler* shandler;
-	int packets_processed = 0;
-	double time_took;
+//	int packets_processed = 0;
+//	double time_took;
 
 	shandler = client_socket.GetHandler();
 
 	if(!shandler) return;
-	
+
 	//not connected, free it up
 	if(!shandler->Connected())
 	{
 		client_socket.ClearConnection();
-		
+
 		//event_list->push_back(new Event(OTHER_EVENT, DISCONNECT_EVENT, 0, NULL, 0));
 		ehandler.ProcessEvent(OTHER_EVENT, DISCONNECT_EVENT, NULL, 0, 0);
 	}
-	
+
 	else if(shandler->DoRecv())
 	{
 		//time_took = current_time();
@@ -1020,7 +1004,7 @@ void ZPlayer::ProcessSocketEvents()
 	time_took = current_time();
 	while(shandler->PacketAvailable() && shandler->GetPacket(&message, &size, &pack_id))
 	{
-		//event_list->push_back(new Event(TCP_EVENT, pack_id, 0, message, size));	
+		//event_list->push_back(new Event(TCP_EVENT, pack_id, 0, message, size));
 		ehandler.ProcessEvent(TCP_EVENT, pack_id, message, size, 0);
 		packets_processed++;
 	}
@@ -1032,7 +1016,7 @@ void ZPlayer::ProcessSocketEvents()
 void ZPlayer::ProcessGame()
 {
 	double &the_time = ztime.ztime;
-	
+
 	//zmap.DoEffects(the_time);
 
 	ZMusicEngine::Process(object_list, zmap, our_team, fort_ref_id);
@@ -1046,7 +1030,7 @@ void ZPlayer::ProcessGame()
 	zcomp_msg.Process(current_time());
 
 	zhud.Process(the_time, object_list);
-		
+
 	//sort objects
 	sort (ols.prender_olist.begin(), ols.prender_olist.end(), sort_objects_func);
 
@@ -1087,7 +1071,7 @@ void ZPlayer::ProcessGame()
 		(*i)->Process();
 
 	//gui
-	if(gui_window) 
+	if(gui_window)
 	{
 		if(gui_window->KillMe())
 			DeleteCurrentGuiWindow();
@@ -1150,7 +1134,7 @@ void ZPlayer::ProcessVerbalWarnings()
 		int our_unit_count;
 		int next_worst_unit_count = 0;
 		double our_territory_percentage;
-		double next_worst_territory_percentage;
+		double next_worst_territory_percentage=0;
 
 		our_unit_count = team_units_available[our_team];
 		our_territory_percentage = team_zone_percentage[our_team];
@@ -1169,7 +1153,7 @@ void ZPlayer::ProcessVerbalWarnings()
 
 					continue;
 				}
-				
+
 				if(next_worst_unit_count > team_units_available[i])
 					next_worst_unit_count = team_units_available[i];
 
@@ -1178,14 +1162,14 @@ void ZPlayer::ProcessVerbalWarnings()
 			}
 		}
 
-		our_unit_count *= 1.7;
+		our_unit_count = (int)((float)our_unit_count * 1.7);
 		our_territory_percentage *= 1.7;
 
-		if(next_worst_unit_count > our_unit_count && 
+		if(next_worst_unit_count > our_unit_count &&
 			next_worst_territory_percentage > our_territory_percentage)
 		{
 			next_your_losing_msg_time = the_time + 8;
-		
+
 			ZSoundEngine::PlayWav(COMP_YOUR_LOSING_0 + (rand() % MAX_COMP_LOSING_MESSAGES));
 		}
 	}
@@ -1195,7 +1179,7 @@ void ZPlayer::PlayBuildingSounds()
 {
 	bool do_play_radar = false;
 	bool do_play_robot = false;
-	bool do_play_vehicle = false;
+//	bool do_play_vehicle = false;
 
 	for(vector<ZObject*>::iterator i=object_list.begin(); i!=object_list.end(); i++)
 	{
@@ -1245,7 +1229,7 @@ void ZPlayer::PlayBuildingSounds()
 
 void ZPlayer::MissileObjectParticles(int x_, int y_, int radius, int particles)
 {
-	radius *= 0.8;
+	radius = (int)((float)radius * 0.8);
 
 	for(vector<ZObject*>::iterator i=object_list.begin(); i!=object_list.end(); i++)
 	{
@@ -1296,7 +1280,7 @@ void ZPlayer::RenderScreen()
 		//so we just render it all full then put the hud back over it
 		if(splash_fade >= 5 || use_opengl)
 			zhud.ReRenderAll();
-		
+
 		zmap.DoRender(screen);
 		zmap.DoEffects(the_time, screen);
 		RenderSmallMapFiller();
@@ -1345,7 +1329,7 @@ void ZPlayer::RenderScreen()
 		RenderMainMenu();
 
 		//render cursor
-		if(!disable_zcursor) 
+		if(!disable_zcursor)
 		{
 			cursor.Render(zmap, screen, mouse_x, mouse_y);
 			//if(mouse_x > screen->w - (HUD_WIDTH + 16) || mouse_y > screen->h - (HUD_HEIGHT + 16))
@@ -1432,12 +1416,12 @@ void ZPlayer::RenderMouse()
 		x = lbutton.map_x - shift_x;
 		y = lbutton.map_y - shift_y;
 
-		if(x < mouse_x) 
+		if(x < mouse_x)
 		{
 			dim.x = x;
 			dim.w = mouse_x - x;
 		}
-		else 
+		else
 		{
 			dim.x = mouse_x;
 			dim.w = x - mouse_x;
@@ -1448,7 +1432,7 @@ void ZPlayer::RenderMouse()
 			dim.y = y;
 			dim.h = mouse_y - y;
 		}
-		else 
+		else
 		{
 			dim.y = mouse_y;
 			dim.h = y - mouse_y;
@@ -1477,7 +1461,7 @@ void ZPlayer::RenderMouse()
 		for(to_rect.x=start_x+(4-draw_shift);to_rect.x<max_x;to_rect.x+=4)
 			selection_img[our_team].BlitSurface(NULL, &to_rect);
 			//SDL_BlitSurface( selection_img[our_team], NULL, screen, &to_rect);
-		
+
 		to_rect.y = dim.y + dim.h;
 		//if(to_rect.y < screen->h - HUD_HEIGHT - 1 && to_rect.y > 0)
 		if(to_rect.y < init_h - HUD_HEIGHT - 1 && to_rect.y > 0)
@@ -1630,6 +1614,7 @@ void ZPlayer::HandleButton(hud_buttons button)
 	case T_BUTTON: T_Button(); break;
 	case V_BUTTON: V_Button(); break;
 	case Z_BUTTON: Z_Button(); break;
+	case MAX_HUD_BUTTONS: break;
 	}
 }
 
@@ -1837,7 +1822,7 @@ void ZPlayer::FocusCameraTo(int map_x, int map_y)
 
 void ZPlayer::ProcessFocusCamerato()
 {
-	double the_time = current_time();
+//	double the_time = current_time();
 	int shift_x, shift_y, view_w, view_h;
 	double dx, dy;
 	double end_dx, end_dy;
@@ -1874,7 +1859,7 @@ void ZPlayer::ProcessFocusCamerato()
 		if(dy > 0) end_dy = 1;
 		else end_dy = -1;
 	}
-	
+
 	if(end_dx > 0)
 		shifted_x = zmap.ShiftViewRight((int)end_dx);
 	else
@@ -1899,23 +1884,23 @@ void ZPlayer::StartMouseScrolling(int new_mouse_x, int new_mouse_y)
 {
 	if(SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_OFF) return;
 
-	if(!(mouse_x < 10) && (new_mouse_x < 10)) 
+	if(!(mouse_x < 10) && (new_mouse_x < 10))
 	{
 		horz_scroll_over = 0;
 		last_horz_scroll_time = current_time();
 	}
-	else if(!(mouse_x > screen->w - 10) && (new_mouse_x > screen->w - 10)) 
+	else if(!(mouse_x > screen->w - 10) && (new_mouse_x > screen->w - 10))
 	{
 		horz_scroll_over = 0;
 		last_horz_scroll_time = current_time();
 	}
 
-	if(!(mouse_y < 10) && (new_mouse_y < 10)) 
+	if(!(mouse_y < 10) && (new_mouse_y < 10))
 	{
 		vert_scroll_over = 0;
 		last_vert_scroll_time = current_time();
 	}
-	else if(!(mouse_y > screen->h - 10) && (new_mouse_y > screen->h - 10)) 
+	else if(!(mouse_y > screen->h - 10) && (new_mouse_y > screen->h - 10))
 	{
 		vert_scroll_over = 0;
 		last_vert_scroll_time = current_time();
@@ -1965,7 +1950,11 @@ bool ZPlayer::DoKeyScrollDown()
 void ZPlayer::ProcessScroll()
 {
 	double the_time = current_time();
-	const double shift_speed = (DoKeyScrollUp() || DoKeyScrollDown() || DoKeyScrollLeft() || DoKeyScrollRight()) ? client_settings.KeyboardScrollSpeed : client_settings.MouseScrollSpeed;
+#ifdef WEBOS_PORT
+	const double shift_speed = 800;
+#else
+	const double shift_speed = 400;
+#endif
 	double time_diff;
 	double the_shift;
 
@@ -2123,7 +2112,7 @@ void ZPlayer::RenderNews()
 	if(gui_factory_list && gui_factory_list->IsVisible()) to_rect.x += 142;
 
 	//cut down to size
-	while(news_list.size() > max_news_history)
+	while((int)news_list.size() > max_news_history)
 	{
 		//vector<news_entry*>::iterator i;
 
@@ -2161,7 +2150,7 @@ void ZPlayer::RenderNews()
 			fade_alpha = (time_left / start_fade_time) * 255;
 
 			//SDL_SetAlpha(i->text_image,SDL_RLEACCEL | SDL_SRCALPHA,(Uint8)fade_alpha);
-			cur_entry->text_image.SetAlpha(fade_alpha);
+			cur_entry->text_image.SetAlpha((Uint8)fade_alpha);
 		}
 		else
 			cur_entry->text_image.SetAlpha(255);
@@ -2193,19 +2182,19 @@ void ZPlayer::RenderObjects()
 	//draw rallypoints of "selected" building
 	if(gui_window && gui_window->GetBuildingObj())
 		gui_window->GetBuildingObj()->DoRenderWaypoints(zmap, screen, object_list, true);
-	
+
 	//draw object's waypoints
 	for(vector<ZObject*>::iterator i=ols.non_mapitem_olist.begin(); i!=ols.non_mapitem_olist.end(); i++)
 		(*i)->DoRenderWaypoints(zmap, screen, object_list);
-	
+
 	//draw objects
 	for(vector<ZObject*>::iterator i=ols.prender_olist.begin(); i!=ols.prender_olist.end(); i++)
 		(*i)->DoRender(zmap, screen);
-	
+
 	//draw after effects
 	for(vector<ZObject*>::iterator i=ols.prender_olist.begin(); i!=ols.prender_olist.end(); i++)
 		(*i)->DoAfterEffects(zmap, screen);
-	
+
 	//effects
 	for(vector<ZEffect*>::iterator i=effect_list.begin(); i!=effect_list.end(); i++)
 		(*i)->DoRender(zmap, screen);
@@ -2213,7 +2202,7 @@ void ZPlayer::RenderObjects()
 	//animals
 	for(vector<ZObject*>::iterator i=bird_list.begin(); i!=bird_list.end();i++)
 		(*i)->DoRender(zmap, screen);
-	
+
 	//draw selection stuff
 	for(vector<ZObject*>::iterator i=select_info.selected_list.begin(); i!=select_info.selected_list.end(); i++)
 	{
@@ -2224,7 +2213,7 @@ void ZPlayer::RenderObjects()
 	////draw attack radius for the chosen one
 	//if(zhud.GetSelectedObject())
 	//	zhud.GetSelectedObject()->RenderAttackRadius(zmap, screen);
-	
+
 	//draw hover names
 	if(hover_object)
 	{
@@ -2349,16 +2338,58 @@ void ZPlayer::ExitProgram()
 	exit(0);
 }
 
+#ifdef WEBOS_PORT
+
+SDL_TimerID timer_f1 = NULL, timer_f2 = NULL; // Fingers #1 and #2
+SDL_Event rclk_event_dn,rclk_event_up,lclk_event_dn,lclk_event_up;
+int old_x,old_y;
+bool lb_down=false;
+bool can_be_scroll_gesture=false;
+bool not_a_click=false;
+
+Uint32 long_tap_interval=500;//interval for Rclick=LongTap
+
+#define MY_TIMEREVENT_FINGER1   10001
+
+Uint32 timerCallback_Finger1(Uint32 interval, void *param)
+{
+  printf("Fing1 timeout\n");
+  SDL_Event event;
+  event.type = SDL_USEREVENT;
+  event.user.code = MY_TIMEREVENT_FINGER1;
+  event.user.data1 = (void *)0;
+  event.user.data2 = (void *)0;
+  SDL_PushEvent(&event);
+  return 0;//0=stop timer, interval=continue again;
+}
+
+#define SEND_L_BUTT_DOWN_EVENT(XXX1,YYY1) { zmap.GetViewShift(shift_x, shift_y); \
+                                                 lbutton.x = XXX1; lbutton.y = YYY1; \
+                                                 lbutton.map_x = lbutton.x + shift_x; lbutton.map_y = lbutton.y + shift_y; \
+                                                 ehandler.ProcessEvent(SDL_EVENT, LCLICK_EVENT, NULL, 0, 0);}
+#define SEND_R_BUTT_DOWN_EVENT(XXX1,YYY1) { zmap.GetViewShift(shift_x, shift_y); \
+                                                 rbutton.x = XXX1; rbutton.y = YYY1; \
+                                                 rbutton.map_x = rbutton.x + shift_x; rbutton.map_y = rbutton.y + shift_y; \
+                                                 ehandler.ProcessEvent(SDL_EVENT, RCLICK_EVENT, NULL, 0, 0);}
+#define SEND_L_BUTT_UP_EVENT() ehandler.ProcessEvent(SDL_EVENT, LUNCLICK_EVENT, NULL, 0, 0)
+#define SEND_R_BUTT_UP_EVENT() ehandler.ProcessEvent(SDL_EVENT, RUNCLICK_EVENT, NULL, 0, 0)
+
+#endif
+
 void ZPlayer::ProcessSDL()
 {
 	SDL_Event event;
+#ifndef WEBOS_PORT //sorry, no keys support on touchpad!
 	key_event the_key;
+#endif
 	int shift_x, shift_y;
-	
 	while(SDL_PollEvent(&event))
-		switch( event.type ) 
+		switch( event.type )
 	{
 		case SDL_QUIT:
+#ifdef WEBOS_PORT
+// TODO (iev0107m#1#): Save settings and achivements ?
+#endif
 			ExitProgram();
 			break;
 		case SDL_VIDEORESIZE:
@@ -2367,6 +2398,121 @@ void ZPlayer::ProcessSDL()
 			//ehandler.AddEvent(new Event(SDL_EVENT, RESIZE_EVENT, 0, NULL, 0));
 			ehandler.ProcessEvent(SDL_EVENT, RESIZE_EVENT, NULL, 0, 0);
 			break;
+#ifdef WEBOS_PORT
+// TODO (iev0107m#1#): Fix the pause in background: Resume window appears, but the pause is not set in realuty!
+		case SDL_ACTIVEEVENT:
+            if (!event.active.gain) {//0 = to background, 1 = move to foreground
+                SendSetPaused(true);
+                ztime.Pause();
+            }else{
+                if (ztime.IsPaused()){
+                    SendSetPaused(false);
+                    ztime.Resume();
+                }
+            }
+			break;
+        case SDL_USEREVENT:
+            if (event.user.code==MY_TIMEREVENT_FINGER1){
+                if (timer_f1) SDL_RemoveTimer(timer_f1);
+                timer_f1=NULL;
+                lb_down=false;
+                SEND_R_BUTT_DOWN_EVENT(event.button.x,event.button.y);
+                SEND_R_BUTT_UP_EVENT();
+            }
+        break;
+		case SDL_MOUSEMOTION:
+            if (!lb_down){
+                mouse_x = event.motion.x;
+                mouse_y = event.motion.y;
+                ehandler.ProcessEvent(SDL_EVENT, MOTION_EVENT, NULL, 0, 0);
+            }else{
+                if ((abs(event.motion.x-old_x)>DELTA_X_SCROLL)||(abs(event.motion.y-old_y)>DELTA_Y_SCROLL)){
+// stop timer, it is not a R-Click
+                    if (timer_f1) SDL_RemoveTimer(timer_f1);
+                    timer_f1=NULL;
+                    if ((!can_be_scroll_gesture)||((abs(event.motion.x-old_x)>DELTA_X_SCROLL)&&(abs(event.motion.y-old_y)>DELTA_Y_SCROLL))){
+// selection, finger goes in vertical AND horizontal
+                        can_be_scroll_gesture=false;
+                        not_a_click=false;
+// Lclick on old place
+                        SEND_L_BUTT_DOWN_EVENT(old_x,old_y);
+// Mouse move on new place
+                        mouse_x = event.motion.x;
+                        mouse_y = event.motion.y;
+                        ehandler.ProcessEvent(SDL_EVENT, MOTION_EVENT, NULL, 0, 0);
+                    }else{
+                        not_a_click=true;
+//                     scroll with gesture (finger goes EITHER vertical OR horizontal, NOT BOTH directions)
+                        if (abs(event.motion.x-old_x)>DELTA_X_SCROLL){ // horizontal scroll
+                            int tens=abs(event.motion.x-old_x)/SCROLL_MULTIPLIER;
+                            if (event.motion.x>old_x) { // scroll left
+                                zmap.ShiftViewLeft(tens);
+                            }else{ // scroll right
+                                zmap.ShiftViewRight(tens);
+                            }
+                        }else{ //vertical scroll
+                            int tens=abs(event.motion.y-old_y)/SCROLL_MULTIPLIER;
+                            if (event.motion.y>old_y){ // scroll  up
+                                zmap.ShiftViewUp(tens);
+                            }else{ //scroll down
+                                zmap.ShiftViewDown(tens);
+                            }
+                        }
+/*                        mouse_x = event.motion.x;
+                        mouse_y = event.motion.y;
+                        ehandler.ProcessEvent(SDL_EVENT, MOTION_EVENT, NULL, 0, 0);*/
+                    }
+                }
+            }
+            break;
+		case SDL_MOUSEBUTTONDOWN:
+			zmap.GetViewShift(shift_x, shift_y);
+// we support long tap as Rclick only in play areas (VIEW_SCREEN_W x VIEW_SCREEN_H)
+            if ((event.button.x<=VIEW_SCREEN_W)&&(event.button.y<VIEW_SCREEN_W)){
+                if (event.motion.which==0){
+                    if (timer_f1) SDL_RemoveTimer(timer_f1);
+                    timer_f1 = SDL_AddTimer(long_tap_interval, &timerCallback_Finger1, NULL);
+                    old_x=event.button.x;
+                    old_y=event.button.y;
+                    lb_down=true;
+                    can_be_scroll_gesture=true;
+                    not_a_click=false;
+                    break;
+                } else
+                    if (event.motion.which<9) // we do not use multitouch, so ignore fingers 1..8
+                        break;
+            }
+			switch(event.button.button)
+			{
+			case SDL_BUTTON_LEFT:
+				SEND_L_BUTT_DOWN_EVENT(event.button.x,event.button.y);
+				break;
+			}
+			break;
+		case SDL_MOUSEBUTTONUP:
+// we support long tap as Rclick only in play arean (VIEW_SCREEN_W x VIEW_SCREEN_H)
+            if ((event.button.x<=VIEW_SCREEN_W)&&(event.button.y<VIEW_SCREEN_W)){
+                if (event.motion.which==0){
+                    lb_down=false;
+                    if (timer_f1){
+                        SDL_RemoveTimer(timer_f1);
+                        timer_f1=NULL;
+                        SEND_L_BUTT_DOWN_EVENT(event.button.x,event.button.y);
+                    }
+                    if (!not_a_click) SEND_L_BUTT_UP_EVENT();
+                    break;
+                } else if (event.motion.which<9) // we do not use multitouch, so ignore fingers 1..8
+                    break;
+            }
+			switch(event.button.button)
+			{
+			case SDL_BUTTON_LEFT:
+				SEND_L_BUTT_UP_EVENT();
+				break;
+			}
+			break;
+	}
+#else
 		case SDL_MOUSEMOTION:
 			StartMouseScrolling(event.motion.x, event.motion.y);
 			mouse_x = event.motion.x;
@@ -2442,6 +2588,7 @@ void ZPlayer::ProcessSDL()
 			ehandler.ProcessEvent(SDL_EVENT, KEYUP_EVENT_, (char*)&the_key, sizeof(key_event), 0);
 			break;
 	}
+#endif
 }
 
 void ZPlayer::DoSplash()
@@ -2456,7 +2603,7 @@ void ZPlayer::DoSplash()
 	if(splash_fade >= 5)
 	{
 		SDL_Rect to_rect;
-		
+
 		//decrease fade?
 		if(graphics_loaded)// && zmap.Loaded())
 		{
@@ -2465,24 +2612,41 @@ void ZPlayer::DoSplash()
 				last_time = current_time();
 				did_init = true;
 			}
-			
+
 			splash_fade -= (float)(current_time() - last_time) * fade_per_second;
 			if(splash_fade < 0) splash_fade = 0;
-			
+
 			switch(sound_setting)
 			{
-			case SOUND_25: Mix_VolumeMusic((80 / 4) * splash_fade / 255); break;
-			case SOUND_50: Mix_VolumeMusic((80 / 2) * splash_fade / 255); break;
-			case SOUND_75: Mix_VolumeMusic((80 * 3 / 4) * splash_fade / 255); break;
-			case SOUND_100: Mix_VolumeMusic((80) * splash_fade / 255); break;
+			case SOUND_25: Mix_VolumeMusic((int)((80.0f / 4.0f) * splash_fade / 255.0f)); break;
+			case SOUND_50: Mix_VolumeMusic((int)((80.0f / 2.0f) * splash_fade / 255.0f)); break;
+			case SOUND_75: Mix_VolumeMusic((int)((80.0f * 3.0f / 4.0f) * splash_fade / 255.0f)); break;
+			case SOUND_100: Mix_VolumeMusic((int)((80.0f) * splash_fade / 255.0f)); break;
 			}
 			//Mix_VolumeMusic((int)(128.0 * splash_fade / 255));
 
 			//if(splash_screen)
 			//SDL_SetAlpha(splash_screen,SDL_RLEACCEL | SDL_SRCALPHA,(Uint8)splash_fade);
-			splash_screen.SetAlpha(splash_fade);
+			splash_screen.SetAlpha((Uint8)splash_fade);
 		}
-		
+
+#ifdef WEBOS_PORT
+// additional two images 'ZOD Engine'
+        {
+			ZSDL_Surface splash_imag2;
+			splash_imag2.LoadBaseImage("assets/zod_engine.bmp");
+			splash_imag2.MakeAlphable();
+			splash_imag2.SetAlpha((Uint8)(splash_fade / 1.5f));
+			if(splash_imag2.GetBaseSurface())
+			{
+				to_rect.x = to_rect.y = 0;
+				splash_imag2.BlitSurface(NULL, &to_rect);
+				to_rect.x = 500;
+				to_rect.y = 515;
+				splash_imag2.BlitSurface(NULL, &to_rect);
+			}
+		}
+#endif
 		//render
 		//to_rect.x = (screen->w - splash_screen->w) >> 1;
 		//to_rect.y = (screen->h - splash_screen->h) >> 1;
@@ -2491,7 +2655,7 @@ void ZPlayer::DoSplash()
 
 		splash_screen.BlitSurface(NULL, &to_rect);
 		//zmap.RenderZSurface(&splash_screen, init_w >> 1, init_h >> 1, true);
-		
+
 		//if(splash_screen)
 		//SDL_BlitSurface(splash_screen, NULL, screen, &to_rect);
 
@@ -2505,7 +2669,7 @@ void ZPlayer::DoSplash()
 
 			loading_text.LoadBaseImage(ZFontEngine::GetFont(LOADING_WHITE_FONT).Render(loading_c));
 			loading_text.MakeAlphable();
-			loading_text.SetAlpha(splash_fade / 1.5);
+			loading_text.SetAlpha((Uint8)(splash_fade / 1.5f));
 			if(loading_text.GetBaseSurface())
 			{
 				/*to_rect.x += splash_screen.GetBaseSurface()->w;
@@ -2518,7 +2682,23 @@ void ZPlayer::DoSplash()
 				loading_text.BlitSurface(NULL, &to_rect);
 			}
 		}
+#ifdef WEBOS_PORT
+// credits on splash
+        {
+			ZSDL_Surface credits_text;
+			char credits_c[500]=CREDITS_STRING;
 
+			credits_text.LoadBaseImage(ZFontEngine::GetFont(BIG_WHITE_FONT).Render(credits_c));
+			credits_text.MakeAlphable();
+			credits_text.SetAlpha((Uint8)(splash_fade / 1.5f));
+			if(credits_text.GetBaseSurface())
+			{
+				to_rect.x = 100;
+				to_rect.y = 480;
+				credits_text.BlitSurface(NULL, &to_rect);
+			}
+		}
+#endif
 
 		//load the normal music
 		if(splash_fade < 5)
@@ -2534,7 +2714,7 @@ void ZPlayer::DoSplash()
 		}
 			//if(music_on) zmap.PlayMusic();
 	}
-	
+
 }
 
 void ZPlayer::SelectZObject(ZObject *obj)
@@ -2649,7 +2829,7 @@ void ZPlayer::CollectSelectables()
 
 			//it already in the list?
 			for(vector<ZObject*>::iterator j=choice_list.begin(); j!=choice_list.end(); j++)
-				if(*j == pot_obj) 
+				if(*j == pot_obj)
 				{
 					pot_obj = NULL;
 					break;
@@ -2729,11 +2909,11 @@ bool ZPlayer::CouldCollectSelectables()
 		//the group leader would be chosen
 		//if we were only selecting one unit
 		if(would_be_single_unit && obj->GetGroupLeader()) obj = obj->GetGroupLeader();
-		
+
 		if(!obj->Selectable()) continue;
 		if(obj->GetOwner() != our_team) continue;
 		if(!obj->WithinSelection(map_left, map_right, map_top, map_bottom)) continue;
-		
+
 		return true;
 	}
 
@@ -3005,7 +3185,7 @@ void ZPlayer::SendDevWayPointsOfSelected()
 		if(select_info.selected_list.size() && (*select_info.selected_list.begin())->GetWayPointDevList().size())
 		{
 			waypoint &wp = *(*select_info.selected_list.begin())->GetWayPointDevList().begin();
-			
+
 			remove_obj_from_selected = ZObject::NearestObjectToCoords(select_info.selected_list, wp.x, wp.y);
 
 			if(remove_obj_from_selected) SendDevWayPointsOfObj(remove_obj_from_selected);
@@ -3237,7 +3417,7 @@ bool ZPlayer::MainMenuAbsorbLClick()
 
 			if(the_flags.set_volume) SetSoundSetting(the_flags.set_volume_value);
 
-			if(the_flags.set_game_speed) 
+			if(the_flags.set_game_speed)
 			{
 				float_packet the_data;
 
@@ -3270,7 +3450,7 @@ bool ZPlayer::MainMenuAbsorbLUnClick()
 
 			if(the_flags.pause_game) SendSetPaused(true);
 
-			if(the_flags.start_bot) 
+			if(the_flags.start_bot)
 			{
 				int_packet the_data;
 
@@ -3278,7 +3458,7 @@ bool ZPlayer::MainMenuAbsorbLUnClick()
 				client_socket.SendMessage(START_BOT_EVENT, (char*)&the_data, sizeof(int_packet));
 			}
 
-			if(the_flags.stop_bot) 
+			if(the_flags.stop_bot)
 			{
 				int_packet the_data;
 
@@ -3286,7 +3466,7 @@ bool ZPlayer::MainMenuAbsorbLUnClick()
 				client_socket.SendMessage(STOP_BOT_EVENT, (char*)&the_data, sizeof(int_packet));
 			}
 
-			if(the_flags.change_map) 
+			if(the_flags.change_map)
 			{
 				int_packet the_data;
 
@@ -3372,7 +3552,7 @@ bool ZPlayer::GuiAbsorbLClick()
 		else
 			DeleteCurrentGuiWindow();
 	}
-	
+
 
 	//move forward?
 	if(CouldCollectSelectables()) return false;
@@ -3583,9 +3763,9 @@ void ZPlayer::SetPlaceCannonCords()
 
 void ZPlayer::RenderPlaceCannon()
 {
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 	int map_x, map_y;
-	int shift_x, shift_y;
+//	int shift_x, shift_y;
 
 	if(!place_cannon) return;
 
@@ -3835,6 +4015,9 @@ void ZPlayer::InitMenus()
 
 void ZPlayer::LoadMainMenu(int menu_type, bool kill_if_open, gmm_warning_flag warning_flags)
 {
+#ifdef WEBOS_PORT
+// TODO (iev0107m#1#): 'Next map' & 'Prev map'  button in menu ?
+#endif
 	ZGuiMainMenuBase *new_menu = NULL;
 
 	//already loaded?
@@ -3875,7 +4058,7 @@ void ZPlayer::LoadMainMenu(int menu_type, bool kill_if_open, gmm_warning_flag wa
 	default: printf("ZPlayer::LoadMainMenu: bad menu_type:%d\n", menu_type); break;
 	}
 
-	if(new_menu) 
+	if(new_menu)
 	{
 		new_menu->SetCenterCoords(init_w >> 1, init_h >> 1);
 		new_menu->SetPlayerInfoList(&player_info);
@@ -3923,28 +4106,28 @@ void ZPlayer::SetSoundSetting(int sound_setting_)
 
 	switch(sound_setting)
 	{
-	case SOUND_0: 
-		Mix_Volume(-1, 0); 
+	case SOUND_0:
+		Mix_Volume(-1, 0);
 		Mix_VolumeMusic(0);
 		AddNewsEntry("volume off");
 		break;
-	case SOUND_25: 
-		Mix_Volume(-1, 128 / 4); 
+	case SOUND_25:
+		Mix_Volume(-1, 128 / 4);
 		Mix_VolumeMusic(80 / 4);
 		AddNewsEntry("volume 25%");
 		break;
-	case SOUND_50: 
-		Mix_Volume(-1, 128 / 2); 
+	case SOUND_50:
+		Mix_Volume(-1, 128 / 2);
 		Mix_VolumeMusic(80 / 2);
 		AddNewsEntry("volume 50%");
 		break;
-	case SOUND_75: 
-		Mix_Volume(-1, 128 * 3 / 4); 
+	case SOUND_75:
+		Mix_Volume(-1, 128 * 3 / 4);
 		Mix_VolumeMusic(80 * 3 / 4);
 		AddNewsEntry("volume 75%");
 		break;
-	case SOUND_100: 
-		Mix_Volume(-1, 128); 
+	case SOUND_100:
+		Mix_Volume(-1, 128);
 		Mix_VolumeMusic(80);
 		AddNewsEntry("volume full");
 		break;

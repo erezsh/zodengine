@@ -139,7 +139,7 @@ void ZRobot::Common_Process(double the_time)
 		case R_ATTACKING:
 			if(!attack_object) break;
 			attack_object->GetCenterCords(tx, ty);
-			new_dir = DirectionFromLoc(tx - loc.x, ty - loc.y);
+			new_dir = DirectionFromLoc((float)(tx - loc.x), (float)(ty - loc.y));
 			if(new_dir != -1) direction = new_dir;
 			break;
 	}

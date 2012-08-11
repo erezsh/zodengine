@@ -54,8 +54,8 @@ public:
 
 	void Move(double percentage)
 	{
-		x = start_x + ((w_dist) * percentage);
-		y = start_y + ((h_dist) * percentage);
+		x = start_x + (int)((w_dist) * percentage);
+		y = start_y + (int)((h_dist) * percentage);
 	}
 
 	void MoveToDest()
@@ -71,7 +71,7 @@ public:
 	int w, h;
 	int w_dist, h_dist;
 };
-
+ 
 extern bool ecc_render_item_comp (ECraneConcoItem* a, ECraneConcoItem* b);
 
 class ECraneConco : public ZEffect

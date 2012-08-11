@@ -235,7 +235,7 @@ void ZCompMessageEngine::Process(double the_time)
 void ZCompMessageEngine::DoRender(ZMap &the_map, SDL_Surface *dest)
 {
 	int shift_x, shift_y, view_w, view_h;
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 
 	if(show_message_img && show_the_message && show_message_img->GetBaseSurface())
 	{
@@ -283,7 +283,7 @@ void ZCompMessageEngine::RenderResume(ZMap &the_map, SDL_Surface *dest)
 
 void ZCompMessageEngine::RenderGuns(ZMap &the_map, SDL_Surface *dest)
 {
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 	int shift_x, shift_y, view_w, view_h;
 	int x, y;
 

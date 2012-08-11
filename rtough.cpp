@@ -27,8 +27,8 @@ void RTough::Init()
 {
 	int i, j, k;
 	char filename_c[500];
-	SDL_Surface *temp_surface;
-	
+//	SDL_Surface *temp_surface;
+
 	for(i=1;i<MAX_TEAM_TYPES;i++)
 		for(j=0;j<MAX_ANGLE_TYPES;j++)
 			for(k=0;k<3;k++)
@@ -92,8 +92,8 @@ void RTough::DoRender(ZMap &the_map, SDL_Surface *dest, int shift_x, int shift_y
 	int &y = loc.y;
 	ZSDL_Surface *base_surface;
 	SDL_Rect from_rect, to_rect;
-	int lx, ly;
-	
+//	int lx, ly;
+
 	if(owner != NULL_TEAM)
 	{
 		switch(mode)
@@ -112,11 +112,11 @@ void RTough::DoRender(ZMap &the_map, SDL_Surface *dest, int shift_x, int shift_y
 	}
 	else
 		base_surface = &null_img;
-	
+
 	if(!base_surface) return;
 
 	submerge_amount = the_map.SubmergeAmount(loc.x+8,loc.y+8);
-	
+
 	//if(the_map.GetBlitInfo(base_surface, x, y, from_rect, to_rect))
 	if(the_map.GetBlitInfo(x, y + submerge_amount, 16, 16 - submerge_amount, from_rect, to_rect))
 	{
@@ -132,7 +132,7 @@ void RTough::DoRender(ZMap &the_map, SDL_Surface *dest, int shift_x, int shift_y
 
 void RTough::DoAfterEffects(ZMap &the_map, SDL_Surface *dest, int shift_x, int shift_y)
 {
-	
+
 }
 
 void RTough::FireMissile(int x_, int y_)
@@ -195,8 +195,8 @@ void RTough::FireMissile(int x_, int y_)
 int RTough::Process()
 {
 	double &the_time = ztime->ztime;
-	int &x = loc.x;
-	int &y = loc.y;
+//	int &x = loc.x;
+//	int &y = loc.y;
 
 	Common_Process(the_time);
 

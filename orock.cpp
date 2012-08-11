@@ -64,7 +64,7 @@ ORock::ORock(ZTime *ztime_, ZSettings *zsettings_, int palette_) : ZObject(ztime
 void ORock::Init()
 {
 	string filename;
-	char filename_c[500];
+//	char filename_c[500];
 	int i, j;
 
 	for(i=0;i<MAX_PLANET_TYPES;i++)
@@ -448,8 +448,8 @@ void ORock::SetupRockRenders(ZMap &the_map, vector<ZObject*> object_list)
 	for(vector<ZObject*>::iterator obj=object_list.begin(); obj!=object_list.end(); obj++)
 	{
 		unsigned char ot, oid;
-		int x, y;
-		int tx, ty;
+//		int x, y;
+//		int tx, ty;
 
 		(*obj)->GetObjectID(ot, oid);
 

@@ -9,7 +9,7 @@ ZSDL_Surface EStandard::edeath_fire[4];
 EStandard::EStandard(ZTime *ztime_, int x_, int y_, int object) : ZEffect(ztime_)
 {
 	double &the_time = ztime->ztime;
-	int i;
+//	int i;
 
 	if(!finished_init)
 	{
@@ -103,7 +103,7 @@ void EStandard::Process()
 
 void EStandard::DoRender(ZMap &zmap, SDL_Surface *dest)
 {
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 
 	if(killme) return;
 

@@ -165,11 +165,11 @@ int AngleFromLoc(float dx, float dy)
 	a = atan2(dy,dx);
 
 	//atan2 is kind of funky
-	if(a < 0) a += 3.14159 + 3.14159;
+	if(a < 0) a += 3.14159f + 3.14159f;
 
 	//printf("a:%f\n", a);
 
-	ret = (int)(180 * a / 3.14159);
+	ret = (int)(180 * a / 3.14159f);
 
 	while(ret >= 360) ret = ret - 360;
 	while(ret < 0) ret = ret + 360;
@@ -181,7 +181,7 @@ void draw_selection_box(SDL_Surface *surface, SDL_Rect dim, SDL_Color color, int
 {
 	const int padding = 3;
 	const int the_len = 5;
-	int x_i, y_i, x_end, y_end;
+	int /* x_i, y_i,*/ x_end, y_end;
 	SDL_Rect line_box;
 	//int sdlmap;
 
@@ -336,7 +336,7 @@ void draw_selection_box(SDL_Surface *surface, SDL_Rect dim, SDL_Color color, int
 
 void draw_box(SDL_Surface *surface, SDL_Rect dim, SDL_Color color, int max_x, int max_y)
 {
-	int x_i, y_i;
+//	int x_i, y_i;
 	SDL_Rect line_box;
 	//int sdlmap;
 
@@ -676,9 +676,9 @@ void put32pixel(SDL_Surface *surface, int x, int y, SDL_Color color)
 {
 	SDL_PixelFormat *fmt;
 	//SDL_Surface *surface;
-	SDL_Color return_color;
-	Uint32 temp, *pixel;
-	Uint8 red, green, blue, alpha;
+//	SDL_Color return_color;
+	Uint32 /* temp,*/ *pixel;
+//	Uint8 red, green, blue, alpha;
 	
 	if(x<0) return;
 	if(y<0) return;

@@ -199,7 +199,7 @@ namespace ZPath_Finding_AStar
 		//	closed_list.list = (pf_point*)realloc(closed_list.list, closed_list.alloc_size * sizeof(pf_point));
 		//}
 		//closed_list.list[closed_list.size++] = tp;
-		
+
 	}
 
 	inline pf_point lowest_f_cost(pf_point_array &open_list)
@@ -217,7 +217,7 @@ namespace ZPath_Finding_AStar
 			if(lowest_found.f > ip.f)
 				lowest_found = ip;
 		}
-			
+
 		//not found?
 		return lowest_found;
 	}
@@ -259,7 +259,7 @@ namespace ZPath_Finding_AStar
 		const int ticks_until_pause = 90;
 		int total_ticks;
 		int pause_ticks;
-		double start_time, end_time;
+//		double start_time, end_time;
 		//vector<pf_point> open_list;
 		//vector<pf_point> closed_list;
 		pf_point_array open_list;
@@ -275,7 +275,7 @@ namespace ZPath_Finding_AStar
 		int end_y = response->end_y / 16;
 
 		//start and end ok?
-		if(!tile_ok(start_x, start_y, start_x, start_y, response) || 
+		if(!tile_ok(start_x, start_y, start_x, start_y, response) ||
 			!tile_ok(end_x, end_y, end_x, end_y, response))
 		{
 			response->pf_point_list.push_back(pf_point(response->end_x, response->end_y));
@@ -287,7 +287,7 @@ namespace ZPath_Finding_AStar
 
 		//init lists
 		{
-			int size;
+//			int size;
 
 			open_list.alloc_size = 1000;
 			open_list.list = (pf_point*)malloc(open_list.alloc_size * sizeof(pf_point));
@@ -329,7 +329,7 @@ namespace ZPath_Finding_AStar
 
 			remove_from_open(cp, open_list, closed_list);
 
-			if(response->kill_thread) 
+			if(response->kill_thread)
 			{
 				open_list.FreeList();
 				open_list.FreePointIndex();
@@ -447,7 +447,7 @@ namespace ZPath_Finding_AStar
 		}
 
 		final_path.push_back(pf_point(response->end_x, response->end_y));
-		
+
 		response->pf_point_list = final_path;
 		//return final_path;
 

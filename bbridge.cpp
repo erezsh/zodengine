@@ -74,7 +74,7 @@ void BBridge::DoRender(ZMap &the_map, SDL_Surface *dest, int shift_x, int shift_
 	int &x = loc.x;
 	int &y = loc.y;
 	ZSDL_Surface *base_surface;
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 
 	if(do_rerender) ReRenderImages();
 
@@ -168,7 +168,7 @@ void BBridge::DoTurrentEffect(bool is_reversed)
 void BBridge::SetMapImpassables(ZMap &tmap)
 {
 	int tx, ty, ex, ey;
-	int i, j;
+//	int i, j;
 
 	tx = loc.x / 16;
 	ty = loc.y / 16;
@@ -196,7 +196,7 @@ void BBridge::SetMapImpassables(ZMap &tmap)
 void BBridge::ImpassCenter(ZMap &tmap, bool impassable)
 {
 	int tx, ty, ex, ey;
-	int i, j;
+//	int i, j;
 
 	tx = loc.x / 16;
 	ty = loc.y / 16;
@@ -294,13 +294,13 @@ void BBridge::ReRenderImages()
 	//erm it all exist?
 	if(!render_img.GetBaseSurface() || !render_damaged_img.GetBaseSurface() || !render_destroyed_img.GetBaseSurface())
 	{
-		printf("error: not able to create base bridge image for rendering\n");
+//		mprintf("error: not able to create base bridge image for rendering\n");
 		return;
 	}
 
 	if(!planet_template[palette].GetBaseSurface())
 	{
-		printf("error: required bridge palette not loaded\n");
+//		mprintf("error: required bridge palette not loaded\n");
 		return;
 	}
 	
@@ -309,7 +309,7 @@ void BBridge::ReRenderImages()
 		//double check dimensions?
 		if((width < 4 || height < 5) || (render_img.GetBaseSurface()->w != width * 16 || render_img.GetBaseSurface()->h != height * 16))
 		{
-			printf("error: bridge dimensions incorrect\n");
+//			mprintf("error: bridge dimensions incorrect\n");
 			return;
 		}
 
@@ -348,7 +348,7 @@ void BBridge::ReRenderImages()
 		//double check dimensions?
 		if((width < 5 || height < 4) || (render_img.GetBaseSurface()->w != width * 16 || render_img.GetBaseSurface()->h != height * 16))
 		{
-			printf("error: bridge dimensions incorrect\n");
+//			mprintf("error: bridge dimensions incorrect\n");
 			return;
 		}
 

@@ -92,9 +92,9 @@ bool ZMapCraterGraphics::CraterExists(bool is_small, int palette, int crater_typ
 	if(crater_type >= MAX_KNOWN_CRATER_TYPES) return false;
 
 	if(is_small)
-		return crater_small_n[palette][crater_type];
+		return crater_small_n[palette][crater_type] != 0;
 	else
-		return crater_large_n[palette][crater_type];
+		return crater_large_n[palette][crater_type] != 0;
 }
 
 ZSDL_Surface &ZMapCraterGraphics::RandomCrater(bool is_small, int palette, int crater_type)

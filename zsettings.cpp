@@ -333,7 +333,7 @@ void ZSettings::CensorSettings()
 {
 	//some settings are forced to certain values
 	//as some parts of the code were set to expect this
-	int oid;
+//	int oid;
 
 	//non missiles
 	robot_settings[GRUNT].CensorNonMissileUnit();
@@ -393,7 +393,7 @@ bool ZSettings::LoadSettings(string filename)
 {
 	FILE *fp;
 
-	fp = fopen(filename.c_str(), "r");
+	fp=fopen(filename.c_str(), "r");
 
 	if(!fp)
 	{
@@ -555,7 +555,7 @@ bool ZSettings::SaveSettings(string filename)
 {
 	FILE *fp;
 
-	fp = fopen(filename.c_str(), "w");
+	fp=fopen(filename.c_str(), "w");
 
 	if(!fp)
 	{

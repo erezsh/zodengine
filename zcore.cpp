@@ -29,7 +29,7 @@ void ZCore::Setup()
 
 void ZCore::Run()
 {
-	
+
 }
 
 void ZCore::SetBotBypassData(char *data, int size)
@@ -43,7 +43,7 @@ void ZCore::SetBotBypassData(char *data, int size)
 
 void ZCore::CreateRandomBotBypassData(char *data, int &size)
 {
-	srand(time(0));
+	srand((unsigned int)time(0));
 
 	size = MAX_BOT_BYPASS_SIZE - (rand() % MAX_BOT_BYPASS_RANDOM_SIZE_OFFSET);
 
@@ -54,7 +54,7 @@ void ZCore::CreateRandomBotBypassData(char *data, int &size)
 void ZCore::SetupRandomizer()
 {
 	//setup randomizer
-	srand(time(0));
+	srand((unsigned int)time(0));
 }
 
 void ZCore::InitEncryption()
@@ -111,7 +111,7 @@ bool ZCore::CheckRegistration()
 	//clients and servers on different threads may use this function
 	SDL_LockMutex(check_mutex);
 
-	fp = fopen("registration.zkey", "r");
+	fp=fopen("registration.zkey", "r");
 
 	if(!fp)
 	{
@@ -395,7 +395,7 @@ void ZCore::ResetZoneOwnagePercentages(bool notify_players)
 
 	//percentage
 	for(i=0;i<MAX_TEAM_TYPES;i++)
-			team_zone_percentage[i] = 1.0 * zone_ownage[i] / zones;
+			team_zone_percentage[i] = (float)1.0 * (float)zone_ownage[i] / (float)zones;
 
 	//tell all the buildings
 	for(vector<ZObject*>::iterator obj=object_list.begin(); obj!=object_list.end(); obj++)
@@ -454,7 +454,7 @@ string ZCore::VoteAppendDescription()
 	{
 	case CHANGE_MAP_VOTE:
 		if(value < 0) return "";
-		if(value >= selectable_map_list.size()) return "";
+		if(value >= (int)selectable_map_list.size()) return "";
 
 		sprintf(num_c, "%d. ", value);
 
@@ -539,7 +539,7 @@ ZObject* ZCore::ProcessWaypointData(char *data, int size, bool is_server, int ok
 	//clear this objects waypoint list
 	if(is_server && !our_object->CanOverwriteWP())
 	{
-		//keep the first one because we are not allowed to 
+		//keep the first one because we are not allowed to
 		//write over it
 		if(our_object->GetWayPointList().size())
 		{
@@ -571,7 +571,7 @@ ZObject* ZCore::ProcessWaypointData(char *data, int size, bool is_server, int ok
 	//do we need to clone the waypoints?
 	if(is_server)
 	{
-		
+
 	}
 
 	return our_object;
@@ -721,7 +721,7 @@ bool ZCore::CheckUnitLimitReached()
 	for(vector<ZObject*>::iterator obj=object_list.begin(); obj!=object_list.end(); obj++)
 	{
 		unsigned char ot, oid;
-		
+
 		(*obj)->GetObjectID(ot, oid);
 
 		if(!(ot == ROBOT_OBJECT || ot == VEHICLE_OBJECT || ot == CANNON_OBJECT)) continue;

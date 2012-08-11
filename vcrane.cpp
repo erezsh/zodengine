@@ -149,9 +149,9 @@ void VCrane::DoRender(ZMap &the_map, SDL_Surface *dest, int shift_x, int shift_y
 {
 	int &x = loc.x;
 	int &y = loc.y;
-	SDL_Surface *base_surface;
-	SDL_Rect from_rect, to_rect;
-	int lx, ly;
+//	SDL_Surface *base_surface;
+//	SDL_Rect from_rect, to_rect;
+//	int lx, ly;
 
 	if(IsDestroyed())
 	{
@@ -198,7 +198,7 @@ void VCrane::RenderCrane(ZMap &the_map, SDL_Surface *dest, int shift_x, int shif
 	const int hook_x[8] = {0,   4,  14,  23,  25,  21,  14, 5};
 	const int hook_y[8] = {14, 20,  23,  20,  14,  8,  5, 8};
 	//SDL_Surface *base_surface;
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 	int lx, ly;
 
 	lx = x + crane_x[direction] + hook_x[direction];

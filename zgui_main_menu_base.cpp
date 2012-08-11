@@ -90,8 +90,8 @@ void ZGuiMainMenuBase::Move(double px, double py)
 	cx = x + (w>>1);
 	cy = y + (h>>1);
 
-	cx *= px;
-	cy *= py;
+	cx = (int)((double)cx * px);
+	cy = (int)((double)cy * py);
 
 	x = cx - (w>>1);
 	y = cy - (h>>1);

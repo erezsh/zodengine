@@ -85,7 +85,7 @@ AHutAnimal::AHutAnimal(ZTime *ztime_, ZSettings *zsettings_, int palette_) : ZOb
 	walk_speed = 0.2;
 	look_speed = 0.35;
 
-	move_speed = 15.0;
+	move_speed = (int)15.0;
 	real_move_speed = 15.0;
 
 	next_walk_time = 0;
@@ -226,18 +226,18 @@ void AHutAnimal::GotoRandomTile()
 				new_xy.y = ity;
 				possible_list.push_back(new_xy);
 
-				if(IsPrefferedDirection(direction, DirectionFromLoc(itx-ctx, ity-cty)))
+				if(IsPrefferedDirection(direction, DirectionFromLoc((float)(itx-ctx), (float)(ity-cty))))
 					preferred_list.push_back(new_xy);
 			}
 
 		if(!possible_list.size())
 		{
-			printf("hut animal at tile %d,%d has no where to move! killing animal...\n", ctx, cty);
+//			mprintf("hut animal at tile %d,%d has no where to move! killing animal...\n", ctx, cty);
 			killme = true;
 			return;
 		}
 
-		//printf("possible:%d prefered:%d\n", possible_list.size(), preferred_list.size());
+		//mprintf("possible:%d prefered:%d\n", possible_list.size(), preferred_list.size());
 
 		if(preferred_list.size() && rand()%5)
 		{
@@ -274,8 +274,8 @@ void AHutAnimal::GotoTile(int tx, int ty)
 	xover = 0;
 	yover = 0;
 
-	dx = cur_wp_info.x - cur_wp_info.sx;
-	dy = cur_wp_info.y - cur_wp_info.sy;
+	dx = (float)(cur_wp_info.x - cur_wp_info.sx);
+	dy = (float)(cur_wp_info.y - cur_wp_info.sy);
 
 	mag = sqrt((dx * dx) + (dy * dy));
 
@@ -289,8 +289,8 @@ void AHutAnimal::GotoTile(int tx, int ty)
 	dx /= mag;
 	dy /= mag;
 
-	dx *= real_move_speed;
-	dy *= real_move_speed;
+	dx *= (float)real_move_speed;
+	dy *= (float)real_move_speed;
 
 	new_direction = DirectionFromLoc(dx, dy);
 	if(new_direction != -1) direction = new_direction;
@@ -348,8 +348,8 @@ int AHutAnimal::Process()
 		inx = (int)floor(nx);
 		iny = (int)floor(ny);
 
-		xover = nx - inx;
-		yover = ny - iny;
+		xover = (float)(nx - (double)inx);
+		yover = (float)(ny - (double)iny);
 
 		x = inx;
 		y = iny;

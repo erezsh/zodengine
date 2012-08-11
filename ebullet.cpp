@@ -20,7 +20,7 @@ EBullet::EBullet(ZTime *ztime_, team_type team, int start_x, int start_y, int de
 	float mag;
 	dx = dest_x - start_x;
 	dy = dest_y - start_y;
-	mag = sqrt((dx * dx) + (dy * dy));
+	mag = (float)sqrt((dx * dx) + (dy * dy));
 
 	init_time = the_time;
 	final_time = init_time + (mag / bullet_speed);
@@ -49,8 +49,8 @@ void EBullet::Process()
 	else
 	{
 		//move
-		x = sx + (dx * (the_time - init_time));
-		y = sy + (dy * (the_time - init_time));
+		x = sx + (int)((dx * (the_time - init_time)));
+		y = sy + (int)((dy * (the_time - init_time)));
 	}
 }
 

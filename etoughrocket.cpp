@@ -23,7 +23,7 @@ EToughRocket::EToughRocket(ZTime *ztime_, int start_x, int start_y, int dest_x, 
 	float mag;
 	dx = dest_x - start_x;
 	dy = dest_y - start_y;
-	mag = sqrt((dx * dx) + (dy * dy));
+	mag = (float)sqrt((dx * dx) + (dy * dy));
 
 	udx = dx / mag;
 	udy = dy / mag;
@@ -36,12 +36,12 @@ EToughRocket::EToughRocket(ZTime *ztime_, int start_x, int start_y, int dest_x, 
 	dy /= (final_time - init_time);
 
 	//find angle
-	angle = 359 - AngleFromLoc(dx, dy);
+	angle = 359 - AngleFromLoc((float)dx, (float)dy);
 	for(int i=0;i<2;i++)
 	{
 		//bullet_img[i] = the_bullet[i].GetImage(angle);
 		bullet_img[i] = the_bullet[i];
-		bullet_img[i].SetAngle(angle);
+		bullet_img[i].SetAngle((float)angle);
 	}
 
 	//shift the x and y's
@@ -90,8 +90,8 @@ void EToughRocket::Process()
 	else
 	{
 		//move
-		x = sx + (dx * (the_time - init_time));
-		y = sy + (dy * (the_time - init_time));
+		x = sx + (int)(dx * (the_time - init_time));
+		y = sy + (int)(dy * (the_time - init_time));
 
 		PlaceSmoke(the_time);
 	}
@@ -99,7 +99,7 @@ void EToughRocket::Process()
 
 void EToughRocket::DoRender(ZMap &zmap, SDL_Surface *dest)
 {
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 
 	if(killme) return;
 
@@ -121,8 +121,8 @@ void EToughRocket::PlaceSmoke(double &the_time)
 
 	for(;the_time - last_smoke_time > time_d2; last_smoke_time += time_d2)
 	{
-		smx = sx + (dx * ((last_smoke_time - time_d) - init_time));
-		smy = sy + (dy * ((last_smoke_time - time_d) - init_time));
+		smx = sx + (int)(dx * ((last_smoke_time - time_d) - init_time));
+		smy = sy + (int)(dy * ((last_smoke_time - time_d) - init_time));
 
 		//smx += cx;
 		//smy += cy;

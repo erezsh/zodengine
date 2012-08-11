@@ -57,10 +57,10 @@ void ZPlayer::SetupEHandler()
 	ehandler.AddFunction(TCP_EVENT, SET_BUILDING_QUEUE_LIST, set_build_queue_list_event);
 	ehandler.AddFunction(TCP_EVENT, REQUEST_VERSION, request_version_event);
 	ehandler.AddFunction(TCP_EVENT, GIVE_VERSION, get_version_event);
-	
+
 	ehandler.AddFunction(OTHER_EVENT, CONNECT_EVENT, connect_event);
 	ehandler.AddFunction(OTHER_EVENT, DISCONNECT_EVENT, disconnect_event);
-	
+
 	ehandler.AddFunction(SDL_EVENT, RESIZE_EVENT, resize_event);
 	ehandler.AddFunction(SDL_EVENT, LCLICK_EVENT, lclick_event);
 	ehandler.AddFunction(SDL_EVENT, LUNCLICK_EVENT, lunclick_event);
@@ -77,7 +77,7 @@ void ZPlayer::SetupEHandler()
 
 void ZPlayer::motion_event(ZPlayer *p, char *data, int size, int dummy)
 {
-	bool did_main_menu_motion;
+//	bool did_main_menu_motion;
 
 	if(p->MainMenuMotion())
 	{
@@ -140,7 +140,7 @@ void ZPlayer::motion_event(ZPlayer *p, char *data, int size, int dummy)
 			p->hover_object = (*i);
 			//printf("object under cursor:%s\n", p->hover_object->GetObjectName().c_str());
 		}
-		
+
 		if(!p->lbutton.started_over_hud && !p->lbutton.started_over_gui)
 			p->CollectSelectables();
 	}
@@ -186,9 +186,9 @@ void ZPlayer::resize_event(ZPlayer *p, char *data, int size, int dummy)
 	}
 
 	ZSDL_Surface::SetScreenDimensions(p->init_w, p->init_h);
-	
+
 	p->zhud.ReRenderAll();
-	
+
 	p->zmap.SetViewingDimensions(p->init_w - HUD_WIDTH, p->init_h - HUD_HEIGHT);
 
 	//move menus around
@@ -214,7 +214,7 @@ void ZPlayer::lclick_event(ZPlayer *p, char *data, int size, int dummy)
 
 	//p->zhud.LeftClick(p->mouse_x, p->mouse_y, p->screen->w, p->screen->h, hud_response);
 	p->zhud.LeftClick(p->mouse_x, p->mouse_y, p->init_w, p->init_h, hud_response);
-		
+
 
 	//did the hud absorb the click?
 	if(!hud_response.used)
@@ -301,7 +301,7 @@ void ZPlayer::lunclick_event(ZPlayer *p, char *data, int size, int dummy)
 		}
 		else if(p->GuiAbsorbLUnClick())
 		{
-			
+
 		}
 		else if(p->lbutton.started_over_gui && p->zcomp_msg.AbsorbedLUnClick(p->mouse_x, p->mouse_y, p->zmap))
 		{
@@ -368,7 +368,7 @@ void ZPlayer::lunclick_event(ZPlayer *p, char *data, int size, int dummy)
 	//did the hud absorb the click?
 	if(hud_response.used)
 	{
-	
+
 	}
 
 	//we have a hud event?
@@ -392,7 +392,7 @@ void ZPlayer::runclick_event(ZPlayer *p, char *data, int size, int dummy)
 	p->rbutton.down = false;
 
 	p->AddDevWayPointToSelected();
-	if(!p->ShiftDown()) 
+	if(!p->ShiftDown())
 	{
 		//special case where a vehicle ejects?
 		if(p->select_info.selected_list.size() == 1)
@@ -459,7 +459,7 @@ void ZPlayer::keydown_event(ZPlayer *p, char *data, int size, int dummy)
 	key_event *pi = (key_event*)data;
 	int the_key = pi->the_key;
 	int the_unicode = pi->the_unicode;
-	
+
 	if(the_unicode) p->ProcessUnicode(the_unicode);
 
 	//printf("keydown:%d unicode:%d\n", the_key, the_unicode);
@@ -562,7 +562,7 @@ void ZPlayer::keyup_event(ZPlayer *p, char *data, int size, int dummy)
 {
 	key_event *pi = (key_event*)data;
 	int the_key = pi->the_key;
-	int the_unicode = pi->the_unicode;
+//	int the_unicode = pi->the_unicode;
 	//printf("keyup:%d\n", the_key);
 
 	p->SetAsciiState(the_key, false);
@@ -624,7 +624,7 @@ void ZPlayer::disconnect_event(ZPlayer *p, char *data, int size, int dummy)
 void ZPlayer::store_map_event(ZPlayer *p, char *data, int size, int dummy)
 {
 	p->ProcessMapDownload(data, size);
-	
+
 	if(p->zmap.Loaded())
 	{
 		p->zmap.SetViewingDimensions(p->init_w - 100, p->init_h - 36);
@@ -678,7 +678,7 @@ void ZPlayer::set_zone_info_event(ZPlayer *p, char *data, int size, int dummy)
 
 void ZPlayer::display_news_event(ZPlayer *p, char *data, int size, int dummy)
 {
-	const double lasting_time = 10.0;
+//	const double lasting_time = 10.0;
 	news_entry new_entry;
 	//SDL_Color textcolor;
 
@@ -714,13 +714,13 @@ void ZPlayer::display_news_event(ZPlayer *p, char *data, int size, int dummy)
 	//new_entry.text_image = TTF_RenderText_Solid(p->ttf_font, new_entry.message.c_str(), textcolor);
 	//new_entry->text_image.LoadBaseImage(TTF_RenderText_Solid(p->ttf_font, new_entry->message.c_str(), textcolor));
 	new_entry->text_image.LoadBaseImage(ZFontEngine::GetFont(SMALL_WHITE_FONT).Render(new_entry->message.c_str()));
-	
+
 	//a hack to get software renderer working again...
 	if(!p->use_opengl && new_entry->text_image.GetBaseSurface())
 	{
 		ZSDL_ModifyBlack(new_entry->text_image.GetBaseSurface());
 		new_entry->text_image.UseDisplayFormat();
-		SDL_SetColorKey(new_entry->text_image.GetBaseSurface(), SDL_SRCCOLORKEY, 0x000000); 
+		SDL_SetColorKey(new_entry->text_image.GetBaseSurface(), SDL_SRCCOLORKEY, 0x000000);
 	}
 
 
@@ -800,7 +800,7 @@ void ZPlayer::set_object_attack_object_event(ZPlayer *p, char *data, int size, i
 	if(!obj) return;
 
 	//set the little flashy A in the hud?
-	if(obj->GetAttackObject() && 
+	if(obj->GetAttackObject() &&
 		obj->GetAttackObject()->GetOwner() == p->our_team &&
 		p->zhud.GetARefID() == -1 &&
 		!(rand() % 5))
@@ -1171,7 +1171,7 @@ void ZPlayer::set_player_name_event(ZPlayer *p, char *data, int size, int dummy)
 void ZPlayer::set_player_team_event(ZPlayer *p, char *data, int size, int dummy)
 {
 	p->ProcessSetLPlayerTeam(data, size);
-} 
+}
 
 void ZPlayer::set_player_mode_event(ZPlayer *p, char *data, int size, int dummy)
 {
@@ -1402,7 +1402,7 @@ void ZPlayer::set_regkey(ZPlayer *p, char *data, int size, int dummy)
 		FILE *fp;
 		int ret;
 
-		fp = fopen("registration.zkey", "w");
+		fp=fopen("registration.zkey", "w");
 
 		if(!fp)
 		{
@@ -1411,7 +1411,7 @@ void ZPlayer::set_regkey(ZPlayer *p, char *data, int size, int dummy)
 		}
 
 		ret = fwrite(pi->buf, 16, 1, fp);
-	
+
 		if(!ret)
 		{
 			p->AddNewsEntry("new registration key bought but could not save to file! please visit www.nighsoft.com");

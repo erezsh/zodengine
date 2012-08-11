@@ -122,7 +122,7 @@ int VHeavy::Process()
 		if(attack_object)
 		{
 			attack_object->GetCenterCords(tx, ty);
-			new_dir = DirectionFromLoc(tx - loc.x, ty - loc.y);
+			new_dir = DirectionFromLoc((float)(tx - loc.x), (float)(ty - loc.y));
 			if(new_dir != -1) t_direction = new_dir;
 		}
 		else
@@ -148,7 +148,7 @@ void VHeavy::DoRender(ZMap &the_map, SDL_Surface *dest, int shift_x, int shift_y
 	const int lid_shift_x[MAX_ANGLE_TYPES] = {8, 13, 16, 17, 16, 11, 7,  7};
 	const int lid_shift_y[MAX_ANGLE_TYPES] = {9,  9,  7,  4,  3,  2, 4,  7};
 	ZSDL_Surface *base_surface;
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 	int lx, ly;
 
 	if(IsDestroyed())

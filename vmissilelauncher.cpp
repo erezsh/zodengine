@@ -111,7 +111,7 @@ int VMissileLauncher::Process()
 			int new_dir;
 
 			attack_object->GetCenterCords(tx, ty);
-			new_dir = DirectionFromLoc(tx - loc.x, ty - loc.y);
+			new_dir = DirectionFromLoc((float)(tx - loc.x), (float)(ty - loc.y));
 			if(new_dir != -1) t_direction = new_dir;
 		}
 		else
@@ -134,8 +134,8 @@ void VMissileLauncher::DoRender(ZMap &the_map, SDL_Surface *dest, int shift_x, i
 	const int turrent_y[MAX_ANGLE_TYPES] = {0, 3, 0, 4, 0, -2, -3, -3};
 	const int turrent_shift_x[MAX_ANGLE_TYPES] = {2, 0, 0,  0,  0, -2, 0, 0};
 	const int turrent_shift_y[MAX_ANGLE_TYPES] = {0, 0, 0, -2, -2, 0,  2, -2};
-	ZSDL_Surface *base_surface;
-	SDL_Rect from_rect, to_rect;
+//	ZSDL_Surface *base_surface;
+//	SDL_Rect from_rect, to_rect;
 	int lx, ly;
 	
 	if(IsDestroyed())

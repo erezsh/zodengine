@@ -38,7 +38,7 @@ void ZCannon::SetAttackObject(ZObject *obj)
 		int new_dir;
 
 		attack_object->GetCenterCords(tx, ty);
-		new_dir = DirectionFromLoc(tx - loc.x, ty - loc.y);
+		new_dir = DirectionFromLoc((float)(tx - loc.x), (float)(ty - loc.y));
 		if(new_dir != -1) direction = new_dir;
 	}
 }
@@ -60,7 +60,7 @@ void ZCannon::SetInitialDrivers()
 	{
 		driver_type = GRUNT;
 		//AddDriver(GRUNT_MAX_HEALTH);
-		AddDriver(zsettings->GetUnitSettings(ROBOT_OBJECT, GRUNT).health * MAX_UNIT_HEALTH);
+		AddDriver((int)(zsettings->GetUnitSettings(ROBOT_OBJECT, GRUNT).health * MAX_UNIT_HEALTH));
 	}
 	else
 	{

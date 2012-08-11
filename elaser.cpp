@@ -21,7 +21,7 @@ ELaser::ELaser(ZTime *ztime_, int start_x, int start_y, int dest_x, int dest_y) 
 	float mag;
 	dx = dest_x - start_x;
 	dy = dest_y - start_y;
-	mag = sqrt((dx * dx) + (dy * dy));
+	mag = (float)sqrt((dx * dx) + (dy * dy));
 
 	init_time = the_time;
 	final_time = init_time + (mag / bullet_speed);
@@ -30,10 +30,10 @@ ELaser::ELaser(ZTime *ztime_, int start_x, int start_y, int dest_x, int dest_y) 
 	dy /= (final_time - init_time);
 
 	//find angle
-	angle = 359 - AngleFromLoc(dx, dy);
+	angle = 359 - AngleFromLoc((float)dx, (float)dy);
 	//bullet_img = laser_bullet[bullet_i].GetImage(angle);
 	bullet_img = laser_bullet[bullet_i];
-	bullet_img.SetAngle(angle);
+	bullet_img.SetAngle((float)angle);
 
 	if(!bullet_img.GetBaseSurface())
 	{
@@ -70,14 +70,14 @@ void ELaser::Process()
 	else
 	{
 		//move
-		x = sx + (dx * (the_time - init_time));
-		y = sy + (dy * (the_time - init_time));
+		x = sx + (int)(dx * (the_time - init_time));
+		y = sy + (int)(dy * (the_time - init_time));
 	}
 }
 
 void ELaser::DoRender(ZMap &zmap, SDL_Surface *dest)
 {
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 
 	if(killme) return;
 

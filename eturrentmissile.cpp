@@ -38,7 +38,7 @@ ETurrentMissile::ETurrentMissile(ZTime *ztime_, int start_x, int start_y, int de
 	float mag;
 	dx = dest_x - start_x;
 	dy = dest_y - start_y;
-	mag = sqrt((dx * dx) + (dy * dy));
+	mag = (float)sqrt((dx * dx) + (dy * dy));
 
 	init_time = the_time;
 	final_time = init_time + offset_time;
@@ -141,7 +141,7 @@ void ETurrentMissile::Init()
 void ETurrentMissile::Process()
 {
 	double &the_time = ztime->ztime;
-	int i, mx, my;
+//	int i, mx, my;
 
 	if(killme) return;
 
@@ -170,15 +170,15 @@ void ETurrentMissile::Process()
 		double time_dif = (the_time - init_time);
 
 		//move
-		x = sx + (dx * time_dif);
-		y = sy + (dy * time_dif);
+		x = sx + (int)(dx * time_dif);
+		y = sy + (int)(dy * time_dif);
 
 		size = -(rise / (final_time - init_time)) * (time_dif * time_dif) + rise * time_dif;
 		size += 1.0;
-		y -= size * 30;
+		y -= (int)(size * 30);
 		y += 30;
 
-		angle = dangle * time_dif;
+		angle = (int)(dangle * time_dif);
 
 		while(angle >= 360) angle -= 360;
 		while(angle < 0) angle += 360;
@@ -187,7 +187,7 @@ void ETurrentMissile::Process()
 
 void ETurrentMissile::DoRender(ZMap &zmap, SDL_Surface *dest)
 {
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 
 	if(killme) return;
 
@@ -245,8 +245,8 @@ void ETurrentMissile::DoRender(ZMap &zmap, SDL_Surface *dest)
 
 	if(!render_img) return;
 
-	render_img->SetAngle(angle);
-	render_img->SetSize(size);
+	render_img->SetAngle((float)angle);
+	render_img->SetSize((float)size);
 
 	zmap.RenderZSurface(render_img, x, y, false, true);
 	//if(zmap.GetBlitInfo(render_img, x - (render_img->w >> 1), y - (render_img->h >> 1), from_rect, to_rect))
@@ -283,7 +283,7 @@ void ETurrentMissile::EndExplosion()
 		spark_x = x + 16;
 		spark_y = y + 16;
 
-		if(effect_list) 
+		if(effect_list)
 		for(i=0;i<sparks_amt;i++)
 			effect_list->push_back((ZEffect*)(new EDeathSparks(ztime, spark_x, spark_y)));
 	}

@@ -25,7 +25,7 @@ ELightRocket::ELightRocket(ZTime *ztime_, int start_x, int start_y, int dest_x, 
 	float mag;
 	dx = dest_x - start_x;
 	dy = dest_y - start_y;
-	mag = sqrt((dx * dx) + (dy * dy));
+	mag = (float)sqrt((dx * dx) + (dy * dy));
 
 	udx = dx / mag;
 	udy = dy / mag;
@@ -38,10 +38,10 @@ ELightRocket::ELightRocket(ZTime *ztime_, int start_x, int start_y, int dest_x, 
 	dy /= (final_time - init_time);
 
 	//find angle
-	angle = 359 - AngleFromLoc(dx, dy);
+	angle = 359 - AngleFromLoc((float)dx, (float)dy);
 	//bullet_img = the_bullet.GetImage(angle);
 	bullet_img = the_bullet;
-	bullet_img.SetAngle(angle);
+	bullet_img.SetAngle((float)angle);
 
 	//shift the x and y's
 	cx = (bullet_img.GetBaseSurface()->w >> 1);
@@ -132,14 +132,14 @@ void ELightRocket::Process()
 	else
 	{
 		//move
-		x = sx + (dx * (the_time - init_time));
-		y = sy + (dy * (the_time - init_time));
+		x = sx + (int)(dx * (the_time - init_time));
+		y = sy + (int)(dy * (the_time - init_time));
 	}
 }
 
 void ELightRocket::DoRender(ZMap &zmap, SDL_Surface *dest)
 {
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 
 	if(killme) return;
 

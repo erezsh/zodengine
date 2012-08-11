@@ -22,7 +22,7 @@ ESideExplosion::ESideExplosion(ZTime *ztime_, int x_, int y_, double size_, int 
 	float mag;
 	dx = ex - x_;
 	dy = ey - y_;
-	mag = sqrt((dx * dx) + (dy * dy));
+	mag = (float)sqrt((dx * dx) + (dy * dy));
 
 	init_time = the_time;
 
@@ -88,20 +88,20 @@ void ESideExplosion::Process()
 
 	//move
 	{
-		x = sx + (dx * (the_time - init_time));
-		y = sy + (dy * (the_time - init_time));
+		x = sx + (int)(dx * (the_time - init_time));
+		y = sy + (int)(dy * (the_time - init_time));
 	}
 }
 
 void ESideExplosion::DoRender(ZMap &zmap, SDL_Surface *dest)
 {
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 	//SDL_Surface *surface;
 
 	if(killme) return;
 
 	//surface = render_img[render_i].GetImage(size);
-	render_img[render_i].SetSize(size);
+	render_img[render_i].SetSize((float)size);
 
 	zmap.RenderZSurface(&render_img[render_i], x, y);
 	//if(zmap.GetBlitInfo( surface, x, y, from_rect, to_rect))

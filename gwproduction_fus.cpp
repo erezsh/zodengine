@@ -281,9 +281,9 @@ void GWPFullUnitSelector::CalculateWH()
 	if(vehicle_list.size()) blocks_down++;
 	if(cannon_list.size()) blocks_down++;
 
-	if(robot_list.size() > blocks_right) blocks_right = robot_list.size();
-	if(vehicle_list.size() > blocks_right) blocks_right = vehicle_list.size();
-	if(cannon_list.size() > blocks_right) blocks_right = cannon_list.size();
+	if((int)robot_list.size() > blocks_right) blocks_right = robot_list.size();
+	if((int)vehicle_list.size() > blocks_right) blocks_right = vehicle_list.size();
+	if((int)cannon_list.size() > blocks_right) blocks_right = cannon_list.size();
 
 	w = GWPFUS_SIDE_SIZE + ((GWPFUS_MARGIN + GWPFUS_OBJW) * blocks_right) + GWPFUS_MARGIN + GWPFUS_SIDE_SIZE;
 	h = GWPFUS_TOPH + ((GWPFUS_MARGIN + GWPFUS_OBJH) * blocks_down) + GWPFUS_MARGIN + GWPFUS_SIDE_SIZE;

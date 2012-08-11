@@ -12,8 +12,8 @@ ZSDL_Surface ECannonDeath::missile_wasted;
 ECannonDeath::ECannonDeath(ZTime *ztime_, int x_, int y_, int object_, int ex_, int ey_, double offset_time_) : ZEffect(ztime_)
 {
 	double &the_time = ztime->ztime;
-	int i, max;
-	int xs, ys, ws, hs;
+//	int i, max;
+//	int xs, ys, ws, hs;
 	//wasted_img = NULL;
 	double the_random;
 
@@ -120,7 +120,7 @@ void ECannonDeath::Process()
 
 void ECannonDeath::DoRender(ZMap &zmap, SDL_Surface *dest)
 {
-	SDL_Rect from_rect, to_rect;
+//	SDL_Rect from_rect, to_rect;
 
 	if(killme) return;
 

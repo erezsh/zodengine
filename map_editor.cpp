@@ -261,12 +261,12 @@ int main(int argc, char **argv)
 	rshift_down = false;
 	next_ref_id = 0;
 	current_map_ruler = NO_RULER;
-	
+
 	//seed
 	srand(time(0));
-	
+
 	getargs(argc, argv);
-	
+
 	//check if args ok
 	if(!checkargs(argv[0])) return 0;
 
@@ -285,12 +285,12 @@ int main(int argc, char **argv)
 	ZSDL_Surface::SetMainSoftwareSurface(screen);
 	ZSDL_Surface::SetMapPlace(MAP_SHIFT_X, 0);
 	ZSDL_Surface::SetHasHud(false);
-	
+
 	//TTF
 	TTF_Init();
 	ttf_font = TTF_OpenFont("assets/arial.ttf",10);
 	if (!ttf_font) printf("could not load arial.ttf\n");
-	
+
 	//init stuff
 	ZTeam::Init();
 	ZMap::Init();
@@ -323,7 +323,7 @@ int main(int argc, char **argv)
 	ZRobot::Init();
 
 	init_main_objects();
-	
+
 	//do "load"
 	if(is_new)
 		edit_map.MakeNewMap(mapname.c_str(), palette, width, height);
@@ -335,14 +335,14 @@ int main(int argc, char **argv)
 
 	//testing purposes
 	//edit_map.ReplaceUnusableTiles();
-	
+
 	//load objects
 	for(vector<map_object>::iterator i=edit_map.GetObjectList().begin(); i!=edit_map.GetObjectList().end(); i++)
 		load_object(*i);
 
 	//setup rock renders
 	ORock::SetupRockRenders(edit_map, object_list);
-	
+
 	//set these
 	bfort_front->ChangePalette((planet_type)edit_map.GetMapBasics().terrain_type);
 	bfort_back->ChangePalette((planet_type)edit_map.GetMapBasics().terrain_type);
@@ -366,10 +366,10 @@ int main(int argc, char **argv)
 
 	//unique
 	vjeep->SetDirection(6);
-	
+
 	//set this
 	edit_map.SetViewingDimensions(800-MAP_SHIFT_X, 600);
-	
+
 	edit_map.DebugMapInfo();
 
 	//minimap
@@ -379,12 +379,12 @@ int main(int argc, char **argv)
 
 	//draw it all.
 	draw_everything();
-	
+
 	SDL_Event event;
 	while(1)
 	{
 		while(SDL_PollEvent(&event))
-		switch( event.type ) 
+		switch( event.type )
 		{
 			case SDL_QUIT:
 				return 0;
@@ -423,7 +423,7 @@ int main(int argc, char **argv)
 				process_button_unpressed(event.key.keysym.sym);
 				break;
 		}
-		
+
 // 		if(edit_map.DoEffects(current_time())) draw_map();
 		double the_time = current_time();
 		ztime.UpdateTime();
@@ -431,19 +431,19 @@ int main(int argc, char **argv)
 		ProcessScroll(the_time);
 
 		//edit_map.DoEffects(the_time);
-		
+
 		for(vector<ZObject*>::iterator i=object_list.begin(); i!=object_list.end(); i++)
 			(*i)->Process();
-		
+
 		draw_map();
 
 		edit_minimap.DoRender(screen, MINIMAP_X, MINIMAP_Y);
 
 		SDL_Flip(screen);
-		
+
 		uni_pause(10);
 	}
-	
+
 	return 0;
 }
 
@@ -477,11 +477,11 @@ void do_print_screen()
 
 		//draw zones
 		edit_map.DoZoneEffects(current_time(), print_surface);
-	
+
 		//draw objects
 		for(vector<ZObject*>::iterator i=object_list.begin(); i!=object_list.end(); i++)
 			(*i)->DoRender(edit_map, print_surface);
-	
+
 		//draw after effects
 		for(vector<ZObject*>::iterator i=object_list.begin(); i!=object_list.end(); i++)
 			(*i)->DoAfterEffects(edit_map, print_surface);
@@ -550,7 +550,7 @@ void init_main_objects()
 void display_proper_init(char *exec_command)
 {
 	printf("Welcome to the Zod Map Editor\n\n");
-	
+
 	printf("========================================================\n");
 	printf("Command list...\n");
 	printf("-f filename              - filename to be loaded / saved\n");
@@ -566,12 +566,12 @@ void display_proper_init(char *exec_command)
 
 int checkargs(char *exec_command)
 {
-	if(!filename.length()) 
+	if(!filename.length())
 	{
 		display_proper_init(exec_command);
 		return 0;
 	}
-	
+
 	if(is_new)
 	{
 		if(!width || !height || !mapname.length())
@@ -580,7 +580,7 @@ int checkargs(char *exec_command)
 			return 0;
 		}
 	}
-	
+
 	return 1;
 }
 
@@ -590,11 +590,11 @@ void getargs(int argc, char **argv)
 	int temp_int;
 	string temp_str;
 	extern char *optarg;
-	extern int optind, optopt;
-	
-	while ((c = getopt(argc, argv, "f:d:p:m:n")) != -1) 
+//	extern int optind, optopt;
+
+	while ((c = getopt(argc, argv, "f:d:p:m:n")) != -1)
 	{
-		switch(c) 
+		switch(c)
 		{
 			case 'f':
 				if(!optarg) return;
@@ -604,7 +604,7 @@ void getargs(int argc, char **argv)
 				if(!optarg) return;
 				temp_str = optarg;
 				temp_int = temp_str.find('x');
-				
+
 				if(temp_int != string::npos)
 				{
 					width = atoi(temp_str.substr(0, temp_int).c_str());
@@ -617,7 +617,7 @@ void getargs(int argc, char **argv)
 				for(int i=0;i<MAX_PLANET_TYPES;i++)
 					if(planet_type_string[i] == optarg)
 						palette = (planet_type)i;
-				
+
 				break;
 			case 'm':
 				if(!optarg) return;
@@ -829,7 +829,7 @@ void process_button_pressed(int c)
 		case 'm': //change mode
 			current_mode++;
 			if(current_mode >= MAX_EDITOR_MODES) current_mode = 0;
-			
+
 			current_object = 0;
 			//current_ptile = -1;
 			remove_object = NULL;
@@ -841,7 +841,7 @@ void process_button_pressed(int c)
 				bbridge_vert->SetExtraLinks(current_extra_links);
 				bbridge_horz->SetExtraLinks(current_extra_links);
 			}
-			
+
 			draw_everything();
 			break;
 		case 'o': //change object
@@ -850,9 +850,9 @@ void process_button_pressed(int c)
 		case 't': //change team
 			current_team++;
 			if(current_team >= MAX_TEAM_TYPES) current_team = 0;
-			
+
 			set_placement_objects_team((team_type)current_team);
-			
+
 			draw_info(false);
 			switch(current_mode)
 			{
@@ -1155,7 +1155,7 @@ void process_event(map_event the_event, bool push_into_undo)
 					do_it = true;
 					break;
 			}
-					
+
 			//common code
 			if(do_it)
 			{
@@ -1206,7 +1206,7 @@ void process_event(map_event the_event, bool push_into_undo)
 					do_it = true;
 					break;
 			}
-					
+
 			//common code if allowed
 			if(do_it)
 			{
@@ -1234,7 +1234,7 @@ void process_event(map_event the_event, bool push_into_undo)
 				redo_list.clear();
 				store_map_event(reverse_event(the_event), undo_list);
 			}
-					
+
 			new_object.x = mtile_x;
 			new_object.y = mtile_y;
 			new_object.owner = the_event.team;
@@ -1291,7 +1291,7 @@ void process_event(map_event the_event, bool push_into_undo)
 					do_it = true;
 					break;
 			}
-					
+
 			//common code if allowed
 			if(do_it)
 			{
@@ -1335,7 +1335,7 @@ void process_event(map_event the_event, bool push_into_undo)
 
 			if(the_event.object >= MAP0_ITEM && the_event.object <= MAP21_ITEM)
 				do_it = true;
-					
+
 			//common code
 			if(do_it)
 			{
@@ -1356,7 +1356,7 @@ void process_event(map_event the_event, bool push_into_undo)
 				draw_info();
 			}
 			break;
-		case PLACE_ZONE_MODE:			
+		case PLACE_ZONE_MODE:
 			//add it
 			new_formal_zone.x = the_event.x;
 			new_formal_zone.y = the_event.y;
@@ -1399,7 +1399,7 @@ void process_event(map_event the_event, bool push_into_undo)
 			}
 
 			robj->GetCords(temp_x, temp_y);
-					
+
 			//find in the map list
 			for(vector<map_object>::iterator i=edit_map.GetObjectList().begin();i!=edit_map.GetObjectList().end(); i++)
 				if(temp_x == i->x * 16 && temp_y == i->y * 16)
@@ -1407,7 +1407,7 @@ void process_event(map_event the_event, bool push_into_undo)
 				edit_map.GetObjectList().erase(i);
 				break;
 			}
-					
+
 			//find in the object list
 			for(vector<ZObject*>::iterator i=object_list.begin(); i!=object_list.end(); i++)
 				if(robj == *i)
@@ -1423,7 +1423,7 @@ void process_event(map_event the_event, bool push_into_undo)
 
 			//just do it, the client can be more critical if it is needed
 			ORock::SetupRockRenders(edit_map, object_list);
-					
+
 			changes_made = true;
 			draw_info();
 			break;
@@ -1433,10 +1433,10 @@ void process_event(map_event the_event, bool push_into_undo)
 
 void process_mouse_click(int x, int y, bool motion_click)
 {
-	map_object new_object;
+//	map_object new_object;
 	int mtile_x, mtile_y;
-	int temp_x, temp_y;
-	bool do_it = false;
+//	int temp_x, temp_y;
+//	bool do_it = false;
 	map_event the_event;
 	static int last_placed_tile_mtile = -1;
 
@@ -1458,14 +1458,14 @@ void process_mouse_click(int x, int y, bool motion_click)
 			edit_map.SetViewShift(new_screen_x, new_screen_y);
 		}
 	}
-	
+
 	//in palette area?
 	if(x < 320 && y < 384)
 	{
 		int new_tile;
-		
+
 		new_tile = ZMap::GetPaletteTile(x,y);
-		
+
 		if(new_tile != -1)
 		{
 			if(ctrl_down())
@@ -1493,7 +1493,7 @@ void process_mouse_click(int x, int y, bool motion_click)
 			draw_palette();
 		}
 	}
-	
+
 	//in map area?
 	if(x >= MAP_SHIFT_X)
 	{
@@ -1576,13 +1576,13 @@ void process_mouse_click(int x, int y, bool motion_click)
 					the_event.x = mtile_x;
 					the_event.y = mtile_y;
 					process_event(the_event, true);
-					
+
 					//if(edit_map.RemoveZone(mtile_x, mtile_y))
 					//{
 					//	changes_made = 1;
 					//	draw_info();
 					//}
-					
+
 					break;
 				case REMOVE_OBJECT_MODE:
 					if(!remove_object) break;
@@ -1592,7 +1592,7 @@ void process_mouse_click(int x, int y, bool motion_click)
 					process_event(the_event, true);
 
 					break;
-					
+
 					//remove_object->GetCords(temp_x, temp_y);
 					//
 					////find in the map list
@@ -1630,17 +1630,17 @@ void process_mouse_click(int x, int y, bool motion_click)
 void process_mouse_movement(int x, int y)
 {
 	int mtile_x, mtile_y;
-	
+
 	mouse_x = x;
 	mouse_y = y;
-	
+
 	//in palette area?
 	if(x < 320 && y < 384)
 	{
 		int new_tile;
-		
+
 		new_tile = ZMap::GetPaletteTile(x,y);
-		
+
 		if(hover_ptile != new_tile)
 		{
 			hover_ptile = new_tile;
@@ -1648,21 +1648,21 @@ void process_mouse_movement(int x, int y)
 // 			SDL_Flip(screen);
 		}
 	}
-	
+
 	//in map area?
 	if(x >= MAP_SHIFT_X)
 	{
 		int new_tile;
-		
+
 		//what tile are we over?
 		new_tile = edit_map.GetTileIndex(x-MAP_SHIFT_X,y, true);
-		
+
 		if(hover_mtile != new_tile)
 		{
 			hover_mtile = new_tile;
 			if(check_hover_object()) draw_info();
 		}
-		
+
 		switch(current_mode)
 		{
 			case PLACE_TILE_MODE:
@@ -1680,15 +1680,15 @@ void process_mouse_movement(int x, int y)
 				if(hover_mtile == -1) break;
 				mtile_x = hover_mtile % edit_map.GetMapBasics().width;
 				mtile_y = hover_mtile / edit_map.GetMapBasics().width;
-				
+
 				new_zone.w = (mtile_x - new_zone.x) + 1;
 				new_zone.h = (mtile_y - new_zone.y) + 1;
-				
+
 				if(new_zone.w > edit_map.GetMapBasics().width) new_zone.w = 1;
 				if(new_zone.h > edit_map.GetMapBasics().height) new_zone.h = 1;
 				if(new_zone.w < 1) new_zone.w = 1;
 				if(new_zone.h < 1) new_zone.h = 1;
-				
+
 				break;
 			case REMOVE_OBJECT_MODE:
 				if(hover_mtile == -1) break;
@@ -1708,9 +1708,9 @@ void process_mouse_movement(int x, int y)
 					if(y < oy) continue;
 					if(x >= ox + w_pix) continue;
 					if(y >= oy + h_pix) continue;
-					
+
 					remove_object = (*i);
-					
+
 					break;
 				}
 				break;
@@ -1718,7 +1718,7 @@ void process_mouse_movement(int x, int y)
 
 		//mouse down so we click too?
 		if(click_down && current_mode != PLACE_ZONE_MODE) process_mouse_click(x, y, true);
-	}	
+	}
 
 	if(click_down && within_minimap(x,y)) process_mouse_click(x, y, true);
 }
@@ -1728,19 +1728,19 @@ void blit_message(const char *message, int x, int y, int r, int g, int b)
 	SDL_Surface *text;
 	SDL_Color textcolor;
 	SDL_Rect location;
-			
+
 	if(!ttf_font) return;
 
 	textcolor.r = r;
 	textcolor.g = g;
 	textcolor.b = b;
 	textcolor.unused = 0;
-	
+
 	location.x = x;
 	location.y = y;
-			
+
 	text = TTF_RenderText_Solid(ttf_font, message, textcolor);
-	
+
 	SDL_BlitSurface( text, NULL, screen, &location);
 }
 
@@ -1749,7 +1749,7 @@ void draw_everything()
 	draw_palette(false);
 	draw_map(false);
 	draw_info(false);
-	
+
 	SDL_Flip(screen);
 }
 
@@ -1757,18 +1757,18 @@ void draw_palette(bool flip)
 {
 	//SDL_BlitSurface(ZMap::GetMapPalette((planet_type)edit_map.GetMapBasics().terrain_type), NULL, screen, NULL);
 	ZMap::GetMapPalette((planet_type)edit_map.GetMapBasics().terrain_type).BlitSurface(NULL, NULL);
-	
+
 	draw_selection_box(hover_ptile);
 
 	for(vector<int>::iterator i=current_ptile_list.begin(); i!=current_ptile_list.end(); i++)
 		draw_x_marker(*i);
-	
+
 	//if(flip) SDL_Flip(screen);
 }
 
 void draw_seperator(bool flip)
 {
-	
+
 	if(flip) SDL_Flip(screen);
 }
 
@@ -1800,14 +1800,14 @@ void draw_map_ruler()
 
 	//even drawing the map?
 	if(screen->w < MAP_SHIFT_X) return;
-	
+
 	edit_map.GetViewShift(shift_x, shift_y);
 	edit_map.GetViewShiftFull(shift_x, shift_y, view_w, view_h);
 
 	//top and bottom
 	offset_x = -shift_x % 16;
 	offset_x += 16;
-	xi = shift_x / 16; 
+	xi = shift_x / 16;
 	xi++;
 	for(x=offset_x;x<view_w;x+=16, xi++)
 	{
@@ -1816,7 +1816,7 @@ void draw_map_ruler()
 			line_rect.y = 0;
 			line_rect.w = 1;
 			line_rect.h = 4;
-        
+
 			SDL_FillRect(screen, &line_rect, colorkey );
 
 			if(!(xi%5))
@@ -1830,7 +1830,7 @@ void draw_map_ruler()
 					line_rect.y = 0;
 					line_rect.w = 1;
 					line_rect.h = screen->h;
-        
+
 					SDL_FillRect(screen, &line_rect, colorkey );
 				}
 			}
@@ -1840,7 +1840,7 @@ void draw_map_ruler()
 		line_rect.y = screen->h - 4;
 		line_rect.w = 1;
 		line_rect.h = 4;
-        
+
 		SDL_FillRect(screen, &line_rect, colorkey );
 	}
 
@@ -1856,7 +1856,7 @@ void draw_map_ruler()
 			line_rect.y = y;
 			line_rect.w = 4;
 			line_rect.h = 1;
-        
+
 			SDL_FillRect(screen, &line_rect, colorkey );
 
 			if(!(yi%5))
@@ -1870,7 +1870,7 @@ void draw_map_ruler()
 					line_rect.y = y;
 					line_rect.w = screen->w - MAP_SHIFT_X;
 					line_rect.h = 1;
-        
+
 					SDL_FillRect(screen, &line_rect, colorkey );
 				}
 			}
@@ -1880,7 +1880,7 @@ void draw_map_ruler()
 		line_rect.y = y;
 		line_rect.w = 4;
 		line_rect.h = 1;
-        
+
 		SDL_FillRect(screen, &line_rect, colorkey );
 	}
 }
@@ -1895,45 +1895,45 @@ void draw_map(bool flip)
 	int mtile_x, mtile_y;
 	SDL_Rect to_rect;
 	SDL_Rect from_rect;
-	
+
 	edit_map.GetViewShift(shift_x, shift_y);
 	from_rect.x = shift_x;
 	from_rect.y = shift_y;
 	from_rect.w = screen->w - MAP_SHIFT_X;
 	from_rect.h = screen->h;
-	
+
 	to_rect.x = MAP_SHIFT_X;
 	to_rect.y = 0;
 	//SDL_BlitSurface(edit_map.GetRender(), &from_rect, screen, &to_rect);
 	edit_map.DoRender(screen, MAP_SHIFT_X);
-	
+
 	//do map effects
 	//edit_map.DoEffects(current_time(), screen, MAP_SHIFT_X);
 
 	//draw zones
 	edit_map.DoZoneEffects(current_time(), screen, MAP_SHIFT_X);
-	
+
 	//draw objects
 	for(vector<ZObject*>::iterator i=object_list.begin(); i!=object_list.end(); i++)
 		(*i)->DoRender(edit_map, screen, MAP_SHIFT_X);
-	
+
 	//draw after effects
 	for(vector<ZObject*>::iterator i=object_list.begin(); i!=object_list.end(); i++)
 		(*i)->DoAfterEffects(edit_map, screen, MAP_SHIFT_X);
-	
+
 	if(remove_object)
 	{
 		int ox, oy, ow_pix, oh_pix;
-		
+
 		remove_object->GetCords(ox, oy);
 		remove_object->GetDimensionsPixel(ow_pix, oh_pix);
-		
+
 		ox -= shift_x;
 		oy -= shift_y;
-		
+
 		draw_selection_box(ox + MAP_SHIFT_X, oy, ow_pix, oh_pix);
 	}
-	
+
 	//is the mouse in the area?
 	if(mouse_x >= MAP_SHIFT_X && hover_mtile != -1)
 	{
@@ -1941,7 +1941,7 @@ void draw_map(bool flip)
 		edit_map.GetTile(hover_mtile,x,y, true);
 		to_rect.x = x+MAP_SHIFT_X;
 		to_rect.y = y;
-		
+
 		mtile_x = hover_mtile % edit_map.GetMapBasics().width;
 		mtile_y = hover_mtile / edit_map.GetMapBasics().width;
 
@@ -1959,7 +1959,7 @@ void draw_map(bool flip)
 					from_rect.y = y;
 					from_rect.w = 16;
 					from_rect.h = 16;
-					
+
 					//blit!
 					//SDL_BlitSurface(ZMap::GetMapPalette((planet_type)edit_map.GetMapBasics().terrain_type), &from_rect, screen, &to_rect);
 					ZMap::GetMapPalette((planet_type)edit_map.GetMapBasics().terrain_type).BlitSurface(&from_rect, &to_rect);
@@ -1972,7 +1972,7 @@ void draw_map(bool flip)
 						bfort_front->GetDimensions(width, height);
 						if(width + mtile_x > edit_map.GetMapBasics().width) break;
 						if(height + mtile_y > edit_map.GetMapBasics().height) break;
-						
+
 						bfort_front->SetCords(mtile_x*16,mtile_y*16);
 						bfort_front->DoRender(edit_map, screen, MAP_SHIFT_X);
 // 						SDL_BlitSurface(bfort_front.GetRender(), NULL, screen, &to_rect);
@@ -1981,7 +1981,7 @@ void draw_map(bool flip)
 						bfort_back->GetDimensions(width, height);
 						if(width + mtile_x > edit_map.GetMapBasics().width) break;
 						if(height + mtile_y > edit_map.GetMapBasics().height) break;
-						
+
 						bfort_back->SetCords(mtile_x*16,mtile_y*16);
 						bfort_back->DoRender(edit_map, screen, MAP_SHIFT_X);
 // 						SDL_BlitSurface(bfort_back.GetRender(), NULL, screen, &to_rect);
@@ -1990,7 +1990,7 @@ void draw_map(bool flip)
 						bradar->GetDimensions(width, height);
 						if(width + mtile_x > edit_map.GetMapBasics().width) break;
 						if(height + mtile_y > edit_map.GetMapBasics().height) break;
-						
+
 						bradar->SetCords(mtile_x*16,mtile_y*16);
 						bradar->DoRender(edit_map, screen, MAP_SHIFT_X);
 // 						SDL_BlitSurface(bradar.GetRender(), NULL, screen, &to_rect);
@@ -1999,7 +1999,7 @@ void draw_map(bool flip)
 						brepair->GetDimensions(width, height);
 						if(width + mtile_x > edit_map.GetMapBasics().width) break;
 						if(height + mtile_y > edit_map.GetMapBasics().height) break;
-						
+
 						brepair->SetCords(mtile_x*16,mtile_y*16);
 						brepair->DoRender(edit_map, screen, MAP_SHIFT_X);
 // 						SDL_BlitSurface(brepair.GetRender(), NULL, screen, &to_rect);
@@ -2008,7 +2008,7 @@ void draw_map(bool flip)
 						brobot->GetDimensions(width, height);
 						if(width + mtile_x > edit_map.GetMapBasics().width) break;
 						if(height + mtile_y > edit_map.GetMapBasics().height) break;
-						
+
 						brobot->SetCords(mtile_x*16,mtile_y*16);
 						brobot->DoRender(edit_map, screen, MAP_SHIFT_X);
 // 						SDL_BlitSurface(brobot.GetRender(), NULL, screen, &to_rect);
@@ -2017,7 +2017,7 @@ void draw_map(bool flip)
 						bvehicle->GetDimensions(width, height);
 						if(width + mtile_x > edit_map.GetMapBasics().width) break;
 						if(height + mtile_y > edit_map.GetMapBasics().height) break;
-						
+
 						bvehicle->SetCords(mtile_x*16,mtile_y*16);
 						bvehicle->DoRender(edit_map, screen, MAP_SHIFT_X);
 // 						SDL_BlitSurface(bvehicle.GetRender(), NULL, screen, &to_rect);
@@ -2026,7 +2026,7 @@ void draw_map(bool flip)
 						bbridge_vert->GetDimensions(width, height);
 						if(width + mtile_x > edit_map.GetMapBasics().width) break;
 						if(height + mtile_y > edit_map.GetMapBasics().height) break;
-						
+
 						bbridge_vert->SetCords(mtile_x*16,mtile_y*16);
 						bbridge_vert->DoRender(edit_map, screen, MAP_SHIFT_X);
 						break;
@@ -2034,7 +2034,7 @@ void draw_map(bool flip)
 						bbridge_horz->GetDimensions(width, height);
 						if(width + mtile_x > edit_map.GetMapBasics().width) break;
 						if(height + mtile_y > edit_map.GetMapBasics().height) break;
-						
+
 						bbridge_horz->SetCords(mtile_x*16,mtile_y*16);
 						bbridge_horz->DoRender(edit_map, screen, MAP_SHIFT_X);
 						break;
@@ -2184,16 +2184,16 @@ void draw_map(bool flip)
 			case PLACE_ZONE_MODE:
 // 				printf("%d %d %d %d\n", new_zone.x, new_zone.y, new_zone.w, new_zone.h);
 				if(new_zone.x == -1) break;
-				
+
 				if(current_time() - last_nz_time > 0.3)
 				{
 					last_nz_time = current_time();
 					nz_io++;
 					if(nz_io >= MAX_TEAM_TYPES) nz_io = 0;
 				}
-				
+
 				nz_i = nz_io;
-				
+
 				for(int i=0;i<new_zone.w;i++, nz_i++)
 				{
 					if(nz_i >= MAX_TEAM_TYPES) nz_i = 0;
@@ -2217,7 +2217,7 @@ void draw_map(bool flip)
 					//	to_rect.x += MAP_SHIFT_X;
 					//	SDL_BlitSurface( ZMap::GetZoneMarkers()[nz_i], &from_rect, screen, &to_rect);
 					//}
-					
+
 					//to_rect.x = (new_zone.x + i) * 16 + MAP_SHIFT_X + 6;
 					//to_rect.y = new_zone.y * 16 + 6;
 					//
@@ -2228,10 +2228,10 @@ void draw_map(bool flip)
 					//
 					//SDL_BlitSurface(ZMap::GetZoneMarkers()[nz_i], NULL, screen, &to_rect);
 				}
-				for(int i=0;i<new_zone.h;i++, nz_i++) 
+				for(int i=0;i<new_zone.h;i++, nz_i++)
 				{
 					if(nz_i >= MAX_TEAM_TYPES) nz_i = 0;
-					
+
 					x = new_zone.x * 16 + 6;
 					y = (new_zone.y + i) * 16 + 6;
 
@@ -2262,7 +2262,7 @@ void draw_map(bool flip)
 					//
 					//SDL_BlitSurface(ZMap::GetZoneMarkers()[nz_i], NULL, screen, &to_rect);
 				}
-				
+
 				break;
 		}
 	}
@@ -2272,7 +2272,7 @@ void draw_map(bool flip)
 		draw_zones();
 
 	if(current_map_ruler != NO_RULER) draw_map_ruler();
-	
+
 	//if(flip) SDL_Flip(screen);
 }
 
@@ -2309,7 +2309,7 @@ void draw_info(bool flip)
 	int x;
 
 	x = 10+MINIMAP_W_MAX;
-	
+
 	if(screen->h - 384 > 0)
 	{
 		SDL_Rect clr_box;
@@ -2319,14 +2319,14 @@ void draw_info(bool flip)
 		clr_box.h = screen->h - 384;
 		SDL_FillRect(screen, &clr_box, SDL_MapRGB(screen->format, 0, 0, 0));
 	}
-	
+
 	if(changes_made) blit_message("-------------------------- Changes Made! Press S to save!! --------------------------", 5, 390+j, 255, 0, 0);
-	
-	
+
+
 	j += 10;
 	sprintf(message,"Current Mode: %s", map_editor_mode_string[current_mode].c_str());
 	blit_message(message, x, 390+j, 255, 255, 255);
-	
+
 	j += 10;
 	switch(current_mode)
 	{
@@ -2350,7 +2350,7 @@ void draw_info(bool flip)
 			break;
 	}
 	blit_message(message, x, 390+j, 255, 255, 255);
-	
+
 	j += 10;
 	sprintf(message,"Current Team: %s", team_type_string[current_team].c_str());
 	blit_message(message, x, 390+j, 255, 255, 255);
@@ -2378,7 +2378,7 @@ void draw_info(bool flip)
 		sprintf(message,"Current Bridge Extra Links: %d", current_extra_links);
 		blit_message(message, x, 390+j, 255, 255, 255);
 	}
-	
+
 	j += 20;
 	if(hover_object)
 	{
@@ -2392,19 +2392,19 @@ void draw_info(bool flip)
 			sprintf(message,"Hover Object: %s", hover_object->GetObjectName().c_str());
 		blit_message(message, x, 390+j, 255, 255, 255);
 	}
-	
+
 	//if(flip) SDL_Flip(screen);
 }
 
 void draw_selection_box(int x, int y, int w, int h)
 {
-	
+
 	SDL_Color marker_color;
-	
+
 	marker_color.r = 255;
 	marker_color.g = 0;
 	marker_color.b = 0;
-	
+
 	//draw the selection box
 	for(int i=0;i<w;i++) if(x+i >= MAP_SHIFT_X)
 	{
@@ -2418,17 +2418,17 @@ void draw_selection_box(int x, int y, int w, int h)
 void draw_selection_box(int tile)
 {
 	int x, y;
-	
+
 	if(tile == -1) return;
-	
+
 	SDL_Color marker_color;
-	
+
 	marker_color.r = 0;
 	marker_color.g = 255;
 	marker_color.b = 255;
-	
+
 	ZMap::GetPaletteTile(tile,x,y);
-	
+
 	//draw the selection box
 	for(int i=0;i<16;i++) put32pixel(screen, x+i, y, marker_color);
 	for(int i=0;i<16;i++) put32pixel(screen, x, y+i, marker_color);
@@ -2439,17 +2439,17 @@ void draw_selection_box(int tile)
 void draw_x_marker(int tile)
 {
 	int x,y;
-	
+
 	if(tile == -1) return;
-	
+
 	SDL_Color x_color;
-		
+
 	ZMap::GetPaletteTile(tile,x,y);
-		
+
 	x_color.r = 255;
 	x_color.g = 0;
 	x_color.b = 0;
-		
+
 	for(int i=0;i<16;i++)
 	{
 		put32pixel(screen, x+i, y+i, x_color);
@@ -2516,7 +2516,7 @@ int check_hover_object()
 	int mtile_x, mtile_y;
 	int mtile_x_pix, mtile_y_pix;
 	int x,y;
-	
+
 	if(hover_mtile == -1)
 	{
 		if(hover_object)
@@ -2527,23 +2527,23 @@ int check_hover_object()
 		else
 			return 0;
 	}
-	
+
 	mtile_x = hover_mtile % edit_map.GetMapBasics().width;
 	mtile_y = hover_mtile / edit_map.GetMapBasics().width;
 	mtile_x_pix = mtile_x * 16;
 	mtile_y_pix = mtile_y * 16;
-	
+
 	for(vector<ZObject*>::iterator i=object_list.begin(); i!=object_list.end(); i++)
 	{
 		(*i)->GetCords(x,y);
-		
+
 		if(x == mtile_x_pix && y == mtile_y_pix)
 		{
 				hover_object = *i;
 				return 1;
 		}
 	}
-	
+
 	if(hover_object)
 	{
 		hover_object = NULL;
@@ -2569,7 +2569,7 @@ void place_object(map_object new_object)
 	//for(vector<map_object>::iterator i=edit_map.GetObjectList().begin(); i!=edit_map.GetObjectList().end(); i++)
 	//	if(i->x == new_object.x && i->y == new_object.y)
 	//		return;
-	
+
 	edit_map.PlaceObject(new_object);
 	load_object(new_object);
 
@@ -2581,7 +2581,7 @@ void place_object(map_object new_object)
 void load_object(map_object new_object)
 {
 	ZObject *new_object_ptr = NULL;
-	
+
 	switch(new_object.object_type)
 	{
 		case BUILDING_OBJECT:
@@ -2655,7 +2655,7 @@ void load_object(map_object new_object)
 					new_object_ptr = new VCrane(&ztime);
 					break;
 			}
-			
+
 			//for fun
 			if(new_object_ptr)
 				new_object_ptr->SetDirection(rand()%MAX_ANGLE_TYPES);
@@ -2708,8 +2708,8 @@ void load_object(map_object new_object)
 
 			break;
 	}
-	
-	if(new_object_ptr) 
+
+	if(new_object_ptr)
 	{
 		new_object_ptr->SetRefID(next_ref_id++);
 		new_object_ptr->SetOwner((team_type)new_object.owner);
