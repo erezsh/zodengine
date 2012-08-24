@@ -77,8 +77,6 @@ void ZPlayer::SetupEHandler()
 
 void ZPlayer::motion_event(ZPlayer *p, char *data, int size, int dummy)
 {
-	bool did_main_menu_motion;
-
 	if(p->MainMenuMotion())
 	{
 		return;
@@ -562,7 +560,6 @@ void ZPlayer::keyup_event(ZPlayer *p, char *data, int size, int dummy)
 {
 	key_event *pi = (key_event*)data;
 	int the_key = pi->the_key;
-	int the_unicode = pi->the_unicode;
 	//printf("keyup:%d\n", the_key);
 
 	p->SetAsciiState(the_key, false);
@@ -678,9 +675,7 @@ void ZPlayer::set_zone_info_event(ZPlayer *p, char *data, int size, int dummy)
 
 void ZPlayer::display_news_event(ZPlayer *p, char *data, int size, int dummy)
 {
-	const double lasting_time = 10.0;
 	news_entry new_entry;
-	//SDL_Color textcolor;
 
 	if(size <= 5) return;
 
@@ -692,46 +687,6 @@ void ZPlayer::display_news_event(ZPlayer *p, char *data, int size, int dummy)
 
 	p->AddNewsEntry(new_entry.message, new_entry.r, new_entry.g, new_entry.b);
 
-	/*
-	//alloc
-	new_entry = new news_entry;
-
-	//extract
-	memcpy(&new_entry->r, data, 1);
-	memcpy(&new_entry->g, data+1, 1);
-	memcpy(&new_entry->b, data+2, 1);
-	new_entry->message = data+3;
-
-	//a hack to get software renderer working again...
-	//(don't ever allow setting to the invisible "color key" color
-	if(!new_entry->r && !new_entry->g && !new_entry->b)
-		new_entry->r = 1;
-
-	//make surface
-	textcolor.r = new_entry->r;
-	textcolor.g = new_entry->g;
-	textcolor.b = new_entry->b;
-	//new_entry.text_image = TTF_RenderText_Solid(p->ttf_font, new_entry.message.c_str(), textcolor);
-	//new_entry->text_image.LoadBaseImage(TTF_RenderText_Solid(p->ttf_font, new_entry->message.c_str(), textcolor));
-	new_entry->text_image.LoadBaseImage(ZFontEngine::GetFont(SMALL_WHITE_FONT).Render(new_entry->message.c_str()));
-	
-	//a hack to get software renderer working again...
-	if(!p->use_opengl && new_entry->text_image.GetBaseSurface())
-	{
-		ZSDL_ModifyBlack(new_entry->text_image.GetBaseSurface());
-		new_entry->text_image.UseDisplayFormat();
-		SDL_SetColorKey(new_entry->text_image.GetBaseSurface(), SDL_SRCCOLORKEY, 0x000000); 
-	}
-
-
-	//set death time
-	new_entry->death_time = current_time() + lasting_time;
-
-	if(new_entry->text_image.GetBaseSurface())
-	  p->news_list.insert(p->news_list.begin(), new_entry);
-	else
-	  printf("ZPlayer::display_news_event: was not about to render news message:%s...\n", new_entry->message.c_str());
-	*/
 }
 
 void ZPlayer::set_object_waypoints_event(ZPlayer *p, char *data, int size, int dummy)
