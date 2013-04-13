@@ -83,11 +83,11 @@ void GMMOptions::SetTimeStatuses()
 	pause_button.SetGreen(ztime->IsPaused());
 
 	for(int i=0;i<MAX_GMMOPTIONS_SPEED_SETTINGS;i++)
-		if(ztime->GameSpeed() <= gmmoption_speed_setting_value[i] + 0.01)
+		if(ztime->GameSpeed() <= gmmoption_speed_setting_value[i])
 		{
 			char speed_str[500];
 
-			sprintf(speed_str, "Set Game Speed: %.0lf%%\n", 100 * ztime->GameSpeed());
+			sprintf(speed_str, "Set Game Speed: %.0f%%\n", 100 * ztime->GameSpeed());
 			speed_label.SetText(speed_str);
 			speed_radio.SetSelected(i);
 			break;
