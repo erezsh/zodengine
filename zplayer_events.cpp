@@ -322,7 +322,6 @@ void ZPlayer::lunclick_event(ZPlayer *p, char *data, int size, int dummy)
 					//{
 					//	//p->SelectZObject(obj);
 					//	//p->DetermineCursor();
-					//	//p->ClearDevWayPointsOfSelected();
 					//	//p->GiveHudSelected();
 					//}
 
@@ -357,7 +356,6 @@ void ZPlayer::lunclick_event(ZPlayer *p, char *data, int size, int dummy)
 		p->CollectSelectables();
 		p->lbutton.down = false;
 		p->DetermineCursor();
-		p->ClearDevWayPointsOfSelected();
 		p->GiveHudSelected();
 	}
 	else
@@ -389,7 +387,11 @@ void ZPlayer::runclick_event(ZPlayer *p, char *data, int size, int dummy)
 {
 	p->rbutton.down = false;
 
+	if(!p->ShiftDown()) 
+            p->ClearDevWayPointsOfSelected();
+
 	p->AddDevWayPointToSelected();
+
 	if(!p->ShiftDown()) 
 	{
 		//special case where a vehicle ejects?
@@ -422,8 +424,9 @@ void ZPlayer::runclick_event(ZPlayer *p, char *data, int size, int dummy)
 			}
 		}
 
-		p->SendDevWayPointsOfSelected();
 	}
+
+        p->SendDevWayPointsOfSelected();
 }
 
 void ZPlayer::mclick_event(ZPlayer *p, char *data, int size, int dummy)
@@ -481,10 +484,6 @@ void ZPlayer::keydown_event(ZPlayer *p, char *data, int size, int dummy)
 			else
 			{
 				p->LoadControlGroup(the_key - '0');
-				//p->select_info.LoadGroup(the_key - '0');
-				//p->DetermineCursor();
-				//p->ClearDevWayPointsOfSelected();
-				//p->GiveHudSelected();
 			}
 			break;
 		case 27: //esc key
@@ -592,11 +591,9 @@ void ZPlayer::keyup_event(ZPlayer *p, char *data, int size, int dummy)
 			break;
 		case 304: //left shift
 			p->lshift_down = false;
-			if(!p->ShiftDown()) p->SendDevWayPointsOfSelected();
 			break;
 		case 303: //right shift
 			p->rshift_down = false;
-			if(!p->ShiftDown()) p->SendDevWayPointsOfSelected();
 			break;
 	}
 }

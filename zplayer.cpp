@@ -2564,7 +2564,6 @@ void ZPlayer::SelectZObject(ZObject *obj)
 
 	DetermineCursor();
 	GiveHudSelected();
-	ClearDevWayPointsOfSelected();
 }
 
 void ZPlayer::SelectAllOfType(int type)
@@ -2778,7 +2777,6 @@ void ZPlayer::LoadControlGroup(int n)
 	{
 		select_info.LoadGroup(n);
 		DetermineCursor();
-		ClearDevWayPointsOfSelected();
 		GiveHudSelected();
 	}
 }
@@ -3035,9 +3033,6 @@ void ZPlayer::SendDevWayPointsOfSelected()
 
 		ShowPcursor(j->x, j->y);
 	}
-
-	//ok its sent, so clear the lists
-	ClearDevWayPointsOfSelected();
 
 	//tell the hud we gave a command
 	zhud.GiveSelectedCommand(no_way);
