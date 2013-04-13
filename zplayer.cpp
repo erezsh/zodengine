@@ -2932,6 +2932,8 @@ void ZPlayer::AddDevWayPointToSelected()
 		new_rallypoint.player_given = true;
 		new_rallypoint.attack_to = true;
 
+                if(!ShiftDown()) 
+                    gui_window->GetBuildingObj()->GetWayPointDevList().clear();
 		gui_window->GetBuildingObj()->GetWayPointDevList().push_back(new_rallypoint);
 	}
 
@@ -3066,7 +3068,7 @@ void ZPlayer::SendDevWayPointsOfSelected()
 			free(data);
 		}
 
-		obj->GetWayPointDevList().clear();
+		/* obj->GetWayPointDevList().clear(); */
 	}
 }
 
@@ -3353,9 +3355,6 @@ bool ZPlayer::GuiAbsorbLClick()
 					//	//give it the build list
 					//	gui_window->SetBuildList(&buildlist);
 
-					//	//have its buildings dev rallypoints cleared
-					//	if(gui_window->GetBuildingObj())
-					//		gui_window->GetBuildingObj()->GetWayPointDevList().clear();
 					//}
 				}
 			}
@@ -3390,9 +3389,6 @@ bool ZPlayer::GuiAbsorbLClick()
 	//	////give it the build list
 	//	//gui_window->SetBuildList(&buildlist);
 
-	//	////have its buildings dev rallypoints cleared
-	//	//if(gui_window->GetBuildingObj())
-	//	//	gui_window->GetBuildingObj()->GetWayPointDevList().clear();
 
 	//	return true;
 	//}
@@ -4035,10 +4031,6 @@ bool ZPlayer::ObjectMakeGuiWindow(ZObject *obj)
 
 	//set its build list
 	gui_window->SetBuildList(&buildlist);
-
-	//clear rally points
-	//gui_window->GetBuildingObj()->GetWayPointDevList().clear();
-	obj->GetWayPointDevList().clear();
 
 	return true;
 }
